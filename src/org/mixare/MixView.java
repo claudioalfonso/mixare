@@ -349,32 +349,32 @@ public class MixView extends SherlockActivity implements SensorEventListener, On
 			// display text from left to right and keep it horizontal
 			angleX = (float) Math.toRadians(marker_orientation);
 			getMixViewData().getM1().set(1f, 0f, 0f, 0f,
-					(float) FloatMath.cos(angleX),
-					(float) -FloatMath.sin(angleX), 0f,
-					(float) FloatMath.sin(angleX),
-					(float) FloatMath.cos(angleX));
+					(float) Math.cos(angleX),
+					(float) -Math.sin(angleX), 0f,
+					(float) Math.sin(angleX),
+					(float) Math.cos(angleX));
 			angleX = (float) Math.toRadians(marker_orientation);
 			angleY = (float) Math.toRadians(marker_orientation);
 			if (rotation == 1) {
 				getMixViewData().getM2().set(1f, 0f, 0f, 0f,
-						(float) FloatMath.cos(angleX),
-						(float) -FloatMath.sin(angleX), 0f,
-						(float) FloatMath.sin(angleX),
-						(float) FloatMath.cos(angleX));
-				getMixViewData().getM3().set((float) FloatMath.cos(angleY), 0f,
-						(float) FloatMath.sin(angleY), 0f, 1f, 0f,
-						(float) -FloatMath.sin(angleY), 0f,
-						(float) FloatMath.cos(angleY));
+						(float) Math.cos(angleX),
+						(float) -Math.sin(angleX), 0f,
+						(float) Math.sin(angleX),
+						(float) Math.cos(angleX));
+				getMixViewData().getM3().set((float) Math.cos(angleY), 0f,
+						(float) Math.sin(angleY), 0f, 1f, 0f,
+						(float) -Math.sin(angleY), 0f,
+						(float) Math.cos(angleY));
 			} else {
-				getMixViewData().getM2().set((float) FloatMath.cos(angleX), 0f,
-						(float) FloatMath.sin(angleX), 0f, 1f, 0f,
-						(float) -FloatMath.sin(angleX), 0f,
-						(float) FloatMath.cos(angleX));
+				getMixViewData().getM2().set((float) Math.cos(angleX), 0f,
+						(float) Math.sin(angleX), 0f, 1f, 0f,
+						(float) -Math.sin(angleX), 0f,
+						(float) Math.cos(angleX));
 				getMixViewData().getM3().set(1f, 0f, 0f, 0f,
-						(float) FloatMath.cos(angleY),
-						(float) -FloatMath.sin(angleY), 0f,
-						(float) FloatMath.sin(angleY),
-						(float) FloatMath.cos(angleY));
+						(float) Math.cos(angleY),
+						(float) -Math.sin(angleY), 0f,
+						(float) Math.sin(angleY),
+						(float) Math.cos(angleY));
 
 			}
 
@@ -415,10 +415,10 @@ public class MixView extends SherlockActivity implements SensorEventListener, On
 				GeomagneticField gmf = getMixViewData().getMixContext()
 						.getLocationFinder().getGeomagneticField();
 				angleY = (float) Math.toRadians(-gmf.getDeclination());
-				getMixViewData().getM4().set((float) FloatMath.cos(angleY), 0f,
-						(float) FloatMath.sin(angleY), 0f, 1f, 0f,
-						(float) -FloatMath.sin(angleY), 0f,
-						(float) FloatMath.cos(angleY));
+				getMixViewData().getM4().set((float) Math.cos(angleY), 0f,
+						(float) Math.sin(angleY), 0f, 1f, 0f,
+						(float) -Math.sin(angleY), 0f,
+						(float) Math.cos(angleY));
 			} catch (Exception ex) {
 				doError(ex, GPS_ERROR);
 			}

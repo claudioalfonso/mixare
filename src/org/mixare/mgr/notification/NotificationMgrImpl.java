@@ -53,9 +53,11 @@ public class NotificationMgrImpl implements NotificationManager{
 			PendingIntent pendingIntent
 		     = PendingIntent.getActivity(ctx, 0, new Intent(), FLAG_ACTIVITY_NO_ANIMATION);
 			
-			Notification notif = new Notification(R.drawable.icon_datasource, tickerText,
-		            System.currentTimeMillis());
-			notif.setLatestEventInfo(ctx, tickerText, tickerText, pendingIntent);
+			Notification notif = new Notification.Builder(ctx)
+					.setContentText(tickerText)
+					.setSmallIcon(R.drawable.icon_datasource)
+					.setWhen(System.currentTimeMillis())
+					.build();
 		    nm.notify(notifyId, notif);
 	    }
 	}
