@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mixare.MixContext;
 import org.mixare.MixView;
+import org.mixare.data.MarkerBuilder;
 import org.mixare.marker.POIMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.lib.HtmlUnescape;
@@ -81,16 +82,16 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 		
 				if(jo.has("has_detail_page") && jo.getInt("has_detail_page")!=0 && jo.has("webpage"))
 					link=jo.getString("webpage");
-				
-				ma = new POIMarker(
-						id,
-						HtmlUnescape.unescapeHTML(jo.getString("title")), 
-						jo.getDouble("lat"), 
-						jo.getDouble("lng"), 
-						jo.getDouble("elevation"), 
-						link, 
-						taskId, colour);
-				((POIMarker) ma).setIsDirectionMarker(true);
+
+				ma = new MarkerBuilder().setId(id)
+						.setTitle(HtmlUnescape.unescapeHTML(jo.getString("title")))
+						.setLatitude(jo.getDouble("lat"))
+						.setLongitude(jo.getDouble("lng"))
+						.setAltitude(jo.getDouble("elevation"))
+						.setPageURL(link)
+						.setColor(colour)
+						.build();
+
 				markers.add(ma);
 			}
 		}

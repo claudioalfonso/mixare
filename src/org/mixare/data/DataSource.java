@@ -334,7 +334,7 @@ public class DataSource {
 	/* ENUM */
 	
 	public enum TYPE {
-		WIKIPEDIA, TWITTER, OSM, MIXARE, ARENA, PANORAMIO
+		WIKIPEDIA, TWITTER, OSM, MIXARE, ARENA, PANORAMIO, DEFAULT
 	};
 
 	public enum DISPLAY {
