@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mixare.MixView;
+import org.mixare.data.MarkerBuilder;
 import org.mixare.marker.SocialMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
@@ -122,16 +123,21 @@ public class TwitterDataProcessor extends DataHandler implements DataProcessor{
 					String url="http://twitter.com/"+screen_name;//former user
 					
 					//no ID is needed, since identical tweet by identical user may be safely merged into one.
-					ma = new SocialMarker(
-							"",
-							screen_name+": "+text, 
-							lat, 
-							lon, 
-							0, url, 
-							taskId, 
-							colour);
-					
-					markers.add(ma);
+
+					ma = new MarkerBuilder().setId("twitter")
+							.setTitle(screen_name+": "+text)
+							.setLatitude(lat)
+							.setLongitude(lon)
+							.setAltitude(0)
+							.setDisplayType(overrideMarkerDisplayType)
+							.setPageURL(url)
+							.setColor(colour)
+							.setType(DataSource.TYPE.TWITTER)
+							.build();
+
+					if(ma!=null) {
+						markers.add(ma);
+					}
 					cache.add(ma);
 					Log.d(MixView.TAG, "Found "+markers.size()+" new tweets, total tweets :"+cache.size());
 				}

@@ -31,6 +31,7 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mixare.data.MarkerBuilder;
 import org.mixare.marker.ImageMarker;
 import org.mixare.marker.LocalMarker;
 import org.mixare.MixContext;
@@ -148,13 +149,24 @@ public class PanoramioDataProcessor extends DataHandler implements
 				if (title.trim().isEmpty()) {
 					title = "Photo of " + imageOwner;
 				}
-				markers.add(new ImageMarker(jo.getString("photo_id"), title,
-						lat, lng,
-						elevation,
+
+				Marker ma = new MarkerBuilder().setId(jo.getString("photo_id"))
+						.setTitle(title)
+						.setLatitude(lat)
+						.setLongitude(lng)
+						.setAltitude(elevation)
 						// (elevation.nextInt(90) + 30), // @TODO elevation
 						// level for Panoramio
-						jo.getString("photo_url"), taskId, colour, imageOwner,
-						jo.getString("photo_file_url")));
+						// imageOwner
+						.setDisplayType(overrideMarkerDisplayType)
+						.setPageURL(jo.getString("photo_url"))
+						.setColor(colour)
+						.setImageURL(jo.getString("photo_file_url"))
+						.build();
+
+				if(ma!=null) {
+					markers.add(ma);
+				}
 			}
 		}
 

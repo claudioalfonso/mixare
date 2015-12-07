@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mixare.MixContext;
 import org.mixare.MixView;
+import org.mixare.data.MarkerBuilder;
 import org.mixare.marker.POIMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
@@ -80,15 +81,19 @@ public class WikiDataProcessor extends DataHandler implements DataProcessor{
 				Log.v(MixView.TAG, "processing Wikipedia JSON object");
 		
 				//no unique ID is provided by the web service according to http://www.geonames.org/export/wikipedia-webservice.html
-				ma = new POIMarker(
-						"",
-						HtmlUnescape.unescapeHTML(jo.getString("title")), 
-						jo.getDouble("lat"), 
-						jo.getDouble("lng"), 
-						jo.getDouble("elevation"), 
-						"http://"+jo.getString("wikipediaUrl"), 
-						taskId, colour);
-				markers.add(ma);
+				ma = new MarkerBuilder().setId("wikiid")
+						.setTitle(HtmlUnescape.unescapeHTML(jo.getString("title")))
+						.setLatitude(jo.getDouble("lat"))
+						.setLongitude(jo.getDouble("lng"))
+						.setAltitude(jo.getDouble("elevation"))
+						.setDisplayType(overrideMarkerDisplayType)
+						.setPageURL("https://"+jo.getString("wikipediaUrl"))
+						.setColor(colour)
+						.build();
+
+				if(ma!=null) {
+					markers.add(ma);
+				}
 			}
 		}
 		return markers;

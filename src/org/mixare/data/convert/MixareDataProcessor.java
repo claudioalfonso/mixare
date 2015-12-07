@@ -88,11 +88,14 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 						.setLatitude(jo.getDouble("lat"))
 						.setLongitude(jo.getDouble("lng"))
 						.setAltitude(jo.getDouble("elevation"))
+						.setDisplayType(overrideMarkerDisplayType)
 						.setPageURL(link)
 						.setColor(colour)
 						.build();
 
-				markers.add(ma);
+				if(ma!=null) {
+					markers.add(ma);
+				}
 			}
 		}
 		return markers;

@@ -26,8 +26,9 @@ public class MarkerBuilder {
         return imageURL;
     }
 
-    public void setImageURL(String imageURL) {
+    public MarkerBuilder setImageURL(String imageURL) {
         this.imageURL = imageURL;
+        return this;
     }
 
     public String getId() {
@@ -122,47 +123,51 @@ public class MarkerBuilder {
     }
 
     public LocalMarker build(){
-        Log.d(TAG, "build Marker at lat="+latitude+", lon="+longitude);
+        DataSource.DISPLAY standardDisplayType;
+//        Log.d(TAG, "build Marker at lat="+latitude+", lon="+longitude);
 
         LocalMarker newMarker=null;
         if(!isValid()){ //only check properties, not displayType
             return null;
         }
-        Log.d(TAG, "new marker at lat="+latitude+", lon="+longitude+" would be valid");
+//        Log.d(TAG, "new marker at lat="+latitude+", lon="+longitude+" would be valid");
 
         switch (type){
             case WIKIPEDIA:
-                displayType= DataSource.DISPLAY.CIRCLE_MARKER;
+                standardDisplayType = DataSource.DISPLAY.CIRCLE_MARKER;
                 break;
             case TWITTER:
                 newMarker=new SocialMarker(id,title,latitude,longitude,altitude,pageURL,0,color);
-                displayType= DataSource.DISPLAY.CIRCLE_MARKER;
+                standardDisplayType = DataSource.DISPLAY.CIRCLE_MARKER;
                 break;
             case OSM:
-                displayType= DataSource.DISPLAY.NAVIGATION_MARKER;
+                standardDisplayType = DataSource.DISPLAY.NAVIGATION_MARKER;
                 break;
             case MIXARE:
-                displayType= DataSource.DISPLAY.CIRCLE_MARKER;
+                standardDisplayType = DataSource.DISPLAY.CIRCLE_MARKER;
                 break;
             case ARENA:
-                displayType= DataSource.DISPLAY.CIRCLE_MARKER;
+                standardDisplayType = DataSource.DISPLAY.CIRCLE_MARKER;
                 break;
             case PANORAMIO:
-                displayType= DataSource.DISPLAY.IMAGE_MARKER;
+                standardDisplayType = DataSource.DISPLAY.IMAGE_MARKER;
                 break;
             default:
-                displayType= DataSource.DISPLAY.CIRCLE_MARKER;
+                standardDisplayType = DataSource.DISPLAY.NOTSET;
+        }
+        if(displayType==null){
+            displayType = standardDisplayType;
         }
         if(!isValid(true)){ //check displayType as well, especially for imageURL
             return null;
         }
-        Log.d(TAG, "new marker at lat="+latitude+", lon="+longitude+" would be valid (even judging from the display type)");
+//        Log.d(TAG, "new marker at lat="+latitude+", lon="+longitude+" would be valid (even judging from the display type)");
 
         if(newMarker==null){ //no special marker Type set, so determine by displayType
             switch (displayType) {
                 case CIRCLE_MARKER:
                     newMarker=new POIMarker(id,title,latitude,longitude,altitude,pageURL,0, color);
-                    Log.d(TAG, "new circle POI Marker created at lat="+latitude+", lon="+longitude);
+//                    Log.d(TAG, "new circle POI Marker created at lat="+latitude+", lon="+longitude);
                     break;
                 case NAVIGATION_MARKER:
                     newMarker=new NavigationMarker(id,title,latitude,longitude,altitude,pageURL,0,color);
@@ -184,12 +189,12 @@ public class MarkerBuilder {
     public boolean isValid(boolean checkType){
         //do some basic checks
         if(checkType && displayType==null){
-            Log.d(TAG, "new marker wouldn't be valid because of displayType");
+//            Log.d(TAG, "new marker wouldn't be valid because of displayType");
 
             return false;
         }
         if(id==null || id.isEmpty() || title==null || title.isEmpty() ){
-            Log.d(TAG, "new marker wouldn't be valid because of "+id+", "+title+", "+type);
+//            Log.d(TAG, "new marker wouldn't be valid because of "+id+", "+title+", "+type);
 
             return false;
         }
@@ -197,7 +202,7 @@ public class MarkerBuilder {
             return false;
         }
         if(type == null){
-            type= DataSource.TYPE.DEFAULT;
+            type= DataSource.TYPE.NOTSET;
         }
         return true;
     }

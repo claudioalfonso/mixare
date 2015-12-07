@@ -40,6 +40,16 @@ public class DataHandler {
 	
 	// complete marker list
 	private List<Marker> markerList = new ArrayList<Marker>();
+
+	public DataSource.DISPLAY getOverrideMarkerDisplayType() {
+		return overrideMarkerDisplayType;
+	}
+
+	public void setOverrideMarkerDisplayType(DataSource.DISPLAY overrideMarkerDisplayType) {
+		this.overrideMarkerDisplayType = overrideMarkerDisplayType;
+	}
+
+	protected DataSource.DISPLAY overrideMarkerDisplayType = null;
 	
 	public void addMarkers(List<Marker> markers) {
 
@@ -88,6 +98,8 @@ public class DataHandler {
 			ma.update(location);
 		}
 	}
+
+
 	
 //	/**
 //	 * @deprecated Nobody should get direct access to the list

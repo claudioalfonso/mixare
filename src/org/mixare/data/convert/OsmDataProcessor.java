@@ -27,6 +27,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.json.JSONException;
 import org.mixare.MixView;
+import org.mixare.data.MarkerBuilder;
+import org.mixare.lib.HtmlUnescape;
 import org.mixare.marker.NavigationMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
@@ -94,15 +96,19 @@ public class OsmDataProcessor extends DataHandler implements DataProcessor {
 						Log.v(MixView.TAG, "OSM Node: " + name + " lat " + lat
 								+ " lon " + lon + "\n");
 
-						Marker ma = new NavigationMarker(
-								id,
-								name,
-								lat,
-								lon,
-								0,
-								"http://www.openstreetmap.org/?node="+ id,
-								taskId, colour);
-						markers.add(ma);
+						Marker ma = new MarkerBuilder().setId(id)
+								.setTitle(name)
+								.setLatitude(lat)
+								.setLongitude(lon)
+								.setAltitude(0)
+								.setDisplayType(overrideMarkerDisplayType)
+								.setPageURL("http://www.openstreetmap.org/?node="+ id)
+								.setColor(colour)
+								.build();
+
+						if(ma!=null) {
+							markers.add(ma);
+						}
 
 						// skip to next node
 						continue;

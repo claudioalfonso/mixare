@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
+import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
 import org.mixare.lib.marker.Marker;
 import org.mixare.lib.reality.PhysicalPlace;
@@ -65,6 +66,9 @@ public class DataConvertor {
 			dataProcessor = new MixareDataProcessor(); //using this as default if nothing is found.
 		}
 		try {
+			if(dataProcessor instanceof DataHandler) {
+				((DataHandler) dataProcessor).setOverrideMarkerDisplayType(ds.getDisplay());
+			}
 			return dataProcessor.load(rawResult, ds.getDataSourceId(), ds.getColor());
 		} catch (JSONException e) {
 			/* Find Other Away to notify Error, for now Hide this error
