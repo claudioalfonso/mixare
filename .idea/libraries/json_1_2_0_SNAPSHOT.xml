@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="json-1.2.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.locoslab.api/json/1.2.0-SNAPSHOT/5af4aeaa78f9c9199e3677ea8ff0d8c50db04185/json-1.2.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.locoslab.api/json/1.2.0-SNAPSHOT/45147b9aa778eacc714229ce26f61671051062e1/json-1.2.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
