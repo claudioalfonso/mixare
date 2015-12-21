@@ -20,7 +20,7 @@ interface IMarkerService {
     int getPid();
     
     //--other marker interface methods--//
-    String buildMarker(int id, String title, double latitude, double longitude, double altitude, String URL, int type, int color);
+    String buildMarker(int id, String title, double latitude, double longitude, double altitude, String pageURL, int type, int color);
         
     void removeMarker(String markerName);
     
