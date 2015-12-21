@@ -90,10 +90,9 @@ class LocationMgrImpl implements LocationFinder {
 		// fallback for the case where GPS and network providers are disabled
 		Location hardFix = new Location("reverseGeocoded");
 
-		// Frangart, Eppan, Bozen, Italy
-		hardFix.setLatitude(46.480302);
-		hardFix.setLongitude(11.296005);
-		hardFix.setAltitude(300);
+		hardFix.setLatitude(default_lat);
+		hardFix.setLongitude(default_lon);
+		hardFix.setAltitude(default_height);
 		
 		curLoc = hardFix;
 		mixContext.doPopUp(R.string.connection_GPS_dialog_text);
