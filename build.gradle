@@ -21,16 +21,17 @@ repositories{
 dependencies {
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
  //   compile 'org.apache.aries.application:twitter4j:0.3'
-    //    compile 'org.mapsforge:mapsforge-map:0.6.0'
+    compile 'org.mapsforge:mapsforge-core:0.6.0'
+    compile 'org.mapsforge:mapsforge-map:0.6.0'
+    compile 'org.mapsforge:mapsforge-map-android:0.6.0'
+
     compile fileTree(dir: 'lib', include: '*.jar')
     compile project(':mixarelib')
-   // compile files('lib/mapsforge-map-0.3.1-SNAPSHOT-jar-with-dependencies.jar')
-   // compile 'com.google.android.gms:play-services:8.3.0'
     compile group: 'com.locoslab.api', name: 'carta', version: '1.2.0-SNAPSHOT'
 }
 
 android {
-    compileSdkVersion "Google Inc.:Google APIs:23"
+    compileSdkVersion 23
     buildToolsVersion "23.0.2"
     defaultConfig {
         minSdkVersion 11 //Depends on the min version you would like to support

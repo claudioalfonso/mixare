@@ -19,57 +19,75 @@
 package org.mixare.map;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+
+import org.mapsforge.core.model.LatLong;
+import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+import org.mapsforge.map.android.util.AndroidUtil;
+import org.mapsforge.map.android.view.MapView;
+import org.mapsforge.map.layer.cache.TileCache;
+
+import org.mapsforge.map.layer.download.TileDownloadLayer;
+import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 
 public class MixMap extends Activity {
-	private static String mixMapPrefs = "mixmap";
-	private static String mapUsage = "mapUsage";
-	private static SharedPreferences prefs;
-	
-	public enum MAPS {
-		GOOGLE,
-		OSM
-	}
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		Log.d("test", "Launch Map");
-		super.onCreate(savedInstanceState);
-		prefs = getSharedPreferences(mixMapPrefs, MODE_PRIVATE);
-		Intent mapToLaunch;
-		String map = prefs.getString(mapUsage, MAPS.GOOGLE.name());
-		Log.d("test", map);
-		if (map == MAPS.GOOGLE.name()) {
-			Log.d("test", "Launch GoogleMaps");
-			mapToLaunch = new Intent(this, GoogleMap.class);
-		} else if (map == MAPS.OSM.name()){
-			Log.d("test", "Launch OSM");
-			mapToLaunch = new Intent(this, OsmMap.class);
-		} else {
-			Log.d("test", "Fallback");
-			// fallback
-			mapToLaunch = new Intent(this, GoogleMap.class);
-			changeMap(MAPS.GOOGLE);
-		}
-		
-		Intent intent = this.getIntent();
-		if (intent.getBooleanExtra("center", false)) {
-			mapToLaunch.putExtra("center", true);
-			mapToLaunch.putExtra("latitude", intent.getDoubleExtra("latitude", 0.0));
-			mapToLaunch.putExtra("longitude", intent.getDoubleExtra("longitude", 0.0));
-		}
-		
-		startActivity(mapToLaunch);
-		finish();
-	}
-	
-	public static void changeMap(MAPS mapName) {
-		Log.d("test", "Change map to: " + mapName.name());
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(mapUsage, mapName.name());
-		editor.commit();
-	}
+	private MapView mapView;
+	private TileCache tileCache;
+    protected TileDownloadLayer downloadLayer;
+
+    protected float screenRatio = 1.0f;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        AndroidGraphicFactory.createInstance(this.getApplication());
+
+        this.mapView = new MapView(this);
+        setContentView(this.mapView);
+
+        this.mapView.setClickable(true);
+        this.mapView.getMapScaleBar().setVisible(true);
+        this.mapView.setBuiltInZoomControls(true);
+
+        this.tileCache=AndroidUtil.createTileCache(this, this.getClass().getSimpleName(),
+                this.mapView.getModel().displayModel.getTileSize(), this.screenRatio,
+                this.mapView.getModel().frameBufferModel.getOverdrawFactor(), false);
+
+        this.downloadLayer = new TileDownloadLayer(this.tileCache,
+                this.mapView.getModel().mapViewPosition, OpenStreetMapMapnik.INSTANCE,
+                AndroidGraphicFactory.INSTANCE);
+        mapView.getLayerManager().getLayers().add(this.downloadLayer);
+
+        mapView.getModel().mapViewPosition.setZoomLevelMin(OpenStreetMapMapnik.INSTANCE.getZoomLevelMin());
+        mapView.getModel().mapViewPosition.setZoomLevelMax(OpenStreetMapMapnik.INSTANCE.getZoomLevelMax());
+        mapView.getMapZoomControls().setZoomLevelMin(OpenStreetMapMapnik.INSTANCE.getZoomLevelMin());
+        mapView.getMapZoomControls().setZoomLevelMax(OpenStreetMapMapnik.INSTANCE.getZoomLevelMax());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        this.mapView.getModel().mapViewPosition.setCenter(new LatLong(52.517037, 13.38886));
+        this.mapView.getModel().mapViewPosition.setZoomLevel((byte) 12);
+    }
+
+    @Override
+    public void onPause() {
+        this.downloadLayer.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.downloadLayer.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.mapView.destroyAll();
+    }
 }
