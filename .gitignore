@@ -19,6 +19,8 @@ sonar-project.properties
 # generated files
 bin/
 gen/
+out/
+build/
 
 # Local configuration file (sdk path, etc)
 local.properties
