@@ -1,0 +1,961 @@
+[
+    {
+        "outputFile": "D:\\Android Studio Projects\\mixare\\build\\intermediates\\res\\merged\\debug\\values-es\\values-es.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 31,
+                    "endOffset": 82
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 227,
+                        "endColumn": 31,
+                        "endOffset": 254
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 87,
+                    "endColumn": 31,
+                    "endOffset": 114
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 159,
+                        "endColumn": 31,
+                        "endOffset": 186
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 119,
+                    "endColumn": 33,
+                    "endOffset": 148
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 192,
+                        "endColumn": 33,
+                        "endOffset": 221
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 153,
+                    "endColumn": 33,
+                    "endOffset": 182
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 12,
+                        "startColumn": 4,
+                        "startOffset": 396,
+                        "endColumn": 33,
+                        "endOffset": 425
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 187,
+                    "endColumn": 31,
+                    "endOffset": 214
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 295,
+                        "endColumn": 31,
+                        "endOffset": 322
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 219,
+                    "endColumn": 33,
+                    "endOffset": 248
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 260,
+                        "endColumn": 33,
+                        "endOffset": 289
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 253,
+                    "endColumn": 33,
+                    "endOffset": 282
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 4,
+                        "startOffset": 328,
+                        "endColumn": 33,
+                        "endOffset": 357
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 287,
+                    "endColumn": 31,
+                    "endOffset": 314
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 11,
+                        "startColumn": 4,
+                        "startOffset": 363,
+                        "endColumn": 31,
+                        "endOffset": 390
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 319,
+                    "endColumn": 48,
+                    "endOffset": 363
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 65,
+                        "startColumn": 1,
+                        "startOffset": 3128,
+                        "endColumn": 45,
+                        "endOffset": 3172
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 368,
+                    "endColumn": 46,
+                    "endOffset": 410
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 63,
+                        "startColumn": 1,
+                        "startOffset": 3039,
+                        "endColumn": 43,
+                        "endOffset": 3081
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 12,
+                    "startColumn": 4,
+                    "startOffset": 415,
+                    "endColumn": 43,
+                    "endOffset": 454
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 57,
+                        "endColumn": 43,
+                        "endOffset": 96
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 459,
+                    "endColumn": 47,
+                    "endOffset": 502
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 57,
+                        "startColumn": 1,
+                        "startOffset": 2778,
+                        "endColumn": 44,
+                        "endOffset": 2821
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 507,
+                    "endColumn": 67,
+                    "endOffset": 570
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 51,
+                        "startColumn": 1,
+                        "startOffset": 2496,
+                        "endColumn": 64,
+                        "endOffset": 2559
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 575,
+                    "endColumn": 64,
+                    "endOffset": 635
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 52,
+                        "startColumn": 1,
+                        "startOffset": 2562,
+                        "endColumn": 61,
+                        "endOffset": 2622
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 640,
+                    "endLine": 17,
+                    "endColumn": 54,
+                    "endOffset": 819
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 49,
+                        "startColumn": 1,
+                        "startOffset": 2313,
+                        "endLine": 50,
+                        "endColumn": 54,
+                        "endOffset": 2493
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 824,
+                    "endColumn": 136,
+                    "endOffset": 956
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 44,
+                        "startColumn": 1,
+                        "startOffset": 1964,
+                        "endColumn": 133,
+                        "endOffset": 2096
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 961,
+                    "endColumn": 67,
+                    "endOffset": 1024
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 45,
+                        "startColumn": 1,
+                        "startOffset": 2099,
+                        "endColumn": 64,
+                        "endOffset": 2162
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 1029,
+                    "endColumn": 74,
+                    "endOffset": 1099
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 46,
+                        "startColumn": 1,
+                        "startOffset": 2165,
+                        "endColumn": 71,
+                        "endOffset": 2235
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 21,
+                    "startColumn": 4,
+                    "startOffset": 1104,
+                    "endColumn": 73,
+                    "endOffset": 1173
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 47,
+                        "startColumn": 1,
+                        "startOffset": 2238,
+                        "endColumn": 70,
+                        "endOffset": 2307
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 22,
+                    "startColumn": 4,
+                    "startOffset": 1178,
+                    "endColumn": 100,
+                    "endOffset": 1274
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 76,
+                        "startColumn": 1,
+                        "startOffset": 3640,
+                        "endColumn": 97,
+                        "endOffset": 3736
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 23,
+                    "startColumn": 4,
+                    "startOffset": 1279,
+                    "endColumn": 104,
+                    "endOffset": 1379
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 75,
+                        "startColumn": 1,
+                        "startOffset": 3537,
+                        "endColumn": 101,
+                        "endOffset": 3637
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 24,
+                    "startColumn": 4,
+                    "startOffset": 1384,
+                    "endColumn": 155,
+                    "endOffset": 1535
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 439,
+                        "endColumn": 155,
+                        "endOffset": 590
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 25,
+                    "startColumn": 4,
+                    "startOffset": 1540,
+                    "endColumn": 56,
+                    "endOffset": 1592
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 60,
+                        "startColumn": 1,
+                        "startOffset": 2892,
+                        "endColumn": 53,
+                        "endOffset": 2944
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 26,
+                    "startColumn": 4,
+                    "startOffset": 1597,
+                    "endColumn": 66,
+                    "endOffset": 1659
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 58,
+                        "startColumn": 1,
+                        "startOffset": 2824,
+                        "endColumn": 63,
+                        "endOffset": 2886
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 27,
+                    "startColumn": 4,
+                    "startOffset": 1664,
+                    "endColumn": 58,
+                    "endOffset": 1718
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 66,
+                        "startColumn": 1,
+                        "startOffset": 3175,
+                        "endColumn": 55,
+                        "endOffset": 3229
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 28,
+                    "startColumn": 4,
+                    "startOffset": 1723,
+                    "endColumn": 46,
+                    "endOffset": 1765
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 62,
+                        "startColumn": 1,
+                        "startOffset": 2994,
+                        "endColumn": 43,
+                        "endOffset": 3036
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 29,
+                    "startColumn": 4,
+                    "startOffset": 1770,
+                    "endLine": 43,
+                    "endColumn": 10,
+                    "endOffset": 2605
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 18,
+                        "startColumn": 1,
+                        "startOffset": 726,
+                        "endLine": 32,
+                        "endColumn": 10,
+                        "endOffset": 1578
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 44,
+                    "startColumn": 4,
+                    "startOffset": 2610,
+                    "endColumn": 51,
+                    "endOffset": 2657
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 56,
+                        "startColumn": 1,
+                        "startOffset": 2728,
+                        "endColumn": 48,
+                        "endOffset": 2775
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 45,
+                    "startColumn": 4,
+                    "startOffset": 2662,
+                    "endColumn": 48,
+                    "endOffset": 2706
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 61,
+                        "startColumn": 1,
+                        "startOffset": 2947,
+                        "endColumn": 45,
+                        "endOffset": 2991
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 46,
+                    "startColumn": 4,
+                    "startOffset": 2711,
+                    "endColumn": 77,
+                    "endOffset": 2784
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 73,
+                        "startColumn": 1,
+                        "startOffset": 3458,
+                        "endColumn": 74,
+                        "endOffset": 3531
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 47,
+                    "startColumn": 4,
+                    "startOffset": 2789,
+                    "endColumn": 52,
+                    "endOffset": 2837
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 70,
+                        "startColumn": 1,
+                        "startOffset": 3346,
+                        "endColumn": 49,
+                        "endOffset": 3394
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 48,
+                    "startColumn": 4,
+                    "startOffset": 2842,
+                    "endColumn": 53,
+                    "endOffset": 2891
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 68,
+                        "startColumn": 1,
+                        "startOffset": 3235,
+                        "endColumn": 50,
+                        "endOffset": 3284
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 49,
+                    "startColumn": 4,
+                    "startOffset": 2896,
+                    "endColumn": 60,
+                    "endOffset": 2952
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 69,
+                        "startColumn": 1,
+                        "startOffset": 3287,
+                        "endColumn": 57,
+                        "endOffset": 3343
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 50,
+                    "startColumn": 4,
+                    "startOffset": 2957,
+                    "endColumn": 59,
+                    "endOffset": 3012
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 71,
+                        "startColumn": 1,
+                        "startOffset": 3397,
+                        "endColumn": 56,
+                        "endOffset": 3452
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 51,
+                    "startColumn": 4,
+                    "startOffset": 3017,
+                    "endColumn": 55,
+                    "endOffset": 3068
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 34,
+                        "startColumn": 1,
+                        "startOffset": 1584,
+                        "endColumn": 52,
+                        "endOffset": 1635
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 52,
+                    "startColumn": 4,
+                    "startOffset": 3073,
+                    "endColumn": 47,
+                    "endOffset": 3116
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 35,
+                        "startColumn": 1,
+                        "startOffset": 1638,
+                        "endColumn": 44,
+                        "endOffset": 1681
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 53,
+                    "startColumn": 4,
+                    "startOffset": 3121,
+                    "endColumn": 45,
+                    "endOffset": 3162
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 36,
+                        "startColumn": 1,
+                        "startOffset": 1684,
+                        "endColumn": 42,
+                        "endOffset": 1725
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 54,
+                    "startColumn": 4,
+                    "startOffset": 3167,
+                    "endColumn": 44,
+                    "endOffset": 3207
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 37,
+                        "startColumn": 1,
+                        "startOffset": 1728,
+                        "endColumn": 41,
+                        "endOffset": 1768
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 55,
+                    "startColumn": 4,
+                    "startOffset": 3212,
+                    "endColumn": 44,
+                    "endOffset": 3252
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 38,
+                        "startColumn": 1,
+                        "startOffset": 1771,
+                        "endColumn": 41,
+                        "endOffset": 1811
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 56,
+                    "startColumn": 4,
+                    "startOffset": 3257,
+                    "endColumn": 48,
+                    "endOffset": 3301
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 39,
+                        "startColumn": 1,
+                        "startOffset": 1814,
+                        "endColumn": 45,
+                        "endOffset": 1858
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 57,
+                    "startColumn": 4,
+                    "startOffset": 3306,
+                    "endColumn": 51,
+                    "endOffset": 3353
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 40,
+                        "startColumn": 1,
+                        "startOffset": 1861,
+                        "endColumn": 48,
+                        "endOffset": 1908
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 58,
+                    "startColumn": 4,
+                    "startOffset": 3358,
+                    "endColumn": 48,
+                    "endOffset": 3402
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 41,
+                        "startColumn": 1,
+                        "startOffset": 1911,
+                        "endColumn": 45,
+                        "endOffset": 1955
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 59,
+                    "startColumn": 4,
+                    "startOffset": 3407,
+                    "endColumn": 98,
+                    "endOffset": 3501
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 54,
+                        "startColumn": 1,
+                        "startOffset": 2628,
+                        "endColumn": 95,
+                        "endOffset": 2722
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 60,
+                    "startColumn": 4,
+                    "startOffset": 3506,
+                    "endColumn": 131,
+                    "endOffset": 3633
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 16,
+                        "startColumn": 1,
+                        "startOffset": 593,
+                        "endColumn": 128,
+                        "endOffset": 720
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 61,
+                    "startColumn": 4,
+                    "startOffset": 3638,
+                    "endColumn": 65,
+                    "endOffset": 3699
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 81,
+                        "startColumn": 1,
+                        "startOffset": 3905,
+                        "endColumn": 62,
+                        "endOffset": 3966
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 62,
+                    "startColumn": 4,
+                    "startOffset": 3704,
+                    "endColumn": 71,
+                    "endOffset": 3771
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 82,
+                        "startColumn": 1,
+                        "startOffset": 3969,
+                        "endColumn": 68,
+                        "endOffset": 4036
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 63,
+                    "startColumn": 4,
+                    "startOffset": 3776,
+                    "endColumn": 84,
+                    "endOffset": 3856
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 78,
+                        "startColumn": 1,
+                        "startOffset": 3742,
+                        "endColumn": 81,
+                        "endOffset": 3822
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 64,
+                    "startColumn": 4,
+                    "startOffset": 3861,
+                    "endColumn": 53,
+                    "endOffset": 3910
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 102,
+                        "endColumn": 53,
+                        "endOffset": 151
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 65,
+                    "startColumn": 4,
+                    "startOffset": 3915,
+                    "endColumn": 78,
+                    "endOffset": 3989
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 79,
+                        "startColumn": 1,
+                        "startOffset": 3825,
+                        "endColumn": 75,
+                        "endOffset": 3899
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 66,
+                    "startColumn": 4,
+                    "startOffset": 3994,
+                    "endColumn": 45,
+                    "endOffset": 4035
+                },
+                "from": {
+                    "file": "D:\\Android Studio Projects\\mixare\\res\\values-es\\strings.xml",
+                    "position": {
+                        "startLine": 64,
+                        "startColumn": 1,
+                        "startOffset": 3084,
+                        "endColumn": 42,
+                        "endOffset": 3125
+                    }
+                }
+            }
+        ]
+    }
+]
