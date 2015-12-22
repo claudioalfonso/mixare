@@ -20,6 +20,7 @@ package org.mixare.map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -32,8 +33,10 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mixare.MixView;
+import org.mixare.R;
 import org.mixare.lib.MixUtils;
 
+import org.mixare.lib.marker.Marker;
 import org.mixare.mgr.location.LocationFinder;
 
 public class MixMap extends Activity {
@@ -45,7 +48,6 @@ public class MixMap extends Activity {
     protected String searchKeyword = "";
 
     protected float screenRatio = 1.0f;
-
 
 
     @Override
@@ -93,11 +95,67 @@ public class MixMap extends Activity {
         }
     }
 
+
+    /**
+     * Creates the Overlay and adds the markers
+     */
+    private void createOverlay() {
+        // create a default marker for the overlay
+        Drawable markerLink = getResources().getDrawable(
+                R.drawable.icon_map_link);
+        markerLink.setBounds(-markerLink.getIntrinsicWidth() / 2,
+                -markerLink.getIntrinsicHeight(),
+                markerLink.getIntrinsicWidth() / 2, 0);
+
+        // Create marker if no link is specified
+        Drawable markerNoLink = this.getResources().getDrawable(
+                R.drawable.icon_map_nolink);
+        markerNoLink.setBounds(-markerNoLink.getIntrinsicWidth() / 2,
+                -markerNoLink.getIntrinsicHeight(),
+                markerNoLink.getIntrinsicWidth() / 2, 0);
+        // a marker to show at the position
+       Marker marker;
+        int limit = MixView.getDataView().getDataHandler().getMarkerCount();
+
+        for (int i = 0; i < limit; i++) {
+            Drawable icon=markerLink;
+            marker = MixView.getDataView().getDataHandler().getMarker(i);
+            // if a searchKeyword is specified
+            if (searchKeyword != null) {
+                // the Keyword is not Empty
+                if (!searchKeyword.isEmpty()) {
+                    // the title of the Marker contains the searchKeyword
+                    if (marker.getTitle().toLowerCase()
+                            .indexOf(searchKeyword.toLowerCase().trim()) == -1) {
+                        marker = null;
+                        continue;
+                    }
+                }
+            }
+            // reaches this part of code if no keyword is specified, the keyword
+            // is empty or does match
+
+            // Creates a new GeoPoint of the markers Location
+            final LatLong point = new LatLong(marker.getLatitude(),
+                    marker.getLongitude());
+            // Creates a new OverlayItem with the markers Location, the Title
+            // and the Url
+
+            // If no URL is specified change the icon
+            if (marker.getURL() == null || marker.getURL().isEmpty()) {
+                icon=markerNoLink;
+            }
+
+            this.mapView.getLayerManager().getLayers().add(new org.mapsforge.map.layer.overlay.Marker(point, AndroidGraphicFactory.convertToBitmap(icon), 0, -icon.getIntrinsicHeight() / 2));
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
         setCenterZoom(LocationFinder.default_lat,LocationFinder.default_lon,LocationFinder.default_zoom);
+        createOverlay();
     }
 
     @Override
