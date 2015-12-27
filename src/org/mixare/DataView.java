@@ -85,13 +85,11 @@ public class DataView {
 
 	private boolean isLauncherStarted;
 
-	private ArrayList<UIEvent> uiEvents = new ArrayList<UIEvent>();
+	private final ArrayList<UIEvent> uiEvents = new ArrayList<>();
 
 	private Radar radar = null;
 
 	private float addX = 0, addY = 0;
-
-    private float rx = 10, ry = 20;
 
     private List<Marker> markers;
 
@@ -200,12 +198,11 @@ public class DataView {
 		// Load Layer
 		if (state.nextLStatus == MixState.NOT_STARTED && !frozen) {
 			loadDrawLayer();
-			markers = new ArrayList<Marker>();
+			markers = new ArrayList<>();
 		} else if (state.nextLStatus == MixState.PROCESSING) {
 			DownloadManager dm = mixContext.getDownloadManager();
-			DownloadResult dRes = null;
 
-			markers.addAll(downloadDrawResults(dm, dRes));
+			markers.addAll(downloadDrawResults(dm));
 			
 			if (dm.isDone()) {
 				retry = 0;
@@ -299,9 +296,9 @@ public class DataView {
 			state.nextLStatus = MixState.DONE;
 	}
 
-	private List<Marker> downloadDrawResults(DownloadManager dm,
-			DownloadResult dRes) {
-		List<Marker> markers = new ArrayList<Marker>();
+	private List<Marker> downloadDrawResults(DownloadManager dm	) {
+		DownloadResult dRes;
+		List<Marker> markers = new ArrayList<>();
 		while ((dRes = dm.getNextResult()) != null) {
 			if (dRes.isError() && retry < 3) {
 				retry++;
