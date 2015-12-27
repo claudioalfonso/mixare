@@ -20,7 +20,7 @@ package org.mixare.lib.gui;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.FloatMath;
+import java.lang.Math;
 
 /**
  * The class stores a point of a two-dimensional coordinate system.
@@ -58,8 +58,8 @@ public class ScreenLine implements Parcelable{
 	}
 
 	public void rotate(float t) {
-		float xp = (float) FloatMath.cos(t) * x - (float) FloatMath.sin(t) * y;
-		float yp = (float) FloatMath.sin(t) * x + (float) FloatMath.cos(t) * y;
+		float xp = (float) Math.cos(t) * x - (float) Math.sin(t) * y;
+		float yp = (float) Math.sin(t) * x + (float) Math.cos(t) * y;
 
 		x = xp;
 		y = yp;

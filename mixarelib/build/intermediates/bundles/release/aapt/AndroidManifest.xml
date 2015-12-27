@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="9" />
+        android:targetSdkVersion="23" />
 
     <application android:label="mixarelib" >
     </application>

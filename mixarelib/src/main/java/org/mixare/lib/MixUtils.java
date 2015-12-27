@@ -18,7 +18,7 @@
  */
 package org.mixare.lib;
 
-import android.util.FloatMath;
+import java.lang.Math;
 
 /**
  * This class has the ability to calculate the declination of a line between two
@@ -92,7 +92,7 @@ public class MixUtils {
 			float post_y) {
 		float tmpv_x = post_x - center_x;
 		float tmpv_y = post_y - center_y;
-		float d = (float) FloatMath.sqrt(tmpv_x * tmpv_x + tmpv_y * tmpv_y);
+		float d = (float) Math.sqrt(tmpv_x * tmpv_x + tmpv_y * tmpv_y);
 		float cos = tmpv_x / d;
 		float angle = (float) Math.toDegrees(Math.acos(cos));
 
@@ -119,7 +119,7 @@ public class MixUtils {
 	 * 2 before calling this function. This is Helpful when dealing with maps
 	 * base 2 factor.
 	 * 
-	 * @param float distance
+	 * @param distance
 	 * @return int zoomLevel rate base 2
 	 */
 	public static synchronized int earthEquatorToZoomLevel(final float distance) {
