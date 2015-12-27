@@ -81,8 +81,8 @@
     <orderEntry type="library" exported="" name="maps-1.2.0-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="androidsvg-1.2.2-beta-1" level="project" />
     <orderEntry type="library" exported="" name="json-1.2.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="mapsforge-map-android-0.6.0" level="project" />
     <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="mapsforge-map-android-0.6.0" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-0.6.0" level="project" />
     <orderEntry type="library" exported="" name="actionbarsherlock-4.4.0" level="project" />
     <orderEntry type="library" exported="" name="net-1.2.0-SNAPSHOT" level="project" />

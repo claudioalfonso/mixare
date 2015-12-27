@@ -4,6 +4,16 @@
 /.settings
 sonar-project.properties
 
+# Android Studio
+*.iml
+.idea
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+/mixarelib/build
+/mixarelib/build/
+.gradle
+.gradle/
+mixarelib/build/
+
 
 # .gitignore following https://stackoverflow.com/questions/16736856/what-should-be-in-my-gitignore-for-an-android-studio-project
 #built application files
@@ -35,13 +45,7 @@ Thumbs.db
 .classpath
 .project
 
-# Android Studio
-*.iml
-.idea
-#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
-.gradle
-.gradle/
-mixarelib/build/
+
 
 #NDK
 obj/
