@@ -19,66 +19,64 @@
 package org.mixare.gui;
 
 import org.mixare.DataView;
-import org.mixare.lib.marker.Marker;
+import org.mixare.data.DataHandler;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.ScreenObj;
-import org.mixare.data.DataHandler;
+import org.mixare.lib.marker.Marker;
 
-import android.graphics.Color;
-
-/** Takes care of the small radar in the top left corner and of its points
- * @author daniele
+/**
+ * Takes care of the small radar in the top left corner and of its points
  *
+ * @author daniele
  */
 public class RadarPoints implements ScreenObj {
-	/** The screen */
-	public DataView view;
-	/** The radar's range */
-	float range;
-	/** Radius in pixel on screen */
-	public static float RADIUS = 40;
-	/** Position on screen */
-	static float originX = 0 , originY = 0;
-	/** Color */
-	static int radarColor = Color.argb(100, 0, 0, 200);
-	
-	public void paint(PaintScreen dw) {
-		/** radius is in KM. */
-		range = view.getRadius() * 1000;
-		/** Draw the radar */
-		dw.setFill(true);
-		dw.setColor(radarColor);
-		dw.paintCircle(originX + RADIUS, originY + RADIUS, RADIUS);
 
-		/** put the markers in it */
-		float scale = range / RADIUS;
+    //Radius in pixel on screen
+    public static float RADIUS = 40;
 
-		DataHandler jLayer = view.getDataHandler();
+    //The screen
+    public DataView view;
 
-		for (int i = 0; i < jLayer.getMarkerCount(); i++) {
-			Marker pm = jLayer.getMarker(i);
-			float x = pm.getLocationVector().x / scale;
-			float y = pm.getLocationVector().z / scale;
+    // The radar's range
+    float range;
 
-			if (pm.isActive() && (x * x + y * y < RADIUS * RADIUS)) {
-				dw.setFill(true);
-				
-				// For OpenStreetMap the color is changing based on the URL
-					dw.setColor(pm.getColor());
-				
-				dw.paintRect(x + RADIUS - 1, y + RADIUS - 1, 2, 2);
-			}
-		}
-	}
+    public RadarPoints(DataView view) {
+        this.view = view;
+    }
 
-	/** Width on screen */
-	public float getWidth() {
-		return RADIUS * 2;
-	}
+    public void paint(PaintScreen paintScreen) {
+        /** radius is in KM. */
+        range = view.getRadius() * 1000;
 
-	/** Height on screen */
-	public float getHeight() {
-		return RADIUS * 2;
-	}
+        /** put the markers in it */
+        float scale = range / RADIUS;
+
+        DataHandler jLayer = view.getDataHandler();
+
+        for (int i = 0; i < jLayer.getMarkerCount(); i++) {
+            Marker pm = jLayer.getMarker(i);
+            float x = pm.getLocationVector().x / scale;
+            float y = pm.getLocationVector().z / scale;
+
+            if (pm.isActive() && (x * x + y * y < RADIUS * RADIUS)) {
+                paintScreen.setFill(true);
+
+                // For OpenStreetMap the color is changing based on the URL
+                paintScreen.setColor(pm.getColor());
+
+                paintScreen.paintRect(x + RADIUS - 1, y + RADIUS - 1, 2, 2);
+            }
+        }
+    }
+
+
+    //Width on screen
+    public float getWidth() {
+        return RADIUS * 2;
+    }
+
+    //Height on screen
+    public float getHeight() {
+        return RADIUS * 2;
+    }
 }
-

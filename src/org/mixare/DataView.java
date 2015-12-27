@@ -33,18 +33,14 @@ import java.util.TimerTask;
 
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
-import org.mixare.gui.RadarPoints;
-import org.mixare.lib.MixUtils;
+import org.mixare.gui.Radar;
 import org.mixare.lib.gui.PaintScreen;
-import org.mixare.lib.gui.ScreenLine;
 import org.mixare.lib.marker.Marker;
-import org.mixare.lib.marker.draw.PrimitiveProperty.primitive;
 import org.mixare.lib.render.Camera;
 import org.mixare.mgr.downloader.DownloadManager;
 import org.mixare.mgr.downloader.DownloadRequest;
 import org.mixare.mgr.downloader.DownloadResult;
 
-import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
 
@@ -91,30 +87,22 @@ public class DataView {
 
 	private ArrayList<UIEvent> uiEvents = new ArrayList<UIEvent>();
 
-	private RadarPoints radarPoints = new RadarPoints();
-	private ScreenLine lrl = new ScreenLine();
-	private ScreenLine rrl = new ScreenLine();
-	private float rx = 10, ry = 20;
+	private Radar radar = null;
+
 	private float addX = 0, addY = 0;
 
-	private List<Marker> markers;
-	private String[] directions;
+    private float rx = 10, ry = 20;
+
+    private List<Marker> markers;
 
 	/**
 	 * Constructor
 	 */
 	public DataView(MixContext ctx) {
 		this.mixContext = ctx;
-		
-		directions = new String[8];
-		directions[0] = getContext().getString(R.string.N);
-		directions[1] = getContext().getString(R.string.NE);
-		directions[2] = getContext().getString(R.string.E);
-		directions[3] = getContext().getString(R.string.SE);
-		directions[4] = getContext().getString(R.string.S);
-		directions[5] = getContext().getString(R.string.SW);
-		directions[6] = getContext().getString(R.string.W);
-		directions[7] = getContext().getString(R.string.NW);
+		radar = new Radar(this.mixContext, this);
+		radar.view = this;
+
 	}
 
 	public MixContext getContext() {
@@ -135,6 +123,10 @@ public class DataView {
 
 	public float getRadius() {
 		return radius;
+	}
+
+	public MixState getState (){
+		return this.state;
 	}
 
 	public void setRadius(final float radius) {
@@ -170,12 +162,6 @@ public class DataView {
 			cam = new Camera(width, height, true);
 			cam.setViewAngle(Camera.DEFAULT_VIEW_ANGLE);
 
-			lrl.set(0, -RadarPoints.RADIUS);
-			lrl.rotate(Camera.DEFAULT_VIEW_ANGLE / 2);
-			lrl.add(rx + RadarPoints.RADIUS, ry + RadarPoints.RADIUS);
-			rrl.set(0, -RadarPoints.RADIUS);
-			rrl.rotate(-Camera.DEFAULT_VIEW_ANGLE / 2);
-			rrl.add(rx + RadarPoints.RADIUS, ry + RadarPoints.RADIUS);
 		} catch (Exception ex) {
 			// ex.printStackTrace();
 			Log.e("Mixare", ex.getMessage());
@@ -346,45 +332,10 @@ public class DataView {
 	/**
 	 * Handles drawing radar and direction.
 	 * 
-	 * @param PaintScreen
-	 *            screen that radar will be drawn to
+	 * @param dw screen that radar will be drawn to
 	 */
 	private void drawRadar(PaintScreen dw) {
-		String dirTxt = "";
-		int bearing = (int) state.getCurBearing();
-		int range = (int) (state.getCurBearing() / (360f / 16f));
-		if (range == 15 || range == 0)
-			dirTxt = directions[0];
-		else if (range == 1 || range == 2)
-			dirTxt = directions[1];
-		else if (range == 3 || range == 4)
-			dirTxt = directions[2];
-		else if (range == 5 || range == 6)
-			dirTxt = directions[3];
-		else if (range == 7 || range == 8)
-			dirTxt = directions[4];
-		else if (range == 9 || range == 10)
-			dirTxt = directions[5];
-		else if (range == 11 || range == 12)
-			dirTxt = directions[6];
-		else if (range == 13 || range == 14)
-			dirTxt = directions[7];
-
-		radarPoints.view = this;
-		dw.paintObj(radarPoints, rx, ry, -state.getCurBearing(), 1);
-		dw.setFill(false);
-		dw.setColor(Color.argb(150, 0, 0, 220));
-		dw.paintLine(lrl.x, lrl.y, rx + RadarPoints.RADIUS, ry
-				+ RadarPoints.RADIUS);
-		dw.paintLine(rrl.x, rrl.y, rx + RadarPoints.RADIUS, ry
-				+ RadarPoints.RADIUS);
-		dw.setColor(Color.rgb(255, 255, 255));
-		dw.setFontSize(12);
-
-		radarText(dw, MixUtils.formatDist(radius * 1000), rx
-				+ RadarPoints.RADIUS, ry + RadarPoints.RADIUS * 2 - 10, false);
-		radarText(dw, "" + bearing + ((char) 176) + " " + dirTxt, rx
-				+ RadarPoints.RADIUS, ry - 5, true);
+        radar.paint(dw);
 	}
 
 	private void handleKeyEvent(KeyEvent evt) {
@@ -433,22 +384,7 @@ public class DataView {
 		return evtHandled;
 	}
 
-	private void radarText(PaintScreen dw, String txt, float x, float y,
-			boolean bg) {
-		float padw = 4, padh = 2;
-		float w = dw.getTextWidth(txt) + padw * 2;
-		float h = dw.getTextAsc() + dw.getTextDesc() + padh * 2;
-		if (bg) {
-			dw.setColor(Color.rgb(0, 0, 0));
-			dw.setFill(true);
-			dw.paintRect(x - w / 2, y - h / 2, w, h);
-			dw.setColor(Color.rgb(255, 255, 255));
-			dw.setFill(false);
-			dw.paintRect(x - w / 2, y - h / 2, w, h);
-		}
-		dw.paintText(padw + x - w / 2, padh + dw.getTextAsc() + y - h / 2, txt,
-				false);
-	}
+
 
 	public void clickEvent(float x, float y) {
 		synchronized (uiEvents) {
