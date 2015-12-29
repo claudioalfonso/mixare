@@ -25,7 +25,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.mixare.MixContext;
-import org.mixare.MixView;
 import org.mixare.lib.marker.Marker;
 
 import android.location.Location;
@@ -39,7 +38,7 @@ import android.util.Log;
 public class DataHandler {
 	
 	// complete marker list
-	private List<Marker> markerList = new ArrayList<Marker>();
+	private List<Marker> markerList = new ArrayList<>();
 
 	public DataSource.DISPLAY getOverrideMarkerDisplayType() {
 		return overrideMarkerDisplayType;

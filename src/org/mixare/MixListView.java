@@ -465,7 +465,7 @@ public class MixListView extends SherlockActivity {
 
 						holder = new ViewHolder();
 
-						holder.sideBar = (View) convertView
+						holder.sideBar = convertView
 								.findViewById(R.id.side_bar);
 						holder.title = (TextView) convertView
 								.findViewById(R.id.marker_list_title);

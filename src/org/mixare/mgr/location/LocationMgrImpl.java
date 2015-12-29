@@ -36,11 +36,13 @@ import android.location.LocationManager;
 /**
  * This class is repsonsible for finding the location, and sending it back to
  * the mixcontext.
- * 
+ *
  * @author A. Egal
  */
 class LocationMgrImpl implements LocationFinder {
 
+	private static final int ACCURACY_THRESHOLD = 200;
+	private static final long LOCATION_WAIT_TIME = 20 * 1000; //wait 20 seconds for the location updates to find the location
 	private LocationManager lm;
 	private String bestLocationProvider;
 	private final MixContext mixContext;
@@ -49,7 +51,7 @@ class LocationMgrImpl implements LocationFinder {
 	private LocationFinderState state;
 	private final LocationObserver lob;
 	private List<LocationResolver> locationResolvers;
-	private static final int TWO_MINUTES = 1000 * 60 * 2;
+	private static final int TIME_THRESHOLD = 1000 * 60 * 2; //two minutes
 
 	// frequency and minimum distance for update
 	// this values will only be used after there's a good GPS fix
@@ -63,7 +65,7 @@ class LocationMgrImpl implements LocationFinder {
 		this.mixContext = mixContext;
 		this.lob = new LocationObserver(this);
 		this.state = LocationFinderState.Inactive;
-		this.locationResolvers = new ArrayList<LocationResolver>();
+		this.locationResolvers = new ArrayList<>();
 	}
 
 	/*
@@ -79,22 +81,23 @@ class LocationMgrImpl implements LocationFinder {
 			//temporary set the current location, until a good provider is found
 			curLoc = lm.getLastKnownLocation(lm.getBestProvider(new Criteria(), true));
 			if (curLoc == null) {
-				setHardFix();
+				setDefaultFix();
 			}
 		} catch (Exception ex2) {
-			setHardFix();
+			setDefaultFix();
 		}
 	}
 	
-	private void setHardFix() {
+	private void setDefaultFix() {
 		// fallback for the case where GPS and network providers are disabled
-		Location hardFix = new Location("reverseGeocoded");
+		Location defaultFix = new Location("defaultFix");
 
-		hardFix.setLatitude(default_lat);
-		hardFix.setLongitude(default_lon);
-		hardFix.setAltitude(default_height);
+		defaultFix.setLatitude(default_lat);
+		defaultFix.setLongitude(default_lon);
+		defaultFix.setAltitude(default_height);
+
 		
-		curLoc = hardFix;
+		curLoc = defaultFix;
 		mixContext.doPopUp(R.string.connection_GPS_dialog_text);
 	}
 
@@ -107,7 +110,7 @@ class LocationMgrImpl implements LocationFinder {
 				lm.requestLocationUpdates(p, 0, 0, lr);
 			}
 		}
-		timer.schedule(new LocationTimerTask(),20* 1000); //wait 20 seconds for the location updates to find the location
+		timer.schedule(new LocationTimerTask(),LOCATION_WAIT_TIME); //wait for the location updates to find the location
 	}
 
 	/*
@@ -248,8 +251,8 @@ class LocationMgrImpl implements LocationFinder {
 
 		// Check whether the new location fix is newer or older
 		long timeDelta = location.getTime() - currentBestLocation.getTime();
-		boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-		boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+		boolean isSignificantlyNewer = timeDelta > TIME_THRESHOLD;
+		boolean isSignificantlyOlder = timeDelta < -TIME_THRESHOLD;
 		boolean isNewer = timeDelta > 0;
 
 		// If it's been more than two minutes since the current location, use
@@ -268,7 +271,7 @@ class LocationMgrImpl implements LocationFinder {
 				.getAccuracy());
 		boolean isLessAccurate = accuracyDelta > 0;
 		boolean isMoreAccurate = accuracyDelta < 0;
-		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+		boolean isSignificantlyLessAccurate = accuracyDelta > ACCURACY_THRESHOLD;
 
 		// Check if the old and new location are from the same provider
 		boolean isFromSameProvider = isSameProvider(location.getProvider(),
@@ -322,12 +325,7 @@ class LocationMgrImpl implements LocationFinder {
 						addNotification(mixContext.getString(R.string.location_not_found));
 					}
 				});
-				
 			}
-			
-			
 		}
-
 	}
-
 }

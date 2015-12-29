@@ -61,7 +61,6 @@ public final class HttpTools {
 	 * Prefered To use InputStream managed!
 	 * 
 	 * @param request
-	 * @param cr
 	 * @return
 	 * @throws Exception
 	 */
@@ -83,7 +82,6 @@ public final class HttpTools {
 	 * Prefered To use InputStream managed!
 	 * 
 	 * @param request
-	 * @param cr
 	 * @return
 	 * @throws Exception
 	 */

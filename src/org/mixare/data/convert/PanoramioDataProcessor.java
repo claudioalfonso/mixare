@@ -26,15 +26,12 @@ package org.mixare.data.convert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mixare.data.MarkerBuilder;
 import org.mixare.marker.ImageMarker;
-import org.mixare.marker.LocalMarker;
-import org.mixare.MixContext;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
 import org.mixare.lib.HtmlUnescape;
@@ -49,12 +46,14 @@ import android.util.Log;
  * their owners" under Panoramio photos. Please, check the Panoramio API - Terms
  * of Use for detailed requirements </b>
  * 
- * @see http://www.panoramio.com/api/data/api.html
+ * @see "http://www.panoramio.com/api/data/api.html"
  * @author devBinnooh
  * 
  */
 public class PanoramioDataProcessor extends DataHandler implements
 		DataProcessor {
+	// TAG for logging
+	public static final String TAG = "Mixare";
 
 	public static final int MAX_JSON_OBJECTS = ImageMarker.maxObjects;
 
@@ -63,8 +62,7 @@ public class PanoramioDataProcessor extends DataHandler implements
 	 */
 	@Override
 	public String[] getUrlMatch() {
-		String[] str = { "Panoramio" };
-		return str;
+        return new String[]{ "Panoramio" };
 	}
 
 	/**
@@ -72,8 +70,7 @@ public class PanoramioDataProcessor extends DataHandler implements
 	 */
 	@Override
 	public String[] getDataMatch() {
-		String[] str = { "photos" };
-		return str;
+        return new String[]{ "photos" };
 	}
 
 	/**
@@ -81,11 +78,8 @@ public class PanoramioDataProcessor extends DataHandler implements
 	 */
 	@Override
 	public boolean matchesRequiredType(String type) {
-		if (type.equals(DataSource.TYPE.PANORAMIO.name())) {
-			return true;
-		}
-		return false;
-	}
+        return type.equals(DataSource.TYPE.PANORAMIO.name());
+    }
 
 	/**
 	 * Reads and creates Markers based on Panoramio API returned results.
@@ -110,21 +104,20 @@ public class PanoramioDataProcessor extends DataHandler implements
 	 *  }, ...
 	 * </pre>
 	 * 
-	 * @param String
-	 *            rawData
-	 * @param int taskId
-	 * @param int color
+	 * @param rawData raw JSON string to be parsed as objects
+	 * @param taskId (unused)
+	 * @param color the color of the markers
 	 * @return List<Marker> List of Markers
 	 */
 	@Override
-	public List<Marker> load(String rawData, int taskId, int colour)
+	public List<Marker> load(String rawData, int taskId, int color)
 			throws JSONException {
-		final List<Marker> markers = new ArrayList<Marker>();
+		final List<Marker> markers = new ArrayList<>();
 		final JSONObject root = convertToJSON(rawData);
 		JSONArray dataArray = root.getJSONArray("photos");
 		int top = Math.min(MAX_JSON_OBJECTS, dataArray.length());
 
-		Log.i("Mixare", "Processing Panoramio Results ...");
+		Log.i(TAG, "Processing Panoramio Results ...");
 
 		for (int i = 0; i < top; i++) {
 			JSONObject jo = dataArray.getJSONObject(i);
@@ -160,7 +153,7 @@ public class PanoramioDataProcessor extends DataHandler implements
 						// imageOwner
 						.setDisplayType(overrideMarkerDisplayType)
 						.setPageURL(jo.getString("photo_url"))
-						.setColor(colour)
+						.setColor(color)
 						.setImageURL(jo.getString("photo_file_url"))
 						.build();
 
@@ -178,7 +171,7 @@ public class PanoramioDataProcessor extends DataHandler implements
 		Double[] lngs;
 
 		// calculate send counts
-		double a = Math.ceil(Double.valueOf(top) / Double.valueOf(maxMarkers));
+		double a = Math.ceil(top / maxMarkers);
 		for (int i = 0; i < a; i++) {
 			// calculate loop counts
 			int looper = maxMarkers;
