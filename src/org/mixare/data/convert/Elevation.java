@@ -103,7 +103,12 @@ public class Elevation {
 	public String calcElevation(double lat, double lng) {
 		String requestUrl = url + "astergdem?lat=" + lat + "&lng=" + lng
 				+ "&username=" + username;
-		Looper.prepare();
+		boolean closeLooper = false;
+		if (Looper.myLooper() == null)
+		{
+			Looper.prepare();
+			closeLooper = true;
+		}
 		Downloader downloader = new Downloader();
 		String content = "";
 		try {
@@ -112,8 +117,10 @@ public class Elevation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Looper.myLooper().quit();
-		return content;
+        if (closeLooper) {
+            Looper.myLooper().quit();
+        }
+        return content;
 	}
 
 	private class Downloader extends AsyncTask<String, Void, String> {
@@ -121,7 +128,7 @@ public class Elevation {
 		 * Makes a request to the give URL using HttpTools to get the
 		 * pageContent
 		 * 
-		 * @param requestUrl
+		 * @param params
 		 *            The URL which should be downloaded
 		 * @return The content of the website
 		 */
