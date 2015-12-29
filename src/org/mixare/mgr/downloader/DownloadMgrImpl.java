@@ -40,7 +40,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 	private MixContext ctx;
 	private DownloadManagerState state = DownloadManagerState.Confused;
 	private LinkedBlockingQueue<ManagedDownloadRequest> todoList = new LinkedBlockingQueue<ManagedDownloadRequest>();
-	private ConcurrentHashMap<String, DownloadResult> doneList = new ConcurrentHashMap<String, DownloadResult>();
+	private ConcurrentHashMap<String, DownloadResult> doneList = new ConcurrentHashMap<>();
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	
 
