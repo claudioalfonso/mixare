@@ -57,7 +57,7 @@
 	<string name="data_source_edit_err">This data source cannot be edited.</string>
 	<string name="data_source_delete_err">This data source cannot be deleted.</string>
 
-	<string name="connection_error_dialog">Sorry, a connection Error occured! \nPlease check if you are connected to the Internet.</string>
+	<string name="connection_error_dialog">Sorry, a connection Error occurred! \nPlease check if you are connected to the Internet.</string>
 	<string name="gps_error_dialog">GPS ERROR</string>
 	<string name="unsupportet_hardware_dialog">Mixare had a problem with finding the matching sensors. Make sure your phone has the needed sensors.</string>
 	<string name="general_error_dialog">Mixare had a problem. Please report this error.</string>
@@ -140,11 +140,13 @@
 	<string name="plugin_list">Plugins</string>
 	<string name="mix_list_view">Markerlist</string>
 	
-	<string name="list_view_section"></string>
-	<string name="list_view_entry"></string>
-	<string name="list_view_webview_id"></string>
+	<string name="list_view_section">list_view_section</string>
+	<string name="list_view_entry">list_view_entry</string>
+	<string name="list_view_webview_id">list_view_webview_id</string>
 	
 	<string name="none">None</string>
 	<string name="add_random">Add Random Distance</string>
 	<string name="truncate">Truncate GPS location</string>
+	<string name="problem_detected">problem detected</string>
+	<string name="positionStatusText">(%1$s, %2$.0f) %3$s: %4$.4f, %5$.4f, %6$.0fm</string>
 </resources>

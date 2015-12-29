@@ -93,6 +93,9 @@ public class DataView {
 
     private List<Marker> markers;
 
+    /** TAG for logging */
+    public static final String TAG = "Mixare";
+
 	/**
 	 * Constructor
 	 */
@@ -162,7 +165,7 @@ public class DataView {
 
 		} catch (Exception ex) {
 			// ex.printStackTrace();
-			Log.e("Mixare", ex.getMessage());
+			Log.e(TAG, ex.getMessage());
 		}
 		frozen = false;
 		isInit = true;
@@ -253,6 +256,8 @@ public class DataView {
 		// Draw Radar
 		drawRadar(dw);
 
+        mixContext.getActualMixView().updateHud(curFix);
+
 		// Get next event
 		UIEvent evt = null;
 		synchronized (uiEvents) {
@@ -273,6 +278,8 @@ public class DataView {
 		}
 		state.nextLStatus = MixState.PROCESSING;
 	}
+
+
 
 	/**
 	 * Part of draw function, loads the layer.
@@ -391,7 +398,7 @@ public class DataView {
 
 	public void keyEvent(int keyCode) {
 		synchronized (uiEvents) {
-			uiEvents.add(new KeyEvent(keyCode));
+            uiEvents.add(new KeyEvent(keyCode));
 		}
 	}
 
@@ -418,13 +425,15 @@ public class DataView {
 	private void callRefreshToast() {
 		mixContext.getActualMixView().runOnUiThread(new Runnable() {
 
-			@Override
-			public void run() {
-				mixContext.getNotificationManager().addNotification(
-						mixContext.getString(R.string.refreshing));
+            @Override
+            public void run() {
+                mixContext.getNotificationManager().addNotification(
+                        mixContext.getString(R.string.refreshing));
 			}
 		});
 	}
+
+
 
 }
 
