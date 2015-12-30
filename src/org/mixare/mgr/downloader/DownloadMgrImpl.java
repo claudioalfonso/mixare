@@ -63,6 +63,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 		stop = false;
 		while (!stop) {
 			state=DownloadManagerState.OnLine;
+
 			// Wait for proceed
 			while (!stop) {
 				try {
@@ -79,8 +80,9 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 				}catch (Exception ex){
 					//do nothing terminating
 				}
-				if (result != null)
-				doneList.put(result.getIdOfDownloadRequest(), result);
+				if (result != null) {
+                    doneList.put(result.getIdOfDownloadRequest(), result);
+                }
 				state=DownloadManagerState.OnLine;
 			}
 		}

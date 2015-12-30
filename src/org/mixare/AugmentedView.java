@@ -33,6 +33,7 @@ class AugmentedView extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+
 		try {
 			// if (app.fError) {
 			//

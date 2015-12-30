@@ -26,5 +26,8 @@ package org.mixare.lib;
 public interface MixContextInterface {
 
 	void loadMixViewWebPage(String url)  throws Exception ;
+	void updatePositionStatus(boolean working, boolean problem, String statusText);
+	void updateDataSourceStatus(boolean working, boolean problem, String statusText);
+	void updateSensorsStatus(boolean working, boolean problem, String statusText);
 
 }
