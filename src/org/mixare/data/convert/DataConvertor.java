@@ -72,10 +72,10 @@ public class DataConvertor {
 			return dataProcessor.load(rawResult, ds.getDataSourceId(), ds.getColor());
 		} catch (JSONException e) {
 			/* Find Other Away to notify Error, for now Hide this error
-			 MixView.CONTEXT.runOnUiThread(new Runnable() {
+			 MixViewActivity.CONTEXT.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(MixView.CONTEXT, "Could not process the url data", Toast.LENGTH_LONG).show();
+					Toast.makeText(MixViewActivity.CONTEXT, "Could not process the url data", Toast.LENGTH_LONG).show();
 				}
 			});
 			*/

@@ -20,8 +20,6 @@ public class MarkerBuilder {
     private String pageURL;
     private String imageURL;
 
-    private static final String TAG = "MarkerBuilder";
-
     public String getImageURL() {
         return imageURL;
     }
@@ -124,13 +122,13 @@ public class MarkerBuilder {
 
     public LocalMarker build(){
         DataSource.DISPLAY standardDisplayType;
-//        Log.d(TAG, "build Marker at lat="+latitude+", lon="+longitude);
+//        Log.d(MixViewActivity.TAG, "build Marker at lat="+latitude+", lon="+longitude);
 
         LocalMarker newMarker=null;
         if(!isValid()){ //only check properties, not displayType
             return null;
         }
-//        Log.d(TAG, "new marker at lat="+latitude+", lon="+longitude+" would be valid");
+//        Log.d(MixViewActivity.TAG, "new marker at lat="+latitude+", lon="+longitude+" would be valid");
 
         switch (type){
             case WIKIPEDIA:
@@ -161,13 +159,13 @@ public class MarkerBuilder {
         if(!isValid(true)){ //check displayType as well, especially for imageURL
             return null;
         }
-//        Log.d(TAG, "new marker at lat="+latitude+", lon="+longitude+" would be valid (even judging from the display type)");
+//        Log.d(MixViewActivity.TAG, "new marker at lat="+latitude+", lon="+longitude+" would be valid (even judging from the display type)");
 
         if(newMarker==null){ //no special marker Type set, so determine by displayType
             switch (displayType) {
                 case CIRCLE_MARKER:
                     newMarker=new POIMarker(id,title,latitude,longitude,altitude,pageURL,0, color);
-//                    Log.d(TAG, "new circle POI Marker created at lat="+latitude+", lon="+longitude);
+//                    Log.d(MixViewActivity.TAG, "new circle POI Marker created at lat="+latitude+", lon="+longitude);
                     break;
                 case NAVIGATION_MARKER:
                     newMarker=new NavigationMarker(id,title,latitude,longitude,altitude,pageURL,0,color);
@@ -189,12 +187,12 @@ public class MarkerBuilder {
     public boolean isValid(boolean checkType){
         //do some basic checks
         if(checkType && displayType==null){
-//            Log.d(TAG, "new marker wouldn't be valid because of displayType");
+//            Log.d(MixViewActivity.TAG, "new marker wouldn't be valid because of displayType");
 
             return false;
         }
         if(id==null || id.isEmpty() || title==null || title.isEmpty() ){
-//            Log.d(TAG, "new marker wouldn't be valid because of "+id+", "+title+", "+type);
+//            Log.d(MixViewActivity.TAG, "new marker wouldn't be valid because of "+id+", "+title+", "+type);
 
             return false;
         }

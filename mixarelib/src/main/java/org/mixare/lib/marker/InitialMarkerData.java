@@ -51,7 +51,7 @@ public class InitialMarkerData implements Parcelable{
 	
 	
 	public InitialMarkerData(int id, String title, double latitude, double longitude, 
-			double altitude, String link, int type, int colour) {
+			double altitude, String link, int type, int color) {
 		constr = new Object[8];
 		constr[0] = id;
 		constr[1] = title;
@@ -60,7 +60,7 @@ public class InitialMarkerData implements Parcelable{
 		constr[4] = altitude;
 		constr[5] = link;
 		constr[6] = type;
-		constr[7] = colour;
+		constr[7] = color;
 	}
 	
 	public InitialMarkerData(Parcel in) {

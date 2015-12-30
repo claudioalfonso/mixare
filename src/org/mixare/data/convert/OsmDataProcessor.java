@@ -26,10 +26,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.json.JSONException;
-import org.mixare.MixView;
+import org.mixare.MixViewActivity;
 import org.mixare.data.MarkerBuilder;
-import org.mixare.lib.HtmlUnescape;
-import org.mixare.marker.NavigationMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
 import org.mixare.lib.marker.Marker;
@@ -67,7 +65,7 @@ public class OsmDataProcessor extends DataHandler implements DataProcessor {
 	}
 
 	@Override
-	public List<Marker> load(String rawData, int taskId, int colour)
+	public List<Marker> load(String rawData, int taskId, int color)
 			throws JSONException {
 		Element root = convertToXmlDocument(rawData).getDocumentElement();
 
@@ -93,7 +91,7 @@ public class OsmDataProcessor extends DataHandler implements DataProcessor {
 						double lon = Double.valueOf(att.getNamedItem("lon")
 								.getNodeValue());
 
-						Log.v(MixView.TAG, "OSM Node: " + name + " lat " + lat
+						Log.v(MixViewActivity.TAG, "OSM Node: " + name + " lat " + lat
 								+ " lon " + lon + "\n");
 
 						Marker ma = new MarkerBuilder().setId(id)
@@ -103,7 +101,7 @@ public class OsmDataProcessor extends DataHandler implements DataProcessor {
 								.setAltitude(0)
 								.setDisplayType(overrideMarkerDisplayType)
 								.setPageURL("http://www.openstreetmap.org/?node="+ id)
-								.setColor(colour)
+								.setColor(color)
 								.build();
 
 						if(ma!=null) {

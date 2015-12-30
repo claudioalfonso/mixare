@@ -18,7 +18,7 @@
  */
 package org.mixare.gui;
 
-import org.mixare.DataView;
+import org.mixare.MarkerRenderer;
 import org.mixare.data.DataHandler;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.ScreenObj;
@@ -35,23 +35,23 @@ public class RadarPoints implements ScreenObj {
     public static float RADIUS = 40;
 
     //The screen
-    public DataView view;
+    public MarkerRenderer markerRenderer;
 
     // The radar's range
     float range;
 
-    public RadarPoints(DataView view) {
-        this.view = view;
+    public RadarPoints(MarkerRenderer markerRenderer) {
+        this.markerRenderer = markerRenderer;
     }
 
     public void paint(PaintScreen paintScreen) {
         /** radius is in KM. */
-        range = view.getRadius() * 1000;
+        range = markerRenderer.getRadius() * 1000;
 
         /** put the markers in it */
         float scale = range / RADIUS;
 
-        DataHandler jLayer = view.getDataHandler();
+        DataHandler jLayer = markerRenderer.getDataHandler();
 
         for (int i = 0; i < jLayer.getMarkerCount(); i++) {
             Marker pm = jLayer.getMarker(i);

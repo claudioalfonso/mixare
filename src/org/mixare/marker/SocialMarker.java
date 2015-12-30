@@ -19,7 +19,7 @@
 
 package org.mixare.marker;
 
-import org.mixare.MixView;
+import org.mixare.MixViewActivity;
 import org.mixare.lib.gui.PaintScreen;
 
 import android.location.Location;
@@ -46,25 +46,25 @@ public class SocialMarker extends LocalMarker {
 		
 		// we want the social markers to be on the upper part of
 		// your surrounding sphere 
-		double altitude = curGPSFix.getAltitude()+Math.sin(0.35)*distance+Math.sin(0.4)*(distance/(MixView.getDataView().getRadius()*1000f/distance));
+		double altitude = curGPSFix.getAltitude()+Math.sin(0.35)*distance+Math.sin(0.4)*(distance/(MixViewActivity.getMarkerRenderer().getRadius()*1000f/distance));
 		getmGeoLoc().setAltitude(altitude);
 		super.update(curGPSFix);
 	}
 	
 	@Override
-	public void draw(PaintScreen dw) {
-		drawTextBlock(dw);
-		drawCircle(dw);
+	public void draw(PaintScreen paintScreen) {
+		drawTextBlock(paintScreen);
+		drawCircle(paintScreen);
 	}	
 	
 	@Override
-	public void drawCircle(PaintScreen dw) {
+	public void drawCircle(PaintScreen paintScreen) {
 		if (isVisible) {
-			float maxHeight = dw.getHeight();
-			dw.setStrokeWidth(maxHeight / 100f);
-			dw.setFill(false);
+			float maxHeight = paintScreen.getHeight();
+			paintScreen.setStrokeWidth(maxHeight / 100f);
+			paintScreen.setFill(false);
 
-			dw.setColor(getColor());
+			paintScreen.setColor(getColor());
 			
 			// draw circle with radius depending on distance
 			// 0.44 is approx. vertical fov in radians
@@ -77,7 +77,7 @@ public class SocialMarker extends LocalMarker {
 			 * distance 100 is the threshold to convert from circle to another
 			 * shape
 			 */
-			dw.paintCircle(cMarker.x, cMarker.y, (float) radius);
+			paintScreen.paintCircle(cMarker.x, cMarker.y, (float) radius);
 
 		}
 	}

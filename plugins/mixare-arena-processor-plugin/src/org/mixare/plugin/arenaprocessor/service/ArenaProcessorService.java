@@ -78,9 +78,9 @@ public class ArenaProcessorService extends Service{
 
 		@Override
 		public List<InitialMarkerData> load(String processorName, String rawData, 
-				int taskId, int colour) throws RemoteException {
+				int taskId, int color) throws RemoteException {
 			try {
-				return processor.get(processorName).load(rawData, taskId, colour);
+				return processor.get(processorName).load(rawData, taskId, color);
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return new ArrayList<InitialMarkerData>();

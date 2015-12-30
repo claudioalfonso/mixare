@@ -88,7 +88,7 @@ public class ImageMarkerService extends Service{
 		}
 
 		@Override
-		public int getColour(String markerName) throws RemoteException {
+		public int getColor(String markerName) throws RemoteException {
 			return markers.get(markerName).getColor();
 		}
 

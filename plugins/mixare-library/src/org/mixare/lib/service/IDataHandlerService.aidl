@@ -17,5 +17,5 @@ interface IDataHandlerService {
  	
  	String[] getDataMatch(String processorName);
  	
- 	List<InitialMarkerData> load(String processorName, String rawData, int taskId, int colour);
+ 	List<InitialMarkerData> load(String processorName, String rawData, int taskId, int color);
 }

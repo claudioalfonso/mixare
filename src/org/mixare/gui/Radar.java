@@ -18,15 +18,13 @@
  */
 package org.mixare.gui;
 
-import org.mixare.DataView;
+import org.mixare.MarkerRenderer;
 import org.mixare.MixContext;
 import org.mixare.R;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.ScreenLine;
-import org.mixare.lib.marker.Marker;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.ScreenObj;
-import org.mixare.data.DataHandler;
 import org.mixare.lib.render.Camera;
 
 import android.graphics.Color;
@@ -39,12 +37,12 @@ public class Radar implements ScreenObj {
     /** current context */
     private MixContext mixContext;
 	/** The screen */
-	public DataView view;
+	public MarkerRenderer markerRenderer;
 
     private RadarPoints radarPoints = null;
 
 
-    private PaintScreen dw=null;
+    private PaintScreen paintScreen = null;
 	/** The radar's range */
 	float range;
 	/** Radius in pixel on screen */
@@ -61,9 +59,9 @@ public class Radar implements ScreenObj {
 
     private float rx = 10, ry = 20;
 
-    public Radar(MixContext ctx, DataView view){
+    public Radar(MixContext ctx, MarkerRenderer markerRenderer){
         this.mixContext = ctx;
-        this.view=view;
+        this.markerRenderer = markerRenderer;
         directions = new String[8];
         directions[0] = mixContext.getString(R.string.N);
         directions[1] = mixContext.getString(R.string.NE);
@@ -73,23 +71,23 @@ public class Radar implements ScreenObj {
         directions[5] = mixContext.getString(R.string.SW);
         directions[6] = mixContext.getString(R.string.W);
         directions[7] = mixContext.getString(R.string.NW);
-        radarPoints = new RadarPoints(this.view);
+        radarPoints = new RadarPoints(this.markerRenderer);
 
     }
 
     public void paint(PaintScreen paintScreen) {
-        this.dw=paintScreen;
+        this.paintScreen =paintScreen;
 		/** radius is in KM. */
-		range = view.getRadius() * 1000;
-        int bearing = (int) view.getState().getCurBearing();
+		range = markerRenderer.getRadius() * 1000;
+        int bearing = (int) markerRenderer.getState().getCurBearing();
 
         /** Draw the radar */
-		dw.setFill(true);
-		dw.setColor(radarColor);
-		dw.paintCircle(originX + RADIUS, originY + RADIUS, RADIUS);
+		this.paintScreen.setFill(true);
+		this.paintScreen.setColor(radarColor);
+		this.paintScreen.paintCircle(originX + RADIUS, originY + RADIUS, RADIUS);
 
 		/** put the markers in it */
-        dw.paintObj(radarPoints, rx, ry, -bearing, 1);
+        this.paintScreen.paintObj(radarPoints, rx, ry, -bearing, 1);
 
 
         String dirTxt = "";
@@ -112,19 +110,19 @@ public class Radar implements ScreenObj {
             dirTxt = directions[7];
 
 
- //       dw.paintObj(this, rx, ry, -bearing, 1);
-        dw.setFill(false);
-        dw.setColor(Color.argb(150, 0, 0, 220));
-        dw.paintLine(lrl.x, lrl.y, rx + RADIUS, ry
+ //       paintScreen.paintObj(this, rx, ry, -bearing, 1);
+        this.paintScreen.setFill(false);
+        this.paintScreen.setColor(Color.argb(150, 0, 0, 220));
+        this.paintScreen.paintLine(lrl.x, lrl.y, rx + RADIUS, ry
                 + RADIUS);
-        dw.paintLine(rrl.x, rrl.y, rx + RADIUS, ry
+        this.paintScreen.paintLine(rrl.x, rrl.y, rx + RADIUS, ry
                 + RADIUS);
-        dw.setColor(Color.rgb(255, 255, 255));
-        dw.setFontSize(12);
+        this.paintScreen.setColor(Color.rgb(255, 255, 255));
+        this.paintScreen.setFontSize(12);
 
-        radarText(dw, MixUtils.formatDist(view.getRadius() * 1000), rx
+        radarText(this.paintScreen, MixUtils.formatDist(markerRenderer.getRadius() * 1000), rx
                 + RADIUS, ry + RADIUS * 2 - 10, false);
-        radarText(dw, "" + bearing + ((char) 176) + " " + dirTxt, rx
+        radarText(this.paintScreen, "" + bearing + ((char) 176) + " " + dirTxt, rx
                 + RADIUS, ry - 5, true);
 
         lrl.set(0, -RADIUS);
@@ -135,20 +133,20 @@ public class Radar implements ScreenObj {
         rrl.add(rx + RADIUS, ry + RADIUS);
 	}
 
-    private void radarText(PaintScreen dw, String txt, float x, float y,
+    private void radarText(PaintScreen paintScreen, String txt, float x, float y,
                            boolean bg) {
         float padw = 4, padh = 2;
-        float w = dw.getTextWidth(txt) + padw * 2;
-        float h = dw.getTextAsc() + dw.getTextDesc() + padh * 2;
+        float w = paintScreen.getTextWidth(txt) + padw * 2;
+        float h = paintScreen.getTextAsc() + paintScreen.getTextDesc() + padh * 2;
         if (bg) {
-            dw.setColor(Color.rgb(0, 0, 0));
-            dw.setFill(true);
-            dw.paintRect(x - w / 2, y - h / 2, w, h);
-            dw.setColor(Color.rgb(255, 255, 255));
-            dw.setFill(false);
-            dw.paintRect(x - w / 2, y - h / 2, w, h);
+            paintScreen.setColor(Color.rgb(0, 0, 0));
+            paintScreen.setFill(true);
+            paintScreen.paintRect(x - w / 2, y - h / 2, w, h);
+            paintScreen.setColor(Color.rgb(255, 255, 255));
+            paintScreen.setFill(false);
+            paintScreen.paintRect(x - w / 2, y - h / 2, w, h);
         }
-        dw.paintText(padw + x - w / 2, padh + dw.getTextAsc() + y - h / 2, txt,
+        paintScreen.paintText(padw + x - w / 2, padh + paintScreen.getTextAsc() + y - h / 2, txt,
                 false);
     }
 

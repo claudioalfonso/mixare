@@ -24,10 +24,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mixare.MixContext;
-import org.mixare.MixView;
+import org.mixare.MixViewActivity;
 import org.mixare.data.MarkerBuilder;
-import org.mixare.marker.POIMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.lib.HtmlUnescape;
 import org.mixare.lib.marker.Marker;
@@ -60,7 +58,7 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 	}
 
 	@Override
-	public List<Marker> load(String rawData, int taskId, int colour) throws JSONException {
+	public List<Marker> load(String rawData, int taskId, int color) throws JSONException {
 		List<Marker> markers = new ArrayList<Marker>();
 		JSONObject root = convertToJSON(rawData);
 		JSONArray dataArray = root.getJSONArray("results");
@@ -77,7 +75,7 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 				if(jo.has("id"))
 						id = jo.getString("id");
 				
-				Log.v(MixView.TAG, "processing Mixare JSON object");
+				Log.v(MixViewActivity.TAG, "processing Mixare JSON object");
 				String link=null;
 		
 				if(jo.has("has_detail_page") && jo.getInt("has_detail_page")!=0 && jo.has("webpage"))
@@ -90,7 +88,7 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 						.setAltitude(jo.getDouble("elevation"))
 						.setDisplayType(overrideMarkerDisplayType)
 						.setPageURL(link)
-						.setColor(colour)
+						.setColor(color)
 						.build();
 
 				if(ma!=null) {

@@ -30,6 +30,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mixare.MixViewActivity;
 import org.mixare.data.MarkerBuilder;
 import org.mixare.marker.ImageMarker;
 import org.mixare.data.DataHandler;
@@ -52,8 +53,6 @@ import android.util.Log;
  */
 public class PanoramioDataProcessor extends DataHandler implements
 		DataProcessor {
-	// TAG for logging
-	public static final String TAG = "Mixare";
 
 	public static final int MAX_JSON_OBJECTS = ImageMarker.maxObjects;
 
@@ -117,7 +116,7 @@ public class PanoramioDataProcessor extends DataHandler implements
 		JSONArray dataArray = root.getJSONArray("photos");
 		int top = Math.min(MAX_JSON_OBJECTS, dataArray.length());
 
-		Log.i(TAG, "Processing Panoramio Results ...");
+		Log.i(MixViewActivity.TAG, "Processing Panoramio Results ...");
 
 		for (int i = 0; i < top; i++) {
 			JSONObject jo = dataArray.getJSONObject(i);

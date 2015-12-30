@@ -24,14 +24,11 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mixare.MixContext;
-import org.mixare.MixView;
+import org.mixare.MixViewActivity;
 import org.mixare.data.MarkerBuilder;
-import org.mixare.marker.POIMarker;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
 import org.mixare.lib.HtmlUnescape;
-import org.mixare.data.convert.DataProcessor;
 import org.mixare.lib.marker.Marker;
 
 import android.util.Log;
@@ -65,7 +62,7 @@ public class WikiDataProcessor extends DataHandler implements DataProcessor{
 	}
 
 	@Override
-	public List<Marker> load(String rawData, int taskId, int colour) throws JSONException {
+	public List<Marker> load(String rawData, int taskId, int color) throws JSONException {
 		List<Marker> markers = new ArrayList<Marker>();
 		JSONObject root = convertToJSON(rawData);
 		JSONArray dataArray = root.getJSONArray("geonames");
@@ -78,7 +75,7 @@ public class WikiDataProcessor extends DataHandler implements DataProcessor{
 			if (jo.has("title") && jo.has("lat") && jo.has("lng")
 					&& jo.has("elevation") && jo.has("wikipediaUrl")) {
 	
-				Log.v(MixView.TAG, "processing Wikipedia JSON object");
+				Log.v(MixViewActivity.TAG, "processing Wikipedia JSON object");
 		
 				//no unique ID is provided by the web service according to http://www.geonames.org/export/wikipedia-webservice.html
 				ma = new MarkerBuilder().setId("wikiid")
@@ -88,7 +85,7 @@ public class WikiDataProcessor extends DataHandler implements DataProcessor{
 						.setAltitude(jo.getDouble("elevation"))
 						.setDisplayType(overrideMarkerDisplayType)
 						.setPageURL("https://"+jo.getString("wikipediaUrl"))
-						.setColor(colour)
+						.setColor(color)
 						.build();
 
 				if(ma!=null) {

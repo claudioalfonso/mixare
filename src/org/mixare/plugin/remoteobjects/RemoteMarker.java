@@ -80,11 +80,11 @@ public class RemoteMarker implements Marker{
 	}
 
 	@Override
-	public void draw(PaintScreen dw) {
+	public void draw(PaintScreen paintScreen) {
 		try {
 			DrawCommand[] drawCommands= iMarkerService.remoteDraw(markerName);
 			for(DrawCommand drawCommand: drawCommands){
-				drawCommand.draw(dw);
+				drawCommand.draw(paintScreen);
 				if(drawCommand.getProperty("textlab") != null){
 					setTxtLab((Label)((ParcelableProperty)drawCommand.getProperty("textlab")).getObject());
 				}
@@ -108,7 +108,7 @@ public class RemoteMarker implements Marker{
 	@Override
 	public int getColor() {
 		try {
-			return iMarkerService.getColour(markerName);
+			return iMarkerService.getColor(markerName);
 		} catch (RemoteException e) {
 			throw new PluginNotFoundException(e);
 		}

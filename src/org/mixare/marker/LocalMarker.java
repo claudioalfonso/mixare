@@ -22,9 +22,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
 
-import org.mixare.MixView;
+import org.mixare.MixViewActivity;
 import org.mixare.data.convert.Elevation;
-import org.mixare.data.convert.OsmDataProcessor;
 import org.mixare.lib.MixContextInterface;
 import org.mixare.lib.MixStateInterface;
 import org.mixare.lib.MixUtils;
@@ -41,7 +40,6 @@ import org.mixare.lib.render.MixVector;
 
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.util.Log;
 
 /**
  * The class represents a marker and contains its information.
@@ -175,7 +173,7 @@ public abstract class LocalMarker implements Marker {
 
 	public boolean isClickValid(float x, float y) {
 		
-		//if the marker is not active (i.e. not shown in AR view) we don't have to check it for clicks
+		//if the marker is not active (i.e. not shown in AR markerRenderer) we don't have to check it for clicks
 		if (!isActive() && !this.isVisible)
 			return false;
 
@@ -201,21 +199,21 @@ public abstract class LocalMarker implements Marker {
 		}
 	}
 
-	public void draw(PaintScreen dw) {
-		drawCircle(dw);
-		if (MixView.drawTextBlock) {
-			drawTextBlock(dw);
+	public void draw(PaintScreen paintScreen) {
+		drawCircle(paintScreen);
+		if (MixViewActivity.drawTextBlock) {
+			drawTextBlock(paintScreen);
 		}
 	}
 
-	public void drawCircle(PaintScreen dw) {
+	public void drawCircle(PaintScreen paintScreen) {
 
 		if (isVisible) {
-			//float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
-			float maxHeight = dw.getHeight();
-			dw.setStrokeWidth(maxHeight / 100f);
-			dw.setFill(false);
-			//dw.setColor(DataSource.getColor(type));
+			//float maxHeight = Math.round(paintScreen.getHeight() / 10f) + 1;
+			float maxHeight = paintScreen.getHeight();
+			paintScreen.setStrokeWidth(maxHeight / 100f);
+			paintScreen.setFill(false);
+			//paintScreen.setColor(DataSource.getColor(type));
 
 			//draw circle with radius depending on distance
 			//0.44 is approx. vertical fov in radians 
@@ -223,13 +221,13 @@ public abstract class LocalMarker implements Marker {
 			double radius = Math.max(Math.min(angle/0.44 * maxHeight, maxHeight),maxHeight/25f);
 			//double radius = angle/0.44d * (double)maxHeight;
 
-			dw.paintCircle(cMarker.x, cMarker.y, (float)radius);
+			paintScreen.paintCircle(cMarker.x, cMarker.y, (float) radius);
 		}
 	}
 
-	public void drawTextBlock(PaintScreen dw) {
+	public void drawTextBlock(PaintScreen paintScreen) {
 		//TODO: grandezza cerchi e trasparenza
-		float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
+		float maxHeight = Math.round(paintScreen.getHeight() / 10f) + 1;
 
 		//TODO: change textblock only when distance changes
 		String textStr="";
@@ -245,19 +243,19 @@ public abstract class LocalMarker implements Marker {
 		}
 
 		textBlock = new TextObj(textStr, Math.round(maxHeight / 2f) + 1,
-				250, dw, isUnderline());
+				250, paintScreen, isUnderline());
 
 		if (isVisible) {
 
-			//dw.setColor(DataSource.getColor(type));
+			//paintScreen.setColor(DataSource.getColor(type));
 
 			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y, signMarker.x, signMarker.y);
 
 			txtLab.prepare(textBlock);
 
-			dw.setStrokeWidth(1f);
-			dw.setFill(true);
-			dw.paintObj(txtLab, signMarker.x - txtLab.getWidth()
+			paintScreen.setStrokeWidth(1f);
+			paintScreen.setFill(true);
+			paintScreen.paintObj(txtLab, signMarker.x - txtLab.getWidth()
 					/ 2, signMarker.y + maxHeight, currentAngle + 90, 1);
 		}
 

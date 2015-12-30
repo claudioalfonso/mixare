@@ -31,27 +31,21 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -63,7 +57,7 @@ public class MixListView extends SherlockActivity {
 	private Context ctx;
 	private SectionAdapter sectionAdapter;
 	private ListView listView;
-	private DataView dataView;
+	private MarkerRenderer markerRenderer;
 	private EditText editText;
 	private MenuItem search;
 	/* The sections for the list in meter */
@@ -75,7 +69,7 @@ public class MixListView extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 
 		this.ctx = this;
-		this.dataView = MixView.getDataView();
+		this.markerRenderer = MixViewActivity.getMarkerRenderer();
 
 		editText = new EditText(this);
 
@@ -200,7 +194,7 @@ public class MixListView extends SherlockActivity {
 	 */
 	private List<Item> createList(String query) {
 		List<Item> list = new ArrayList<Item>();
-		DataHandler dataHandler = dataView.getDataHandler();
+		DataHandler dataHandler = markerRenderer.getDataHandler();
 		String lastSection = "";
 		int lastSectionId = -1;
 		int markerCount = 0;
@@ -558,7 +552,7 @@ public class MixListView extends SherlockActivity {
 					try {
 						if (selectedURL.startsWith("webpage")) {
 							String newUrl = MixUtils.parseAction(selectedURL);
-							dataView.getContext().getWebContentManager()
+							markerRenderer.getContext().getWebContentManager()
 									.loadWebPage(newUrl, ctx);
 						}
 					} catch (Exception e) {

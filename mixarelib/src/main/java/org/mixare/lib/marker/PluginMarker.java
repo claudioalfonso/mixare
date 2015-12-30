@@ -47,7 +47,7 @@ public abstract class PluginMarker{
 	// distance from user to mGeoLoc in meters
 	protected double distance;
 	// The marker color
-	private int colour;
+	private int color;
 
 	private boolean active;
 	// Draw properties
@@ -62,7 +62,7 @@ public abstract class PluginMarker{
 	public Label txtLab = new Label();
 	protected TextObj textBlock;
 	
-	public PluginMarker(int id, String title, double latitude, double longitude, double altitude, String link, int type, int colour) {
+	public PluginMarker(int id, String title, double latitude, double longitude, double altitude, String link, int type, int color) {
 		super();
 
 		this.active = true;
@@ -72,7 +72,7 @@ public abstract class PluginMarker{
 			URL = "webpage:" + URLDecoder.decode(link);
 			this.underline = true;
 		}
-		this.colour = colour;
+		this.color = color;
 
 		this.ID= id + "##"+ type +"##"+title;
 
@@ -123,7 +123,7 @@ public abstract class PluginMarker{
 	}
 
 	public int getColor() {
-		return colour;
+		return color;
 	}
 
 	public boolean isVisible() {

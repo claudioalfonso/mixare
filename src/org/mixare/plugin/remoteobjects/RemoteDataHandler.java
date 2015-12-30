@@ -82,9 +82,9 @@ public class RemoteDataHandler extends DataHandler implements DataProcessor{
 	}
 
 	
-	public List<Marker> load(String rawData, int taskId, int colour) throws JSONException {
+	public List<Marker> load(String rawData, int taskId, int color) throws JSONException {
 		try {
-			List<InitialMarkerData> initialMarkerData = iDataHandlerService.load(dataHandlerName, rawData, taskId, colour);
+			List<InitialMarkerData> initialMarkerData = iDataHandlerService.load(dataHandlerName, rawData, taskId, color);
 			return initializeMarkerData(initialMarkerData);
 		} catch (RemoteException e) {
 			throw new PluginNotFoundException(e);

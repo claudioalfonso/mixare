@@ -124,13 +124,13 @@ public class MixUtils {
 	 */
 	public static synchronized int earthEquatorToZoomLevel(final float distance) {
 		final float E = 40075f; // Earth Equator in KM
-		int zoom = 1;
+		int zoomLevel = 1;
 		try {
-			zoom = (int) Math.round(Math.log(E / distance) / Math.log(2.0)) + 1;
-			zoom = (zoom < 1) ? 1 : zoom;
+			zoomLevel = (int) Math.round(Math.log(E / distance) / Math.log(2.0)) + 1;
+			zoomLevel = (zoomLevel < 1) ? 1 : zoomLevel;
 		} catch (Exception e) {
-			zoom = 15;
+			zoomLevel = 15;
 		}
-		return (zoom > 21 ? 21 : zoom);
+		return (zoomLevel > 21 ? 21 : zoomLevel);
 	}
 }

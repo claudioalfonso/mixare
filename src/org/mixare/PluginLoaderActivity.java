@@ -16,7 +16,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -118,7 +117,7 @@ public class PluginLoaderActivity extends Activity {
 			loadPlugins();
 		}
 		if (arePendingActivitiesFinished()) {
-			startActivityForResult(new Intent(this, MixView.class),0);
+			startActivityForResult(new Intent(this, MixViewActivity.class),0);
 			finish();
 		}
 	}

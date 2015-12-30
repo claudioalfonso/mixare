@@ -32,7 +32,7 @@ import org.mapsforge.map.layer.cache.TileCache;
 
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
-import org.mixare.MixView;
+import org.mixare.MixViewActivity;
 import org.mixare.R;
 import org.mixare.lib.MixUtils;
 
@@ -40,7 +40,8 @@ import org.mixare.lib.marker.Marker;
 import org.mixare.mgr.location.LocationFinder;
 
 public class MixMap extends Activity {
-	private MapView mapView;
+    public final static byte DEFAULT_ZOOM_LEVEL =12;
+    private MapView mapView;
 	private TileCache tileCache;
     protected TileDownloadLayer downloadLayer;
 
@@ -88,7 +89,7 @@ public class MixMap extends Activity {
         // IntentExtras
         if (intent.getBooleanExtra("center", false)) {
             setCenterZoom(intent.getDoubleExtra("latitude", LocationFinder.default_lat),
-                    intent.getDoubleExtra("longitude", LocationFinder.default_lon), LocationFinder.default_zoom);
+                    intent.getDoubleExtra("longitude", LocationFinder.default_lon), DEFAULT_ZOOM_LEVEL);
         } else {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();
@@ -115,11 +116,11 @@ public class MixMap extends Activity {
                 markerNoLink.getIntrinsicWidth() / 2, 0);
         // a marker to show at the position
        Marker marker;
-        int limit = MixView.getDataView().getDataHandler().getMarkerCount();
+        int limit = MixViewActivity.getMarkerRenderer().getDataHandler().getMarkerCount();
 
         for (int i = 0; i < limit; i++) {
             Drawable icon=markerLink;
-            marker = MixView.getDataView().getDataHandler().getMarker(i);
+            marker = MixViewActivity.getMarkerRenderer().getDataHandler().getMarker(i);
             // if a searchKeyword is specified
             if (searchKeyword != null) {
                 // the Keyword is not Empty
@@ -154,7 +155,7 @@ public class MixMap extends Activity {
     protected void onStart() {
         super.onStart();
 
-        setCenterZoom(LocationFinder.default_lat,LocationFinder.default_lon,LocationFinder.default_zoom);
+        setCenterZoom(LocationFinder.default_lat, LocationFinder.default_lon, DEFAULT_ZOOM_LEVEL);
         createOverlay();
     }
 
@@ -189,29 +190,29 @@ public class MixMap extends Activity {
     }
 
     /**
-     * Sets the center of the map to the specified point with the specified zoom
+     * Sets the center of the map to the specified point with the specified zoomLevel
      * level
      *
-     * @param zoom
-     *            The zoom level
+     * @param zoomLevel
+     *            The zoomLevel level
      */
-    private void setZoom(int zoom) {
-        this.mapView.getModel().mapViewPosition.setZoomLevel((byte) zoom);
+    private void setZoomLevel(int zoomLevel) {
+        this.mapView.getModel().mapViewPosition.setZoomLevel((byte) zoomLevel);
     }
 
     /**
-     * Sets the center of the map to the specified point with the specified zoom
+     * Sets the center of the map to the specified point with the specified zoomLevel
      * level
      *
      * @param lat
      *            The latitude of the point
      * @param lng
      *            The longitude of the point
-     * @param zoom
-     *            The zoom level
+     * @param zoomLevel
+     *            The zoomLevel level
      */
-    private void setCenterZoom(double lat, double lng, int zoom) {
-        setZoom(zoom);
+    private void setCenterZoom(double lat, double lng, int zoomLevel) {
+        setZoomLevel(zoomLevel);
         setCenter(lat, lng);
     }
 
@@ -222,11 +223,11 @@ public class MixMap extends Activity {
      *
      */
     private void setZoomLevelBasedOnRadius() {
-        float mapZoomLevel = (MixView.getDataView().getRadius() / 2f);
+        float mapZoomLevel = (MixViewActivity.getMarkerRenderer().getRadius() / 2f);
         mapZoomLevel = MixUtils
                 .earthEquatorToZoomLevel((mapZoomLevel < 2f) ? 2f
                         : mapZoomLevel);
-        setZoom((int) mapZoomLevel);
+        setZoomLevel((int) mapZoomLevel);
 
     }
 
@@ -238,7 +239,7 @@ public class MixMap extends Activity {
      * @return My current Location
      */
     private Location getOwnLocation() {
-        return MixView.getDataView().getContext().getLocationFinder()
+        return MixViewActivity.getMarkerRenderer().getContext().getLocationFinder()
                 .getCurrentLocation();
     }
 

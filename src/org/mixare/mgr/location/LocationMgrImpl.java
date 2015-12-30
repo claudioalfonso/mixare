@@ -202,7 +202,7 @@ class LocationMgrImpl implements LocationFinder {
 		synchronized (curLoc) {
 			curLoc = location;
 		}
-		mixContext.getActualMixView().refresh();
+		mixContext.getActualMixViewActivity().refresh();
 		Location lastLoc = getLocationAtLastDownload();
 		if (lastLoc == null) {
 			setLocationAtLastDownload(location);
@@ -309,7 +309,7 @@ class LocationMgrImpl implements LocationFinder {
 			if(bestLocationProvider != null){
 				lm.removeUpdates(getObserver());
 				state=LocationFinderState.Confused;
-				mixContext.getActualMixView().runOnUiThread(new Runnable() {					
+				mixContext.getActualMixViewActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						lm.requestLocationUpdates(bestLocationProvider, freq, dist, getObserver());		
@@ -318,7 +318,7 @@ class LocationMgrImpl implements LocationFinder {
 				state=LocationFinderState.Active;
 			}
 			else{ //no location found
-				mixContext.getActualMixView().runOnUiThread(new Runnable() {					
+				mixContext.getActualMixViewActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						mixContext.getNotificationManager().

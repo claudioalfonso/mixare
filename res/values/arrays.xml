@@ -18,8 +18,4 @@
 	    <item>@string/add_random</item>
 	    <item>@string/truncate</item>
 	</string-array>
-	<string-array name="maps">
-	    <item>@string/map_menu_map_google</item>
-	    <item>@string/map_menu_map_osm</item>
-	</string-array>
 </resources>

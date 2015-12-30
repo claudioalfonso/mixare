@@ -56,7 +56,7 @@ interface IMarkerService {
 
 	void setActive(String markerName, boolean active);
 
-	int getColour(String markerName);
+	int getColor(String markerName);
 
 	int getMaxObjects(String markerName);
 

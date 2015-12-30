@@ -19,8 +19,8 @@
 package org.mixare.marker;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
+import org.mixare.MixViewActivity;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.TextObj;
@@ -58,18 +58,18 @@ public class ImageMarker extends LocalMarker {
 	 * or Call this class with Image URL.
 	 * 
 	 * @see org.mixare.marker.ImageMarker#ImageMarker(String, String, double, double, double, String, int, int, String, String)
-	 * @param String Marker's id
-	 * @param String Marker's title
-	 * @param double latitude
-	 * @param double longitude
-	 * @param double altitude
-	 * @param String link
-	 * @param int Datasource type
-	 * @param int Color int representation {@link android.graphics.Color Color}
+	 * @param id Marker's id
+	 * @param title Marker's title
+	 * @param latitude latitude
+	 * @param longitude longitude
+	 * @param altitude altitude
+	 * @param link link
+	 * @param type Datasource type
+	 * @param color Color int representation {@link android.graphics.Color Color}
 	 */
 	public ImageMarker(String id, String title, double latitude,
-			double longitude, double altitude, String link, int type, int colour) {
-		super(id, title, latitude, longitude, altitude, link, type, colour);
+			double longitude, double altitude, String link, int type, int color) {
+		super(id, title, latitude, longitude, altitude, link, type, color);
 		this.setImage(Bitmap.createBitmap(10, 10, Config.ARGB_4444)); //TODO set default Image if image not Available
 	}
 	
@@ -78,32 +78,28 @@ public class ImageMarker extends LocalMarker {
 	 * Marker will handle retrieving the image from Image URL,
 	 * Please ensure that it links to an Image.
 	 * 
-	 * @param String Marker's id
-	 * @param String Marker's title
-	 * @param double latitude
-	 * @param double longitude
-	 * @param double altitude
-	 * @param String link
-	 * @param int Datasource type
-	 * @param int Color int representation {@link android.graphics.Color Color}
-	 * @param String ImageOwner's name
-	 * @param String Image's url
+	 * @param id Marker's id
+	 * @param title Marker's title
+	 * @param latitude latitude
+	 * @param longitude longitude
+	 * @param altitude altitude
+	 * @param pageLink link
+	 * @param type Datasource type
+	 * @param color Color int representation {@link android.graphics.Color Color}
+	 * @param imageOwner ImageOwner's name
+	 * @param ImageUrl Image's url
 	 */
 	public ImageMarker (String id, String title, double latitude,
 			double longitude, double altitude, final String pageLink, 
-			final int type, final int colour,final String imageOwner,
+			final int type, final int color,final String imageOwner,
 			final String ImageUrl) {
-		super(id, title, latitude, longitude, altitude, pageLink, type, colour);
+		super(id, title, latitude, longitude, altitude, pageLink, type, color);
 		
 		try {
-			
 			final java.net.URL imageURI = new java.net.URL (ImageUrl);
 			this.setImage(BitmapFactory.decodeStream(imageURI.openConnection().getInputStream()));
-			
-		}  catch (MalformedURLException e) {
-			Log.e("Mixare - local ImageMarker", e.getMessage());
-		} catch (IOException e) {
-			Log.e("Mixare - local ImageMarker", e.getMessage());
+		} catch (IOException e) {  //also catches MalformedURLException
+			Log.e(MixViewActivity.TAG, e.getMessage());
 		}finally {
 			if (null == this.getImage()){
 				this.setImage(Bitmap.createBitmap(10, 10, Config.ARGB_4444));
@@ -115,9 +111,9 @@ public class ImageMarker extends LocalMarker {
 	 * Image Marker Draw Function.
 	 * {@inheritDoc}
 	 */
-	public void draw(final PaintScreen dw){
-		drawImage(dw);
-		drawTitle(dw);
+	public void draw(final PaintScreen paintScreen){
+		drawImage(paintScreen);
+		drawTitle(paintScreen);
 	}
 
 	/**
@@ -125,32 +121,32 @@ public class ImageMarker extends LocalMarker {
 	 * than 10 chars, otherwise, it displays the first 10 chars and concatenate
 	 * three dots "..."
 	 * 
-	 * @param PaintScreen View Screen that title screen will be drawn into
+	 * @param paintScreen View Screen that title screen will be drawn into
 	 */
-	public void drawTitle(final PaintScreen dw) {
+	public void drawTitle(final PaintScreen paintScreen) {
 		if (isVisible) {
-			final float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
+			final float maxHeight = Math.round(paintScreen.getHeight() / 10f) + 1;
 			String textStr = MixUtils.shortenTitle(title,distance);
 			textBlock = new TextObj(textStr, Math.round(maxHeight / 2f) + 1, 250,
-					dw, underline);
-			 dw.setColor(this.getColor());
+					paintScreen, underline);
+			 paintScreen.setColor(this.getColor());
 			final float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
 					getSignMarker().x, getSignMarker().y);
 			txtLab.prepare(textBlock);
-			dw.setStrokeWidth(1f);
-			dw.setFill(true);
-			dw.paintObj(txtLab, getSignMarker().x - txtLab.getWidth() / 2,
+			paintScreen.setStrokeWidth(1f);
+			paintScreen.setFill(true);
+			paintScreen.paintObj(txtLab, getSignMarker().x - txtLab.getWidth() / 2,
 					getSignMarker().y + maxHeight, currentAngle + 90, 1);
 		}
 	}
 	
 	/**
 	 * Handles Drawing Images
-	 * @param PaintScreen Screen that Image will be drawn into
+	 * @param paintScreen Screen that Image will be drawn into
 	 */
-	public void drawImage(final PaintScreen dw) {
+	public void drawImage(final PaintScreen paintScreen) {
 		final DrawImage Image = new DrawImage(isVisible, cMarker, image);
-		Image.draw(dw);
+		Image.draw(paintScreen);
 	}
 	
 
@@ -171,7 +167,7 @@ public class ImageMarker extends LocalMarker {
 	}
 
 	/**
-	 * @param Bitmap the image to set
+	 * @param image the image to set
 	 */
 	public void setImage(Bitmap image) {
 		this.image = image;

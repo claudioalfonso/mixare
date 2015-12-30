@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Internal class that holds Mixview field Data.
+ * Internal class that holds MixViewActivity field Data.
  *
  * @author A B, KlemensE
  */
@@ -45,11 +45,11 @@ class MixViewDataHolder {
 	private Matrix m2;
 	private Matrix m3;
 	private Matrix m4;
-	private SeekBar myZoomBar;
+	private SeekBar rangeBar;
 	private PowerManager.WakeLock mWakeLock;
 	private int compassErrorDisplayed;
-	private String zoomLevel;
-	private int zoomProgress;
+	private String rangeLevel;
+	private int rangeBarProgress;
 	private TextView searchNotificationTxt;
 
 	public MixViewDataHolder(MixContext mixContext) {
@@ -293,12 +293,12 @@ class MixViewDataHolder {
 		this.m4 = m4;
 	}
 
-	public SeekBar getMyZoomBar() {
-		return myZoomBar;
+	public SeekBar getRangeBar() {
+		return rangeBar;
 	}
 
-	public void setMyZoomBar(SeekBar myZoomBar) {
-		this.myZoomBar = myZoomBar;
+	public void setRangeBar(SeekBar rangeBar) {
+		this.rangeBar = rangeBar;
 	}
 
 	public PowerManager.WakeLock getmWakeLock() {
@@ -317,20 +317,20 @@ class MixViewDataHolder {
 		this.compassErrorDisplayed = compassErrorDisplayed;
 	}
 
-	public String getZoomLevel() {
-		return zoomLevel;
+	public String getRangeLevel() {
+		return rangeLevel;
 	}
 
-	public void setZoomLevel(String zoomLevel) {
-		this.zoomLevel = zoomLevel;
+	public void setRangeLevel(String rangeLevel) {
+		this.rangeLevel = rangeLevel;
 	}
 
-	public int getZoomProgress() {
-		return zoomProgress;
+	public int getRangeBarProgress() {
+		return rangeBarProgress;
 	}
 
-	public void setZoomProgress(int zoomProgress) {
-		this.zoomProgress = zoomProgress;
+	public void setRangeBarProgress(int rangeBarProgress) {
+		this.rangeBarProgress = rangeBarProgress;
 	}
 
 	public TextView getSearchNotificationTxt() {

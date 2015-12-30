@@ -21,7 +21,6 @@ package org.mixare;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mixare.R;
 import org.mixare.plugin.Plugin;
 import org.mixare.plugin.PluginStatus;
 import org.mixare.sectionedlist.Item;
@@ -80,10 +79,10 @@ public class PluginListActivity extends SherlockActivity {
 			break;
 		/* Show available plugins from url in a webView */
 		case MENU_SELECT_PLUGIN_ID:
-			DataView dataView = MixView.getDataView();
+			MarkerRenderer markerRenderer = MixViewActivity.getMarkerRenderer();
 
 			try {
-				dataView.getContext()
+				markerRenderer.getContext()
 						.getWebContentManager()
 						.loadWebPage(
 								"http://www.mixare.org/plugins/mixare-appview.php",

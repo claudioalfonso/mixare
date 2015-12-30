@@ -53,7 +53,7 @@ public class ArenaProcessor extends PluginDataProcessor {
 	}
 
 	@Override
-	public List<InitialMarkerData> load(String rawData, int taskId, int colour)
+	public List<InitialMarkerData> load(String rawData, int taskId, int color)
 			throws JSONException {
 		List<InitialMarkerData> initialMarkerDatas = new ArrayList<InitialMarkerData>();
 		JSONObject root = convertToJSON(rawData);
@@ -77,7 +77,7 @@ public class ArenaProcessor extends PluginDataProcessor {
 				InitialMarkerData ma = new InitialMarkerData(jo.getInt("id"),
 						HtmlUnescape.unescapeHTML(jo.getString("title")),
 						jo.getDouble("lat"), jo.getDouble("lng"),
-						jo.getDouble("elevation"), link, taskId, colour);
+						jo.getDouble("elevation"), link, taskId, color);
 				ma.setMarkerName("imagemarker");
 				ma.setExtras("bitmap", new ParcelableProperty(
 						"android.graphics.Bitmap", image));

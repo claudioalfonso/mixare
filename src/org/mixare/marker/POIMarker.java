@@ -68,13 +68,13 @@ public class POIMarker extends LocalMarker {
 	}
 
 	@Override
-	public void drawCircle(PaintScreen dw) {
+	public void drawCircle(PaintScreen paintScreen) {
 		if (isVisible) {
-			float maxHeight = dw.getHeight();
-			dw.setStrokeWidth(maxHeight / 100f);
-			dw.setFill(false);
+			float maxHeight = paintScreen.getHeight();
+			paintScreen.setStrokeWidth(maxHeight / 100f);
+			paintScreen.setFill(false);
 
-				dw.setColor(getColor());
+				paintScreen.setColor(getColor());
 			
 			// draw circle with radius depending on distance
 			// 0.44 is approx. vertical fov in radians
@@ -88,16 +88,16 @@ public class POIMarker extends LocalMarker {
 			 * shape
 			 */
 			if (distance < 100.0)
-				otherShape(dw);
+				otherShape(paintScreen);
 			else
-				dw.paintCircle(cMarker.x, cMarker.y, (float) radius);
+				paintScreen.paintCircle(cMarker.x, cMarker.y, (float) radius);
 
 		}
 	}
 
 	@Override
-	public void drawTextBlock(PaintScreen dw) {
-		float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
+	public void drawTextBlock(PaintScreen paintScreen) {
+		float maxHeight = Math.round(paintScreen.getHeight() / 10f) + 1;
 		// TODO: change textblock only when distance changes
 
 		String textStr = "";
@@ -116,10 +116,10 @@ public class POIMarker extends LocalMarker {
 			textStr = getTitle();
 		}
 		textBlock = new TextObj(textStr, Math.round(maxHeight / 2f) + 1, 250,
-				dw, isUnderline());
+				paintScreen, isUnderline());
 
 		if (isVisible) {
-			// based on the distance set the colour
+			// based on the distance set the color
 			if (distance < 100.0) {
 				textBlock.setBgColor(Color.argb(128, 52, 52, 52));
 				textBlock.setBorderColor(Color.rgb(255, 104, 91));
@@ -132,24 +132,24 @@ public class POIMarker extends LocalMarker {
 			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
 					signMarker.x, signMarker.y);
 			txtLab.prepare(textBlock);
-			dw.setStrokeWidth(1f);
-			dw.setFill(true);
-			dw.paintObj(txtLab, signMarker.x - txtLab.getWidth() / 2,
+			paintScreen.setStrokeWidth(1f);
+			paintScreen.setFill(true);
+			paintScreen.paintObj(txtLab, signMarker.x - txtLab.getWidth() / 2,
 					signMarker.y + maxHeight, currentAngle + 90, 1);
 
 		}
 	}
 
-	public void otherShape(PaintScreen dw) {
+	public void otherShape(PaintScreen paintScreen) {
 		// This is to draw new shape, triangle
 		float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y,
 				signMarker.x, signMarker.y);
-		float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
+		float maxHeight = Math.round(paintScreen.getHeight() / 10f) + 1;
 
-		dw.setColor(getColor());
+		paintScreen.setColor(getColor());
 		float radius = maxHeight / 1.5f;
-		dw.setStrokeWidth(dw.getHeight() / 100f);
-		dw.setFill(false);
+		paintScreen.setStrokeWidth(paintScreen.getHeight() / 100f);
+		paintScreen.setFill(false);
 
 		Path tri = new Path();
 		float x = 0;
@@ -159,7 +159,7 @@ public class POIMarker extends LocalMarker {
 		tri.lineTo(x + radius, y - radius);
 
 		tri.close();
-		dw.paintPath(tri, cMarker.x, cMarker.y, radius * 2, radius * 2,
+		paintScreen.paintPath(tri, cMarker.x, cMarker.y, radius * 2, radius * 2,
 				currentAngle + 90, 1);
 	}
 

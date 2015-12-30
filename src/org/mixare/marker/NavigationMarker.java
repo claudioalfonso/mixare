@@ -19,10 +19,9 @@
 
 package org.mixare.marker;
 
-import org.mixare.MixView;
+import org.mixare.MixViewActivity;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.PaintScreen;
-import org.mixare.marker.LocalMarker;
 
 import android.graphics.Path;
 import android.location.Location;
@@ -53,24 +52,24 @@ public class NavigationMarker extends LocalMarker {
 		// your surrounding sphere so we set the height component of 
 		// the position vector radius/2 (in meter) below the user
 
-		locationVector.y-=MixView.getDataView().getRadius()*500f;
+		locationVector.y-= MixViewActivity.getMarkerRenderer().getRadius()*500f;
 		//locationVector.y+=-1000;
 	}
 
 	@Override
-	public void draw(PaintScreen dw) {
-		drawArrow(dw);
-		drawTextBlock(dw);
+	public void draw(PaintScreen paintScreen) {
+		drawArrow(paintScreen);
+		drawTextBlock(paintScreen);
 	}
 	
-	public void drawArrow(PaintScreen dw) {
+	public void drawArrow(PaintScreen paintScreen) {
 		if (isVisible) {
 			float currentAngle = MixUtils.getAngle(cMarker.x, cMarker.y, signMarker.x, signMarker.y);
-			float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
+			float maxHeight = Math.round(paintScreen.getHeight() / 10f) + 1;
 
-			//dw.setColor(DataSource.getColor(type));
-			dw.setStrokeWidth(maxHeight / 10f);
-			dw.setFill(false);
+			//paintScreen.setColor(DataSource.getColor(type));
+			paintScreen.setStrokeWidth(maxHeight / 10f);
+			paintScreen.setFill(false);
 			
 			Path arrow = new Path();
 			float radius = maxHeight / 1.5f;
@@ -84,7 +83,7 @@ public class NavigationMarker extends LocalMarker {
 			arrow.lineTo(x-radius, y);
 			arrow.lineTo(x-radius/3,y);
 			arrow.close();
-			dw.paintPath(arrow,cMarker.x,cMarker.y,radius*2,radius*2,currentAngle+90,1);			
+			paintScreen.paintPath(arrow, cMarker.x, cMarker.y, radius * 2, radius * 2, currentAngle + 90, 1);
 		}
 	}
 

@@ -47,7 +47,7 @@ public abstract class PluginDataProcessor {
 	 * This method converts raw data (xml, json, html) from the content from an url, to marker objects
 	 * @return a list of markerdata, which can be used to build markers.
 	 */
-	public abstract List<InitialMarkerData> load(String rawData, int taskId, int colour) throws JSONException;
+	public abstract List<InitialMarkerData> load(String rawData, int taskId, int color) throws JSONException;
 	
 	protected JSONObject convertToJSON(String rawData){
 		try {

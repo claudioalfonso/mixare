@@ -31,7 +31,6 @@ import org.mixare.mgr.notification.NotificationManagerFactory;
 import org.mixare.mgr.webcontent.WebContentManager;
 import org.mixare.mgr.webcontent.WebContentManagerFactory;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -40,11 +39,7 @@ import android.content.Intent;
  * Cares about location management and about the data (source, inputstream)
  */
 public class MixContext extends ContextWrapper implements MixContextInterface {
-
-	// TAG for logging
-	public static final String TAG = "Mixare";
-
-	private MixView mixView;
+	private MixViewActivity mixViewActivity;
 
 	private final Matrix rotationM = new Matrix();
 
@@ -63,9 +58,9 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	/** Responsible for Notification logging */
 	private NotificationManager notificationManager;
 
-	public MixContext(MixView appCtx) {
+	public MixContext(MixViewActivity appCtx) {
 		super(appCtx);
-		mixView = appCtx;
+		mixViewActivity = appCtx;
 
 		// TODO: RE-ORDER THIS SEQUENCE... IS NECESSARY?
 		getDataSourceManager().refreshDataSources();
@@ -78,7 +73,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	}
 
 	public String getStartUrl() {
-		Intent intent = (getActualMixView()).getIntent();
+		Intent intent = (getActualMixViewActivity()).getIntent();
 		if (intent.getAction() != null
 				&& intent.getAction().equals(Intent.ACTION_VIEW)) {
 			return intent.getData().toString();
@@ -98,7 +93,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	 */
 	public void loadMixViewWebPage(String url) throws Exception {
 		// TODO: CHECK INTERFACE METHOD
-		getWebContentManager().loadWebPage(url, getActualMixView());
+		getWebContentManager().loadWebPage(url, getActualMixViewActivity());
 	}
 
 	@Override
@@ -108,7 +103,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 
 	@Override
 	public void updateDataSourceStatus(boolean working, boolean problem, String statusText) {
-		getActualMixView().setDataSourcesActivity(working,problem,statusText);
+		getActualMixViewActivity().setDataSourcesActivity(working, problem, statusText);
 	}
 
 	@Override
@@ -116,8 +111,8 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 
 	}
 
-	public void doResume(MixView mixView) {
-		setActualMixView(mixView);
+	public void doResume(MixViewActivity mixViewActivity) {
+		setActualMixViewActivity(mixViewActivity);
 	}
 
 	public void updateSmoothRotation(Matrix smoothR) {
@@ -165,22 +160,22 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		return notificationManager;
 	}
 	
-	public MixView getActualMixView() {
-		synchronized (mixView) {
-			return this.mixView;
+	public MixViewActivity getActualMixViewActivity() {
+		synchronized (mixViewActivity) {
+			return this.mixViewActivity;
 		}
 	}
 
-	private void setActualMixView(MixView mv) {
-		synchronized (mixView) {
-			this.mixView = mv;
+	private void setActualMixViewActivity(MixViewActivity mixViewActivity) {
+		synchronized (mixViewActivity) {
+			this.mixViewActivity = mixViewActivity;
 		}
 	}
 
 	public ContentResolver getContentResolver() {
 		ContentResolver out = super.getContentResolver();
 		if (super.getContentResolver() == null) {
-			out = getActualMixView().getContentResolver();
+			out = getActualMixViewActivity().getContentResolver();
 		}
 		return out;
 	}

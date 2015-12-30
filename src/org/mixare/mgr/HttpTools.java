@@ -40,6 +40,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
 import org.mixare.MixContext;
+import org.mixare.MixViewActivity;
 import org.mixare.mgr.downloader.DownloadRequest;
 
 import android.content.ContentResolver;
@@ -173,7 +174,7 @@ public final class HttpTools {
 			try {
 				is.close();
 			} catch (Exception ignore) {
-				Log.w(MixContext.TAG, "Error on url "+urlStr, ignore);
+				Log.w(MixViewActivity.TAG, "Error on url "+urlStr, ignore);
 			}
 			try {
 				if (conn instanceof HttpURLConnection)

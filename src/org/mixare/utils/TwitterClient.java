@@ -19,7 +19,7 @@
  */
 package org.mixare.utils;
 
-import org.mixare.MixView;
+import org.mixare.MixViewActivity;
 
 import android.util.Log;
 import twitter4j.GeoLocation;
@@ -97,7 +97,7 @@ public class TwitterClient
 		}
 		catch(Exception e)
 		{
-			Log.e(MixView.TAG, "Error querying twitter data :"+e);
+			Log.e(MixViewActivity.TAG, "Error querying twitter data :"+e);
 			e.printStackTrace();
 		}
 		return null;

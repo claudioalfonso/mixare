@@ -30,10 +30,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -49,7 +47,7 @@ class WebPageMgrImpl implements WebContentManager {
 	 * Shows a webpage with the given url when clicked on a marker.
 	 */
 	public void loadMixViewWebPage(String url) throws Exception {
-		loadWebPage(url, mixContext.getActualMixView());
+		loadWebPage(url, mixContext.getActualMixViewActivity());
 	}
 
 	public WebPageMgrImpl(MixContext mixContext) {
@@ -74,7 +72,7 @@ class WebPageMgrImpl implements WebContentManager {
 
 		webview.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if (!processUrl(url, mixContext.getActualMixView())) { // if the url could not be processed by
+				if (!processUrl(url, mixContext.getActualMixViewActivity())) { // if the url could not be processed by
 					 // another intent
 					d.show();
 					view.loadUrl(url);
@@ -86,9 +84,9 @@ class WebPageMgrImpl implements WebContentManager {
 			public void onPageFinished(WebView view, String url) {
 				if (url.endsWith("return")) {
 					d.dismiss();
-					mixContext.getActualMixView().setZoomLevel();
-					mixContext.getActualMixView().refreshDownload();
-					mixContext.getActualMixView().refresh();
+					mixContext.getActualMixViewActivity().setRangeLevel();
+					mixContext.getActualMixViewActivity().refreshDownload();
+					mixContext.getActualMixViewActivity().refresh();
 				} else {
 					super.onPageFinished(view, url);
 				}
@@ -115,7 +113,7 @@ class WebPageMgrImpl implements WebContentManager {
 				Gravity.BOTTOM));
 		d.getWindow().setAttributes(lp);	
 
-		if (!processUrl(url, mixContext.getActualMixView())) { // if the url could not be processed by
+		if (!processUrl(url, mixContext.getActualMixViewActivity())) { // if the url could not be processed by
 										 // another intent
 			d.show();
 			webview.loadUrl(url);

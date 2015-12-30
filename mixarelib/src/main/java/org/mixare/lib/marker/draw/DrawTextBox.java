@@ -100,7 +100,7 @@ public class DrawTextBox extends DrawCommand {
 				250, dw, underline);
 
 		if (visible) {
-			// based on the distance set the colour
+			// based on the distance set the color
 			if (distance < 100.0) {
 				textBlock.setBgColor(Color.argb(128, 52, 52, 52));
 				textBlock.setBorderColor(Color.rgb(255, 104, 91));
