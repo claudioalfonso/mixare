@@ -95,8 +95,9 @@ public class DataView {
 
     /** TAG for logging */
     public static final String TAG = "Mixare";
+    public boolean dataSourceWorking;
 
-	/**
+    /**
 	 * Constructor
 	 */
 	public DataView(MixContext ctx) {
@@ -208,12 +209,14 @@ public class DataView {
 			markers.addAll(downloadDrawResults(dm));
 			
 			if (dm.isDone()) {
+              //  dataSourceWorking=false;
+               // mixContext.updateDataSourceStatus(false,false,null);
 				retry = 0;
 				state.nextLStatus = MixState.DONE;
 
-				dataHandler = new DataHandler();
+				dataHandler = new DataHandler(); //why throw away the previous markers/DataHandler?
 				dataHandler.addMarkers(markers);
-				dataHandler.onLocationChanged(curFix);
+				dataHandler.onLocationChanged(curFix); // why call onLocationChanged every draw cycle instead of only when it changed?
 
 				if (refreshTimer == null) { // start the refresh timer if it is
 											// null
@@ -229,10 +232,15 @@ public class DataView {
 					}, date, refreshDelay);
 				}
 			} else {
-				dataHandler.addMarkers(markers);
+               // dataSourceWorking=true;
+              //  mixContext.updateDataSourceStatus(true,false,null);
+                dataHandler.addMarkers(markers);
 				dataHandler.onLocationChanged(curFix);
 			}
-		}
+
+		} else {
+           // mixContext.updateDataSourceStatus(false,false,null);
+        }
 
 		// Update markers
 		dataHandler.updateActivationStatus(mixContext);
@@ -256,7 +264,7 @@ public class DataView {
 		// Draw Radar
 		drawRadar(dw);
 
-        mixContext.getActualMixView().updateHud(curFix);
+       // mixContext.getActualMixView().updateHud(curFix); //FIXME Problem: synchronized access prevents uiEvents from being processed
 
 		// Get next event
 		UIEvent evt = null;
@@ -299,8 +307,9 @@ public class DataView {
 		}
 
 		// if no datasources are activated
-		if (state.nextLStatus == MixState.NOT_STARTED)
-			state.nextLStatus = MixState.DONE;
+		if (state.nextLStatus == MixState.NOT_STARTED) {
+            state.nextLStatus = MixState.DONE;
+        }
 	}
 
 	private List<Marker> downloadDrawResults(DownloadManager dm	) {

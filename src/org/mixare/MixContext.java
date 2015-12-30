@@ -101,6 +101,21 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		getWebContentManager().loadWebPage(url, getActualMixView());
 	}
 
+	@Override
+	public void updatePositionStatus(boolean working, boolean problem, String statusText) {
+
+	}
+
+	@Override
+	public void updateDataSourceStatus(boolean working, boolean problem, String statusText) {
+		getActualMixView().setDataSourcesActivity(working,problem,statusText);
+	}
+
+	@Override
+	public void updateSensorsStatus(boolean working, boolean problem, String statusText) {
+
+	}
+
 	public void doResume(MixView mixView) {
 		setActualMixView(mixView);
 	}

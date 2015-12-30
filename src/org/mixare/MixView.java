@@ -64,6 +64,8 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -110,6 +112,12 @@ public class MixView extends SherlockActivity implements SensorEventListener, On
 
 	/** string to name & access the preference file in the internal storage */
 	public static final String PREFS_NAME = "MyPrefsFileForMenuItems";
+    private ProgressBar positionStatusProgress;
+    private ProgressBar dataSourcesStatusProgress;
+    private ProgressBar sensorsStatusProgress;
+    private ImageView positionStatusIcon;
+    private ImageView dataSourcesStatusIcon;
+    private ImageView sensorsStatusIcon;
 
     /**
 	 * Main application Launcher.
@@ -146,7 +154,7 @@ public class MixView extends SherlockActivity implements SensorEventListener, On
 
 			maintainCamera();
 			maintainAugmentR();
-            maintainHudGui();
+            //maintainHudGui();
             maintainZoomBar();
 
 			if (!isInited) {
@@ -493,7 +501,7 @@ public class MixView extends SherlockActivity implements SensorEventListener, On
 		super.onRestart();
 		maintainCamera();
 		maintainAugmentR();
-        maintainHudGui();
+        //maintainHudGui();
         maintainZoomBar();
 	}
 	
@@ -577,6 +585,12 @@ public class MixView extends SherlockActivity implements SensorEventListener, On
         positionStatusText =(TextView) this.findViewById(R.id.positionStatusText);
         dataSourcesStatusText =(TextView) this.findViewById(R.id.dataSourcesStatusText);
         sensorsStatusText =(TextView) this.findViewById(R.id.sensorsStatusText);
+        positionStatusProgress = (ProgressBar) this.findViewById(R.id.positionStatusProgress);
+        dataSourcesStatusProgress =(ProgressBar) this.findViewById(R.id.dataSourcesStatusProgress);
+        sensorsStatusProgress =(ProgressBar) this.findViewById(R.id.sensorsStatusProgress);
+        positionStatusIcon =(ImageView) this.findViewById(R.id.positionStatusIcon);
+        dataSourcesStatusIcon =(ImageView) this.findViewById(R.id.dataSourcesStatusIcon);
+        sensorsStatusIcon =(ImageView) this.findViewById(R.id.sensorsStatusIcon);
     }
 
 	/**
@@ -1248,6 +1262,27 @@ public class MixView extends SherlockActivity implements SensorEventListener, On
         CharSequence relativeTime =  DateUtils.getRelativeTimeSpanString(curFix.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
         if(positionStatusText !=null) {
             positionStatusText.setText(getResources().getString(R.string.positionStatusText,curFix.getProvider(),curFix.getAccuracy(),relativeTime,curFix.getLatitude(),curFix.getLongitude(),curFix.getAltitude()));
+        }
+        //setDataSourcesActivity(getDataView().dataSourceWorking,false,null);
+    }
+
+    public void setDataSourcesActivity(boolean working, boolean problem, String statusText){
+        if(statusText!=null && dataSourcesStatusText !=null) {
+            dataSourcesStatusText.setText(getResources().getString(R.string.dataSourcesStatusText));
+        }
+        if(dataSourcesStatusProgress !=null) {
+            if(working) {
+                dataSourcesStatusProgress.setVisibility(View.VISIBLE);
+            } else {
+                dataSourcesStatusProgress.setVisibility(View.INVISIBLE);
+            }
+        }
+        if(dataSourcesStatusIcon !=null) {
+            if(problem) {
+                dataSourcesStatusIcon.setVisibility(View.VISIBLE);
+            } else {
+                dataSourcesStatusIcon.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
