@@ -149,4 +149,6 @@
 	<string name="truncate">Truncate GPS location</string>
 	<string name="problem_detected">problem detected</string>
 	<string name="positionStatusText">(%1$s, %2$.0f) %3$s: %4$.4f, %5$.4f, %6$.0fm</string>
+	<string name="dataSourcesStatusText">Data Sources </string>
+	<string name="sensorsStatusText">Sensor status</string>
 </resources>
