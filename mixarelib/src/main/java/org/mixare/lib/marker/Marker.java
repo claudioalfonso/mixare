@@ -53,7 +53,7 @@ public interface Marker extends Comparable<Marker>{
 
 	void calcPaint(Camera viewCam, float addX, float addY);
 
-	void draw(PaintScreen dw);
+	void draw(PaintScreen paintScreen);
 
 	double getDistance();
 
@@ -69,11 +69,11 @@ public interface Marker extends Comparable<Marker>{
 
 	int getColor();
 	
-	public void setTxtLab(Label txtLab);
+	void setTxtLab(Label txtLab);
 
 	Label getTxtLab();
 
-	public boolean fClick(float x, float y, MixContextInterface ctx, MixStateInterface state);
+	boolean fClick(float x, float y, MixContextInterface ctx, MixStateInterface state);
 
 	int getMaxObjects();
 	

@@ -26,10 +26,10 @@ import org.mixare.MixContext;
 public class DataSourceManagerFactory {
 	/**
 	 * Hide implementation Of DataSourceManager
-	 * @param context
+	 * @param context the context
 	 * @return DataSourceManager
 	 */
-	public static DataSourceManager makeDataSourceManager(MixContext ctx){
-		return new DataSourceMgrImpl(ctx);
+	public static DataSourceManager makeDataSourceManager(MixContext context){
+		return new DataSourceMgrImpl(context);
 	}
 }

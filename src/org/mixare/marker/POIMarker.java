@@ -59,6 +59,11 @@ public class POIMarker extends LocalMarker {
 	
 	@Override
 	public void update(Location curGPSFix) {
+        // Set direction Marker to user height
+        if (this.isDirectionMarker()) {
+            getGeoLocation().setAltitude(curGPSFix.getAltitude());
+        }
+
 		super.update(curGPSFix);
 	}
 

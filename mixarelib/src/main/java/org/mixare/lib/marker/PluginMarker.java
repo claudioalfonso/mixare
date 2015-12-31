@@ -167,7 +167,7 @@ public abstract class PluginMarker{
 
 		// compute the relative position vector from user position to POI
 		// location
-		PhysicalPlace.convLocToVec(curGPSFix, mGeoLoc, locationVector);
+		locationVector.calculateRelative(curGPSFix, mGeoLoc);
 	}
 
 	public void calcPaint(Camera viewCam, float addX, float addY) {

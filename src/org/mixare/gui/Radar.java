@@ -37,10 +37,9 @@ public class Radar implements ScreenObj {
     /** current context */
     private MixContext mixContext;
 	/** The screen */
-	public MarkerRenderer markerRenderer;
+	private MarkerRenderer markerRenderer;
 
     private RadarPoints radarPoints = null;
-
 
     private PaintScreen paintScreen = null;
 	/** The radar's range */
@@ -48,9 +47,9 @@ public class Radar implements ScreenObj {
 	/** Radius in pixel on screen */
 	public static float RADIUS = 40;
 	/** Position on screen */
-	static float originX = 10 , originY = 20;
+	private static float originX = 10 , originY = 20;
 	/** Color */
-	static int radarColor = Color.argb(100, 0, 0, 200);
+	private static int radarColor = Color.argb(100, 0, 0, 200);
 
     private ScreenLine lrl = new ScreenLine();
     private ScreenLine rrl = new ScreenLine();
@@ -59,9 +58,9 @@ public class Radar implements ScreenObj {
 
     private float rx = 10, ry = 20;
 
-    public Radar(MixContext ctx, MarkerRenderer markerRenderer){
-        this.mixContext = ctx;
+    public Radar(MarkerRenderer markerRenderer){
         this.markerRenderer = markerRenderer;
+        markerRenderer.getContext();
         directions = new String[8];
         directions[0] = mixContext.getString(R.string.N);
         directions[1] = mixContext.getString(R.string.NE);
@@ -120,10 +119,10 @@ public class Radar implements ScreenObj {
         this.paintScreen.setColor(Color.rgb(255, 255, 255));
         this.paintScreen.setFontSize(12);
 
-        radarText(this.paintScreen, MixUtils.formatDist(markerRenderer.getRadius() * 1000), rx
-                + RADIUS, ry + RADIUS * 2 - 10, false);
-        radarText(this.paintScreen, "" + bearing + ((char) 176) + " " + dirTxt, rx
-                + RADIUS, ry - 5, true);
+        radarText(MixUtils.formatDist(markerRenderer.getRadius() * 1000), rx
+                + RADIUS, ry + RADIUS * 2 - 10, false); //show range
+        radarText("" + bearing + ((char) 176) + " " + dirTxt, rx
+                + RADIUS, ry - 5, true); //show bearing
 
         lrl.set(0, -RADIUS);
         lrl.rotate(Camera.DEFAULT_VIEW_ANGLE / 2);
@@ -133,7 +132,7 @@ public class Radar implements ScreenObj {
         rrl.add(rx + RADIUS, ry + RADIUS);
 	}
 
-    private void radarText(PaintScreen paintScreen, String txt, float x, float y,
+    private void radarText(String txt, float x, float y,
                            boolean bg) {
         float padw = 4, padh = 2;
         float w = paintScreen.getTextWidth(txt) + padw * 2;

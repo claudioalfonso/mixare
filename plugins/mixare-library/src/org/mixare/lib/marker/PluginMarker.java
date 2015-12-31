@@ -44,7 +44,7 @@ public abstract class PluginMarker{
 	protected boolean underline = false;
 	private String URL;
 	protected PhysicalPlace mGeoLoc;
-	// distance from user to mGeoLoc in meters
+	// distance from user to geoLocation in meters
 	protected double distance;
 	// The marker color
 	private int color;

@@ -25,20 +25,20 @@ import org.mixare.lib.gui.ScreenObj;
 import org.mixare.lib.marker.Marker;
 
 /**
- * Takes care of the small radar in the top left corner and of its points
+ * Takes care of the points on the small radar in the top left corner
  *
  * @author daniele
  */
 public class RadarPoints implements ScreenObj {
 
     //Radius in pixel on screen
-    public static float RADIUS = 40;
+    private static float RADIUS = 40;
 
-    //The screen
-    public MarkerRenderer markerRenderer;
+    //The renderer
+    private MarkerRenderer markerRenderer;
 
     // The radar's range
-    float range;
+    private float range;
 
     public RadarPoints(MarkerRenderer markerRenderer) {
         this.markerRenderer = markerRenderer;
@@ -51,18 +51,18 @@ public class RadarPoints implements ScreenObj {
         /** put the markers in it */
         float scale = range / RADIUS;
 
-        DataHandler jLayer = markerRenderer.getDataHandler();
+        DataHandler dataHandler = markerRenderer.getDataHandler();
 
-        for (int i = 0; i < jLayer.getMarkerCount(); i++) {
-            Marker pm = jLayer.getMarker(i);
-            float x = pm.getLocationVector().x / scale;
-            float y = pm.getLocationVector().z / scale;
+        for (int i = 0; i < dataHandler.getMarkerCount(); i++) {
+            Marker marker = dataHandler.getMarker(i);
+            float x = marker.getLocationVector().x / scale;
+            float y = marker.getLocationVector().z / scale;
 
-            if (pm.isActive() && (x * x + y * y < RADIUS * RADIUS)) {
+            if (marker.isActive() && (x * x + y * y < RADIUS * RADIUS)) {
                 paintScreen.setFill(true);
 
                 // For OpenStreetMap the color is changing based on the URL
-                paintScreen.setColor(pm.getColor());
+                paintScreen.setColor(marker.getColor());
 
                 paintScreen.paintRect(x + RADIUS - 1, y + RADIUS - 1, 2, 2);
             }
