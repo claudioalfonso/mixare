@@ -10,12 +10,13 @@ apply plugin: 'com.android.application'
 
 repositories{
     mavenCentral()
-    maven {
+ /*   maven {
         url "https://developer.locoslab.com/artifactory/releases"
     }
     maven {
         url "https://developer.locoslab.com/artifactory/snapshots"
     }
+    */
 }
 
 dependencies {
@@ -27,7 +28,7 @@ dependencies {
 
     compile fileTree(dir: 'lib', include: '*.jar')
     compile project(':mixarelib')
-    compile group: 'com.locoslab.api', name: 'carta', version: '1.2.0-SNAPSHOT'
+ //   compile group: 'com.locoslab.api', name: 'carta', version: '1.2.0-SNAPSHOT'
 }
 
 android {

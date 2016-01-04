@@ -60,7 +60,7 @@ public class Radar implements ScreenObj {
 
     public Radar(MarkerRenderer markerRenderer){
         this.markerRenderer = markerRenderer;
-        markerRenderer.getContext();
+        mixContext=markerRenderer.getContext();
         directions = new String[8];
         directions[0] = mixContext.getString(R.string.N);
         directions[1] = mixContext.getString(R.string.NE);
