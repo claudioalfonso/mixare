@@ -41,6 +41,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
@@ -53,6 +54,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -61,10 +64,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -76,7 +82,7 @@ import android.widget.TextView;
  * camera screen.
  * It also handles the main sensor events, touch events and location events.
  */
-public class MixViewActivity extends SherlockActivity implements SensorEventListener, OnTouchListener {
+public class MixViewActivity extends MixMenu implements SensorEventListener, OnTouchListener {
 
 	private CameraSurface camScreen;
 	private AugmentedView augScreen;
@@ -119,6 +125,8 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
     private ImageView dataSourcesStatusIcon;
     private ImageView sensorsStatusIcon;
 
+	private FrameLayout camera_view;
+
     /**
 	 * Main application Launcher.
 	 * Does:
@@ -147,10 +155,11 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 					(SensorManager) getSystemService(SENSOR_SERVICE));
 			
 			killOnError();
-			requestWindowFeature(Window.FEATURE_NO_TITLE);
-			if (getSupportActionBar() != null) {
-				getSupportActionBar().hide();
-			}
+			//requestWindowFeature(Window.FEATURE_NO_TITLE);
+			//if (getSupportActionBar() != null) {
+			//	getSupportActionBar().hide();
+			//}
+
 
 			maintainCamera();
 			maintainAugmentR();
@@ -181,6 +190,7 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 				firstAccess(settings);
 
 			}
+
 
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);
@@ -556,10 +566,19 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 	 * Checks camScreen, if it does not exist, it creates one.
 	 */
 	private void maintainCamera() {
+
+		camera_view = (FrameLayout)findViewById(R.id.content_frame);
+
 		if (camScreen == null) {
 			camScreen = new CameraSurface(this);
+			camera_view.addView(camScreen);
 		}
-		setContentView(camScreen);
+		else {
+			camera_view.removeView(camScreen);
+			camera_view.addView(camScreen);
+
+		}
+		//setContentView(camScreen);
 	}
 
 	/**
@@ -568,9 +587,16 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 	private void maintainAugmentR() {
 		if (augScreen == null) {
 			augScreen = new AugmentedView(this);
+			addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
+					LayoutParams.WRAP_CONTENT));
 		}
-		addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
+		else {
+			((ViewGroup) augScreen.getParent()).removeView(augScreen);
+			addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
+					LayoutParams.WRAP_CONTENT));
+		}
+
+
 	}
 
 	/**
@@ -801,12 +827,12 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 	}
 	
 	/* ********* Operator - Menu ***** */
-
+	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int base = Menu.FIRST;
 		/* define the first */
-		MenuItem item1 = menu.add(base, base, base,
+		/*MenuItem item1 = menu.add(base, base, base,
 				getString(R.string.menu_item_1));
 		MenuItem item2 = menu.add(base, base + 1, base + 1,
 				getString(R.string.menu_item_2));
@@ -826,6 +852,7 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 		MenuItem item9 = menu.add(base, base + 8, base + 8, "drawText");
 		
 		/* assign icons to the menu items */
+	/*
 		item1.setIcon(drawable.icon_datasource);
 		item2.setIcon(drawable.icon_datasource);
 		item3.setIcon(android.R.drawable.ic_menu_view);
@@ -836,13 +863,13 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 		item8.setIcon(android.R.drawable.ic_menu_share);
 
 		return true;
-	}
-	
-	@Override
+	} */
+
+	/*@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		/* Data sources */
-		case 1:
+		/*case 1:
 			if (!getMarkerRenderer().getIsLauncherStarted()) {
 				Intent intent = new Intent(MixViewActivity.this, DataSourceList.class);
 				startActivityForResult(intent, 40);
@@ -852,7 +879,7 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 			}
 			break;
 			/* Plugin View */
-		case 2:
+		/*case 2:
 			if (!getMarkerRenderer().getIsLauncherStarted()) {
 				Intent intent = new Intent(MixViewActivity.this,
 						PluginListActivity.class);
@@ -863,39 +890,39 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 			}
 			break;
 		/* List markerRenderer */
-		case 3:
+		/*case 3:
 			/*
 			 * if the list of titles to show in alternative list markerRenderer is not
 			 * empty
 			 */
-			if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
+			/*if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
 				Intent intent1 = new Intent(MixViewActivity.this, MixListView.class);
 				intent1.setAction(Intent.ACTION_VIEW);
 				startActivityForResult(intent1, 42);
 			}
 			/* if the list is empty */
-			else {
+			/*else {
 				markerRenderer.getContext().getNotificationManager().
 				addNotification(getString(R.string.empty_list));
 			}
 			break;
 		/* Map View */
-		case 4:
+		/*case 4:
 			Intent intent2 = new Intent(MixViewActivity.this, MixMap.class);
 			startActivityForResult(intent2, 20);
 			break;
 		/* range level */
-		case 5:
+		/*case 5:
 			getMixViewData().getRangeBar().setVisibility(View.VISIBLE);
 			getMixViewData().setRangeBarProgress(
 					getMixViewData().getRangeBar().getProgress());
 			break;
 		/* Search */
-		case 6:
+		/*case 6:
 			onSearchRequested();
 			break;
 		/* GPS Information */
-		case 7:
+		/*case 7:
 			Location currentGPSInfo = getMixViewData().getMixContext()
 					.getLocationFinder().getCurrentLocation();
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -922,11 +949,11 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 			alert.show();
 			break;
 		/* Case 6: license agreements */
-		case 8:
+		/*case 8:
 			AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
 			builder1.setMessage(getString(R.string.license));
 			/* Retry */
-			builder1.setNegativeButton(getString(R.string.close_button),
+			/*builder1.setNegativeButton(getString(R.string.close_button),
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							dialog.dismiss();
@@ -941,6 +968,111 @@ public class MixViewActivity extends SherlockActivity implements SensorEventList
 		}
 		return true;
 	}
+	*/
+	@Override
+	public void selectItem(int position) {
+		switch (position) {
+		/* Data sources */
+			case 0:
+				if (!getMarkerRenderer().getIsLauncherStarted()) {
+					Intent intent = new Intent(MixViewActivity.this, DataSourceList.class);
+					startActivityForResult(intent, 40);
+				} else {
+					markerRenderer.getContext().getNotificationManager()
+							.addNotification(getString(R.string.no_website_available));
+				}
+				break;
+			/* Plugin View */
+			case 1:
+				if (!getMarkerRenderer().getIsLauncherStarted()) {
+					Intent intent = new Intent(MixViewActivity.this,
+							PluginListActivity.class);
+					startActivityForResult(intent, 35);
+				} else {
+					markerRenderer.getContext().getNotificationManager()
+							.addNotification(getString(R.string.no_website_available));
+				}
+				break;
+		/* List markerRenderer */
+			case 2:
+			/*
+			 * if the list of titles to show in alternative list markerRenderer is not
+			 * empty
+			 */
+				if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
+					Intent intent1 = new Intent(MixViewActivity.this, MixListView.class);
+					intent1.setAction(Intent.ACTION_VIEW);
+					startActivityForResult(intent1, 42);
+				}
+			/* if the list is empty */
+				else {
+					markerRenderer.getContext().getNotificationManager().
+							addNotification(getString(R.string.empty_list));
+				}
+				break;
+		/* Map View */
+			case 3:
+				Intent intent2 = new Intent(MixViewActivity.this, MixMap.class);
+				startActivityForResult(intent2, 20);
+				break;
+		/* range level */
+			case 4:
+				getMixViewData().getRangeBar().setVisibility(View.VISIBLE);
+				getMixViewData().setRangeBarProgress(
+						getMixViewData().getRangeBar().getProgress());
+				break;
+		/* Search */
+			case 5:
+				onSearchRequested();
+				break;
+		/* GPS Information */
+			case 6:
+				Location currentGPSInfo = getMixViewData().getMixContext()
+						.getLocationFinder().getCurrentLocation();
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(getString(R.string.general_info_text) + "\n\n"
+						+ getString(R.string.longitude)
+						+ currentGPSInfo.getLongitude() + "\n"
+						+ getString(R.string.latitude)
+						+ currentGPSInfo.getLatitude() + "\n"
+						+ getString(R.string.altitude)
+						+ currentGPSInfo.getAltitude() + "m\n"
+						+ getString(R.string.speed) + currentGPSInfo.getSpeed()
+						+ "km/h\n" + getString(R.string.accuracy)
+						+ currentGPSInfo.getAccuracy() + "m\n"
+						+ getString(R.string.gps_last_fix)
+						+ new Date(currentGPSInfo.getTime()).toString() + "\n");
+				builder.setNegativeButton(getString(R.string.close_button),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
+							}
+						});
+				AlertDialog alert = builder.create();
+				alert.setTitle(getString(R.string.general_info_title));
+				alert.show();
+				break;
+		/* Case 6: license agreements */
+			case 7:
+				AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+				builder1.setMessage(getString(R.string.license));
+			/* Retry */
+				builder1.setNegativeButton(getString(R.string.close_button),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
+							}
+						});
+				AlertDialog alert1 = builder1.create();
+				alert1.setTitle(getString(R.string.license_title));
+				alert1.show();
+				break;
+			case 8:
+				doError(null, new Random().nextInt(3));
+		}
+
+	}
+
 
 	/* ******** Operators - Sensors ****** */
 	private SeekBar.OnSeekBarChangeListener onRangeBarChangeListener = new SeekBar.OnSeekBarChangeListener() {

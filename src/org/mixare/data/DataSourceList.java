@@ -62,7 +62,7 @@ public class DataSourceList extends SherlockListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 

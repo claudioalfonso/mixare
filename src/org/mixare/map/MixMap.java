@@ -24,6 +24,9 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
@@ -34,12 +37,14 @@ import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mixare.MixViewActivity;
 import org.mixare.R;
+import org.mixare.data.AddDataSource;
+import org.mixare.data.DataSourceStorage;
 import org.mixare.lib.MixUtils;
 
 import org.mixare.lib.marker.Marker;
 import org.mixare.mgr.location.LocationFinder;
 
-public class MixMap extends Activity {
+public class MixMap extends SherlockActivity {
     public final static byte DEFAULT_ZOOM_LEVEL =12;
     private MapView mapView;
 	private TileCache tileCache;
@@ -63,6 +68,8 @@ public class MixMap extends Activity {
         this.mapView.setClickable(true);
         this.mapView.getMapScaleBar().setVisible(true);
         this.mapView.setBuiltInZoomControls(true);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         this.tileCache=AndroidUtil.createTileCache(this, this.getClass().getSimpleName(),
                 this.mapView.getModel().displayModel.getTileSize(), this.screenRatio,
@@ -136,6 +143,8 @@ public class MixMap extends Activity {
             // reaches this part of code if no keyword is specified, the keyword
             // is empty or does match
 
+
+
             // Creates a new GeoPoint of the markers Location
             final LatLong point = new LatLong(marker.getLatitude(),
                     marker.getLongitude());
@@ -149,6 +158,16 @@ public class MixMap extends Activity {
 
             this.mapView.getLayerManager().getLayers().add(new org.mapsforge.map.layer.overlay.Marker(point, AndroidGraphicFactory.convertToBitmap(icon), 0, -icon.getIntrinsicHeight() / 2));
         }
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     @Override

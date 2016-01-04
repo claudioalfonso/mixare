@@ -151,4 +151,6 @@
 	<string name="dataSourcesStatusText">Data Sources </string>
 	<string name="sensorsStatusText">Sensor status</string>
 	<string name="pref_rangeLevel" translatable="false">rangeLevel</string>
+	<string name="drawer_open" />
+	<string name="drawer_close" />
 </resources>

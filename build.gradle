@@ -20,14 +20,14 @@ repositories{
 
 dependencies {
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
- //   compile 'org.apache.aries.application:twitter4j:0.3'
+    //   compile 'org.apache.aries.application:twitter4j:0.3'
     compile 'org.mapsforge:mapsforge-core:0.6.0'
     compile 'org.mapsforge:mapsforge-map:0.6.0'
     compile 'org.mapsforge:mapsforge-map-android:0.6.0'
-
-    compile fileTree(dir: 'lib', include: '*.jar')
+    compile fileTree(include: '*.jar', dir: 'lib')
     compile project(':mixarelib')
-    compile group: 'com.locoslab.api', name: 'carta', version: '1.2.0-SNAPSHOT'
+    compile 'com.locoslab.api:carta:1.2.0-SNAPSHOT'
+    compile 'com.android.support:support-v4:23.1.1'
 }
 
 android {
