@@ -96,7 +96,7 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 
 				// preview form factor
 				float ff = (float) w / h;
-				Log.d(MixViewActivity.TAG, "Screen res: w:" + w + " h:" + h
+				Log.d(Config.TAG, "Screen res: w:" + w + " h:" + h
 						+ " aspect ratio:" + ff);
 
 				// holder for the best form factor and size
@@ -126,7 +126,7 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 					// preview width should be more than current bestw
 					// this combination will ensure that the highest resolution
 					// will win
-					Log.d(MixViewActivity.TAG, "Candidate camera element: w:"
+					Log.d(Config.TAG, "Candidate camera element: w:"
 							+ element.width + " h:" + element.height
 							+ " aspect ratio:" + cff);
 					if ((ff - cff <= ff - bff) && (element.width <= w)
@@ -136,14 +136,14 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 						besth = element.height;
 					}
 				}
-				Log.d(MixViewActivity.TAG, "Chosen camera element: w:" + bestw + " h:"
+				Log.d(Config.TAG, "Chosen camera element: w:" + bestw + " h:"
 						+ besth + " aspect ratio:" + bff);
 				// Some Samsung phones will end up with bestw and besth = 0
 				// because their minimum preview size is bigger then the screen
 				// size.
 				// In this case, we use the default values: 480x320
 				if ((bestw == 0) || (besth == 0)) {
-					Log.d(MixViewActivity.TAG, "Using default camera parameters!");
+					Log.d(Config.TAG, "Using default camera parameters!");
 					bestw = 480;
 					besth = 320;
 				}

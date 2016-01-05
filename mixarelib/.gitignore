@@ -9,12 +9,7 @@ sonar-project.properties
 *.iml
 .idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
-/mixarelib/build
-/mixarelib/build/
 .gradle
-.gradle/
-mixarelib/build/
-
 
 # .gitignore following https://stackoverflow.com/questions/16736856/what-should-be-in-my-gitignore-for-an-android-studio-project
 #built application files
@@ -28,9 +23,6 @@ mixarelib/build/
 *.class
 
 # generated files
-bin/
-gen/
-out/
 build/
 
 # Local configuration file (sdk path, etc)
@@ -39,23 +31,4 @@ local.properties
 # Windows thumbnail db
 Thumbs.db
 
-# OSX files
-.DS_Store
 
-# Eclipse project files
-.classpath
-.project
-
-
-
-#NDK
-obj/
-
-#Optional - for older project format
-/*/out
-/*/*/build
-/*/*/production
-*.iws
-*.ipr
-*~
-*.swp

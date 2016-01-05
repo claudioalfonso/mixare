@@ -79,7 +79,7 @@ public class PluginListActivity extends SherlockActivity {
 			break;
 		/* Show available plugins from url in a webView */
 		case MENU_SELECT_PLUGIN_ID:
-			MarkerRenderer markerRenderer = MixViewActivity.getMarkerRenderer();
+			MarkerRenderer markerRenderer = MixViewActivity.getMarkerRendererStatically();
 
 			try {
 				markerRenderer.getContext()

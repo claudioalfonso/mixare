@@ -45,7 +45,7 @@ public class SocialMarker extends LocalMarker {
 	public void update(Location curGPSFix) {
 		// we want the social markers to be on the upper part of
 		// your surrounding sphere 
-		double altitude = curGPSFix.getAltitude()+Math.sin(0.35)*distance+Math.sin(0.4)*(distance/(MixViewActivity.getMarkerRenderer().getRadius()*1000f/distance));
+		double altitude = curGPSFix.getAltitude()+Math.sin(0.35)*distance+Math.sin(0.4)*(distance/(MixViewActivity.getMarkerRendererStatically().getRadius()*1000f/distance));
 		getGeoLocation().setAltitude(altitude);
 
 		super.update(curGPSFix);

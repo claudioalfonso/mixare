@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mixare.MixViewActivity;
+import org.mixare.Config;
 import org.mixare.data.MarkerBuilder;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
@@ -114,7 +114,7 @@ public class TwitterDataProcessor extends DataHandler implements DataProcessor{
 				}
 				if (lat != null) 
 				{
-					Log.v(MixViewActivity.TAG, "processing Twitter JSON object");
+					Log.v(Config.TAG, "processing Twitter JSON object");
 					
 					JSONObject user = jo.getJSONObject("user");
 					String screen_name = user.getString("screen_name");
@@ -138,7 +138,7 @@ public class TwitterDataProcessor extends DataHandler implements DataProcessor{
 						markers.add(ma);
 					}
 					cache.add(ma);
-					Log.d(MixViewActivity.TAG, "Found "+markers.size()+" new tweets, total tweets :"+cache.size());
+					Log.d(Config.TAG, "Found "+markers.size()+" new tweets, total tweets :"+cache.size());
 				}
 			}
 		}

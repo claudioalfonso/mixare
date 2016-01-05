@@ -123,11 +123,11 @@ public class MixMap extends SherlockActivity {
                 markerNoLink.getIntrinsicWidth() / 2, 0);
         // a marker to show at the position
        Marker marker;
-        int limit = MixViewActivity.getMarkerRenderer().getDataHandler().getMarkerCount();
+        int limit = MixViewActivity.getMarkerRendererStatically().getDataHandler().getMarkerCount();
 
         for (int i = 0; i < limit; i++) {
             Drawable icon=markerLink;
-            marker = MixViewActivity.getMarkerRenderer().getDataHandler().getMarker(i);
+            marker = MixViewActivity.getMarkerRendererStatically().getDataHandler().getMarker(i);
             // if a searchKeyword is specified
             if (searchKeyword != null) {
                 // the Keyword is not Empty
@@ -242,7 +242,7 @@ public class MixMap extends SherlockActivity {
      *
      */
     private void setZoomLevelBasedOnRadius() {
-        float mapZoomLevel = (MixViewActivity.getMarkerRenderer().getRadius() / 2f);
+        float mapZoomLevel = (MixViewActivity.getMarkerRendererStatically().getRadius() / 2f);
         mapZoomLevel = MixUtils
                 .earthEquatorToZoomLevel((mapZoomLevel < 2f) ? 2f
                         : mapZoomLevel);
@@ -258,7 +258,7 @@ public class MixMap extends SherlockActivity {
      * @return My current Location
      */
     private Location getOwnLocation() {
-        return MixViewActivity.getMarkerRenderer().getContext().getLocationFinder()
+        return MixViewActivity.getMarkerRendererStatically().getContext().getLocationFinder()
                 .getCurrentLocation();
     }
 

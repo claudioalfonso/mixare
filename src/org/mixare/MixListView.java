@@ -69,7 +69,7 @@ public class MixListView extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 
 		this.ctx = this;
-		this.markerRenderer = MixViewActivity.getMarkerRenderer();
+		this.markerRenderer = MixViewActivity.getMarkerRendererStatically();
 
 		editText = new EditText(this);
 

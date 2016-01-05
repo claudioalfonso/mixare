@@ -162,7 +162,7 @@ public class MarkerRenderer {
 
 		} catch (Exception ex) {
 			// ex.printStackTrace();
-			Log.e(MixViewActivity.TAG, ex.getMessage());
+			Log.e(Config.TAG, ex.getMessage());
 		}
 		frozen = false;
 		isInit = true;
@@ -206,7 +206,7 @@ public class MarkerRenderer {
 			
 			if (dm.isDone()) {
               //  dataSourceWorking=false;
-               // mixContext.updateDataSourceStatus(false,false,null);
+                mixContext.updateDataSourceStatus(false,false,null);
 				retry = 0;
 				state.nextLStatus = MixState.DONE;
 
@@ -229,13 +229,13 @@ public class MarkerRenderer {
 				}
 			} else {
                // dataSourceWorking=true;
-              //  mixContext.updateDataSourceStatus(true,false,null);
+                mixContext.updateDataSourceStatus(true,false,null);
                 dataHandler.addMarkers(markers);
 				dataHandler.setCurLocation(curFix);
 			}
 
 		} else {
-           // mixContext.updateDataSourceStatus(false,false,null);
+           mixContext.updateDataSourceStatus(false,false,null);
         }
 
 		// Update markers
@@ -261,7 +261,7 @@ public class MarkerRenderer {
 		// Draw Radar
 		drawRadar(paintScreen);
 
-       // mixContext.getActualMixViewActivity().updateHud(curFix); //FIXME Problem: synchronized access prevents uiEvents from being processed
+        mixContext.getActualMixViewActivity().updateHud(curFix); //FIXME Problem: synchronized access prevents uiEvents from being processed
 
 		// Get next event
 		UIEvent evt = null;
@@ -325,7 +325,7 @@ public class MarkerRenderer {
 			if (!dRes.isError()) {
 				if (dRes.getMarkers() != null) {
 					// jLayer = (DataHandler) dRes.obj;
-					Log.i(MixViewActivity.TAG, "Adding Markers");
+					Log.i(Config.TAG, "Adding Markers");
 					markers.addAll(dRes.getMarkers());
 
 					// Notification

@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
 
-import org.mixare.MixViewActivity;
+import org.mixare.Config;
 import org.mixare.data.convert.Elevation;
 import org.mixare.lib.MixContextInterface;
 import org.mixare.lib.MixStateInterface;
@@ -191,7 +191,7 @@ public abstract class LocalMarker implements Marker {
 
 	public void draw(PaintScreen paintScreen) {
 		drawCircle(paintScreen);
-		if (MixViewActivity.drawTextBlock) {
+		if (Config.drawTextBlock) {
 			drawTextBlock(paintScreen);
 		}
 	}
