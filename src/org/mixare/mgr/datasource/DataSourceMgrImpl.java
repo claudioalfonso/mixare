@@ -18,7 +18,6 @@
  */
 package org.mixare.mgr.datasource;
 
-import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -28,11 +27,9 @@ import org.mixare.data.DataSourceStorage;
 import org.mixare.mgr.downloader.DownloadRequest;
 import org.mixare.mgr.location.LocationBlur;
 
-import android.util.Log;
-
 class DataSourceMgrImpl implements DataSourceManager {
 
-	private final ConcurrentLinkedQueue<DataSource> allDataSources = new ConcurrentLinkedQueue<DataSource>();
+	private final ConcurrentLinkedQueue<DataSource> allDataSources = new ConcurrentLinkedQueue<>();
 
 	private final MixContext ctx;
 
@@ -41,7 +38,7 @@ class DataSourceMgrImpl implements DataSourceManager {
 	}
 
 	@Override
-	public boolean isAtLeastOneDatasourceSelected() {
+	public boolean isAtLeastOneDataSourceSelected() {
 		for (DataSource ds : this.allDataSources) {
 			if (ds.getEnabled()) {
 				return true;
@@ -50,7 +47,7 @@ class DataSourceMgrImpl implements DataSourceManager {
 		return false;
 	}
 
-	public void setAllDataSourcesforLauncher(DataSource datasource) {
+	public void setAllDataSourcesForLauncher(DataSource datasource) {
 		this.allDataSources.clear(); // TODO WHY? CLEAN ALL
 		this.allDataSources.add(datasource);
 	}

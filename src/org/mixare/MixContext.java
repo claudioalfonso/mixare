@@ -65,7 +65,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		// TODO: RE-ORDER THIS SEQUENCE... IS NECESSARY?
 		getDataSourceManager().refreshDataSources();
 
-		if (!getDataSourceManager().isAtLeastOneDatasourceSelected()) {
+		if (!getDataSourceManager().isAtLeastOneDataSourceSelected()) {
 			rotationM.toIdentity();
 		}
 		getLocationFinder().switchOn();

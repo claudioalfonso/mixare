@@ -100,9 +100,7 @@ public class MarkerRenderer {
 	 */
 	public MarkerRenderer(MixContext ctx) {
 		this.mixContext = ctx;
-		radar = new Radar(this.mixContext, this);
-		radar.markerRenderer = this;
-
+		radar = new Radar(this);
 	}
 
 	public MixContext getContext() {
@@ -174,7 +172,7 @@ public class MarkerRenderer {
 		DownloadRequest request = new DownloadRequest(new DataSource(
 				"LAUNCHER", url, DataSource.TYPE.MIXARE,
 				DataSource.DISPLAY.CIRCLE_MARKER, true));
-		mixContext.getDataSourceManager().setAllDataSourcesforLauncher(
+		mixContext.getDataSourceManager().setAllDataSourcesForLauncher(
 				request.getSource());
 		mixContext.getDownloadManager().submitJob(request);
 		state.nextLStatus = MixState.PROCESSING;
@@ -193,7 +191,7 @@ public class MarkerRenderer {
 
 	public void draw(PaintScreen paintScreen) {
 		mixContext.getRM(cam.transform);
-		curFix = mixContext.getLocationFinder().getCurrentLocation();
+		curFix = mixContext.getLocationFinder().getCurrentLocation();  // why get location on every draw cycle instead of only when it changed?
 
 		state.calcPitchBearing(cam.transform);
 
@@ -214,7 +212,7 @@ public class MarkerRenderer {
 
 				dataHandler = new DataHandler(); //why throw away the previous markers/DataHandler?
 				dataHandler.addMarkers(markers);
-				dataHandler.onLocationChanged(curFix); // why call onLocationChanged every draw cycle instead of only when it changed?
+				dataHandler.setCurLocation(curFix); // why call setCurLocation every draw cycle instead of only when it changed?
 
 				if (refreshTimer == null) { // start the refresh timer if it is
 											// null
@@ -233,7 +231,7 @@ public class MarkerRenderer {
                // dataSourceWorking=true;
               //  mixContext.updateDataSourceStatus(true,false,null);
                 dataHandler.addMarkers(markers);
-				dataHandler.onLocationChanged(curFix);
+				dataHandler.setCurLocation(curFix);
 			}
 
 		} else {
@@ -250,7 +248,7 @@ public class MarkerRenderer {
 
 				// To increase performance don't recalculate position vector
 				// for every marker on every draw call, instead do this only
-				// after onLocationChanged and after downloading new marker
+				// after setCurLocation and after downloading new marker
 				// if (!frozen)
 				// ma.update(curFix);
 				if (!frozen) {

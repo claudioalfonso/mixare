@@ -18,8 +18,12 @@
  */
 package org.mixare.lib.render;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import org.mixare.lib.reality.PhysicalPlace;
+
 import java.lang.Math;
 
 /**
@@ -181,5 +185,29 @@ public class MixVector implements Parcelable{
 		x = in.readFloat();
 		y = in.readFloat();
 		z = in.readFloat();
+	}
+
+	/**
+	 * recalculate to represent the vector from a Location to a reference PhysicalPlace
+	 * @param org the location from which to calculate
+	 * @param gp the reference location to which to calculate
+	 *
+	 */
+	public void calculateRelative(Location org, PhysicalPlace gp) {
+		float[] z = new float[1];
+		z[0] = 0;
+		Location.distanceBetween(org.getLatitude(), org.getLongitude(),
+				gp.getLatitude(), org.getLongitude(), z);
+		float[] x = new float[1];
+		Location.distanceBetween(org.getLatitude(), org.getLongitude(),
+				org.getLatitude(), gp.getLongitude(), x);
+		double y = gp.getAltitude() - org.getAltitude();
+		if (org.getLatitude() < gp.getLatitude()) {
+            z[0] *= -1;
+        }
+		if (org.getLongitude() > gp.getLongitude()) {
+            x[0] *= -1;
+        }
+		this.set(x[0], (float) y, z[0]);
 	}
 }

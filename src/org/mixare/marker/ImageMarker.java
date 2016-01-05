@@ -30,6 +30,7 @@ import org.mixare.lib.marker.draw.DrawImage;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.util.Log;
 
 
@@ -173,4 +174,9 @@ public class ImageMarker extends LocalMarker {
 		this.image = image;
 	}
 
+
+    @Override
+	public void update(Location curGPSFix) {
+		super.update(curGPSFix);
+	}
 }

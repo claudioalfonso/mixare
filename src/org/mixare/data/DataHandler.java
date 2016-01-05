@@ -32,13 +32,12 @@ import android.util.Log;
 
 /**
  * DataHandler is the model which provides the Marker Objects with its data.
- *
- * DataHandler is also the Factory for new Marker objects.
  */
 public class DataHandler {
-	
 	// complete marker list
 	private List<Marker> markerList = new ArrayList<>();
+
+	protected DataSource.DISPLAY overrideMarkerDisplayType = null;
 
 	public DataSource.DISPLAY getOverrideMarkerDisplayType() {
 		return overrideMarkerDisplayType;
@@ -48,17 +47,11 @@ public class DataHandler {
 		this.overrideMarkerDisplayType = overrideMarkerDisplayType;
 	}
 
-	protected DataSource.DISPLAY overrideMarkerDisplayType = null;
-	
 	public void addMarkers(List<Marker> markers) {
-
-//		Log.v(MixViewActivity.TAG, "Marker before: "+markerList.size());
 		for(Marker ma:markers) {
 			if(!markerList.contains(ma))
 				markerList.add(ma);
 		}
-		
-//		Log.d(MixViewActivity.TAG, "Marker count: "+markerList.size());
 	}
 	
 	public void sortMarkerList() {
@@ -75,44 +68,26 @@ public class DataHandler {
 	}
 	
 	public void updateActivationStatus(MixContext mixContext) {
-		
-		Hashtable<Class, Integer> map = new Hashtable<Class, Integer>();
+		Hashtable<Class, Integer> map = new Hashtable<>();
 				
 		for(Marker ma: markerList) {
-
 			Class<? extends Marker> mClass=ma.getClass();
 			map.put(mClass, (map.get(mClass)!=null)?map.get(mClass)+1:1);
 			
 			boolean belowMax = (map.get(mClass) <= ma.getMaxObjects());
 			//boolean dataSourceSelected = mixContext.isDataSourceSelected(ma.getDatasource());
 			
-			ma.setActive((belowMax));
+			ma.setActive(belowMax);
 		}
 	}
 		
-	public void onLocationChanged(Location location) {
+	public void setCurLocation(Location location) {
 		updateDistances(location);
 		sortMarkerList();
 		for(Marker ma: markerList) {
 			ma.update(location);
 		}
 	}
-
-
-	
-//	/**
-//	 * @deprecated Nobody should get direct access to the list
-//	 */
-//	public List<Marker> getMarkerList() {
-//		return markerList;
-//	}
-//	
-//	/**
-//	 * @deprecated Nobody should get direct access to the list
-//	 */
-//	public void setMarkerList(List<Marker> markerList) {
-//		this.markerList = markerList;
-//	}
 
 	public int getMarkerCount() {
 		return markerList.size();

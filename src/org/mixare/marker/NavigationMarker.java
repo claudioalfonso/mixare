@@ -45,6 +45,7 @@ public class NavigationMarker extends LocalMarker {
 
 	@Override
 	public void update(Location curGPSFix) {
+		getGeoLocation().setAltitude(curGPSFix.getAltitude());
 	
 		super.update(curGPSFix);
 		
