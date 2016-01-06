@@ -18,11 +18,14 @@
  */
 package org.mixare.map;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -35,6 +38,7 @@ import org.mapsforge.map.layer.cache.TileCache;
 
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
+import org.mixare.MixMenu;
 import org.mixare.MixViewActivity;
 import org.mixare.R;
 import org.mixare.data.AddDataSource;
@@ -44,11 +48,12 @@ import org.mixare.lib.MixUtils;
 import org.mixare.lib.marker.Marker;
 import org.mixare.mgr.location.LocationFinder;
 
-public class MixMap extends SherlockActivity {
+public class MixMap extends MixMenu {
     public final static byte DEFAULT_ZOOM_LEVEL =12;
     private MapView mapView;
 	private TileCache tileCache;
     protected TileDownloadLayer downloadLayer;
+    private FrameLayout map_view;
 
     // the search keyword
     protected String searchKeyword = "";
@@ -56,20 +61,20 @@ public class MixMap extends SherlockActivity {
     protected float screenRatio = 1.0f;
 
 
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         AndroidGraphicFactory.createInstance(this.getApplication());
+        map_view = (FrameLayout)findViewById(R.id.content_frame);
 
         this.mapView = new MapView(this);
-        setContentView(this.mapView);
+        //setContentView(this.mapView);
 
         this.mapView.setClickable(true);
         this.mapView.getMapScaleBar().setVisible(true);
         this.mapView.setBuiltInZoomControls(true);
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         this.tileCache=AndroidUtil.createTileCache(this, this.getClass().getSimpleName(),
                 this.mapView.getModel().displayModel.getTileSize(), this.screenRatio,
@@ -86,7 +91,9 @@ public class MixMap extends SherlockActivity {
         mapView.getMapZoomControls().setZoomLevelMax(OpenStreetMapMapnik.INSTANCE.getZoomLevelMax());
 
         // Add mapView to View
-        setContentView(mapView);
+        //setContentView(mapView);
+        map_view.addView(this.mapView);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Retrieve the search query
         Intent intent = this.getIntent();

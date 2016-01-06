@@ -74,6 +74,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * This class is the main application which uses the other classes for different
@@ -143,22 +144,22 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		super.onCreate(savedInstanceState);
 		// MixViewActivity.CONTEXT = this;
 		try {
-			isBackground = false;			
+			isBackground = false;
 			handleIntent(getIntent());
-			
+
 			final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 			getMixViewData().setmWakeLock(
 					pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
 							"My Tag"));
-			
+
 			getMixViewData().setSensorMgr(
 					(SensorManager) getSystemService(SENSOR_SERVICE));
-			
+
 			killOnError();
 			//requestWindowFeature(Window.FEATURE_NO_TITLE);
-			//if (getSupportActionBar() != null) {
-			//	getSupportActionBar().hide();
-			//}
+			if (getSupportActionBar() != null) {
+				getSupportActionBar().hide();
+			}
 
 
 			maintainCamera();
@@ -197,6 +198,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 	}
 
+	@Override
 	public MixViewDataHolder getMixViewData() {
 		if (mixViewData == null && isBackground == false) {
 			// TODO: VERY important, only one!
@@ -587,15 +589,18 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	private void maintainAugmentR() {
 		if (augScreen == null) {
 			augScreen = new AugmentedView(this);
-			addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
+			camera_view.addView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT));
+			//addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
+			//		LayoutParams.WRAP_CONTENT));
 		}
 		else {
 			((ViewGroup) augScreen.getParent()).removeView(augScreen);
-			addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
+			//addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
+			//		LayoutParams.WRAP_CONTENT));
+			camera_view.addView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT));
 		}
-
 
 	}
 
@@ -628,6 +633,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		addContentView(frameLayout, new FrameLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,
 				Gravity.BOTTOM));
+		//camera_view.addView(frameLayout, new FrameLayout.LayoutParams(
+		//		LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,
+		//		Gravity.BOTTOM));
 	}
 
 	/**
@@ -969,11 +977,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		return true;
 	}
 	*/
-	@Override
+	/*@Override
 	public void selectItem(int position) {
 		switch (position) {
 		/* Data sources */
-			case 0:
+			/*case 0:
 				if (!getMarkerRenderer().getIsLauncherStarted()) {
 					Intent intent = new Intent(MixViewActivity.this, DataSourceList.class);
 					startActivityForResult(intent, 40);
@@ -983,7 +991,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 				break;
 			/* Plugin View */
-			case 1:
+			/*case 1:
 				if (!getMarkerRenderer().getIsLauncherStarted()) {
 					Intent intent = new Intent(MixViewActivity.this,
 							PluginListActivity.class);
@@ -994,39 +1002,39 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 				break;
 		/* List markerRenderer */
-			case 2:
+			/*case 2:
 			/*
 			 * if the list of titles to show in alternative list markerRenderer is not
 			 * empty
 			 */
-				if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
+			/*	if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
 					Intent intent1 = new Intent(MixViewActivity.this, MixListView.class);
 					intent1.setAction(Intent.ACTION_VIEW);
 					startActivityForResult(intent1, 42);
 				}
 			/* if the list is empty */
-				else {
+			/*	else {
 					markerRenderer.getContext().getNotificationManager().
 							addNotification(getString(R.string.empty_list));
 				}
 				break;
 		/* Map View */
-			case 3:
+			/*case 3:
 				Intent intent2 = new Intent(MixViewActivity.this, MixMap.class);
 				startActivityForResult(intent2, 20);
 				break;
 		/* range level */
-			case 4:
+			/*case 4:
 				getMixViewData().getRangeBar().setVisibility(View.VISIBLE);
 				getMixViewData().setRangeBarProgress(
 						getMixViewData().getRangeBar().getProgress());
 				break;
 		/* Search */
-			case 5:
+			/*case 5:
 				onSearchRequested();
 				break;
 		/* GPS Information */
-			case 6:
+			/*case 6:
 				Location currentGPSInfo = getMixViewData().getMixContext()
 						.getLocationFinder().getCurrentLocation();
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1053,11 +1061,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert.show();
 				break;
 		/* Case 6: license agreements */
-			case 7:
+			/*case 7:
 				AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
 				builder1.setMessage(getString(R.string.license));
 			/* Retry */
-				builder1.setNegativeButton(getString(R.string.close_button),
+			/*	builder1.setNegativeButton(getString(R.string.close_button),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.dismiss();
@@ -1072,6 +1080,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 
 	}
+	*/
 
 
 	/* ******** Operators - Sensors ****** */
