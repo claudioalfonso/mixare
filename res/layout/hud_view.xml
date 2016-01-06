@@ -118,4 +118,25 @@
         android:src="@android:drawable/ic_dialog_alert"
         android:visibility="invisible" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:minWidth="3000dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="0dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:id="@+id/rangeBarWrapper">
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rangeBar"
+            android:progress="65"
+            android:max="100"
+            android:visibility="visible"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
+
 </RelativeLayout>

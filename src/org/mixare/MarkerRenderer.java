@@ -261,7 +261,7 @@ public class MarkerRenderer {
 		// Draw Radar
 		drawRadar(paintScreen);
 
-        mixContext.getActualMixViewActivity().updateHud(curFix); //FIXME Problem: synchronized access prevents uiEvents from being processed
+        //mixContext.getActualMixViewActivity().updateHud(curFix); //FIXME Problem: synchronized access prevents uiEvents from being processed
 
 		// Get next event
 		UIEvent evt = null;
