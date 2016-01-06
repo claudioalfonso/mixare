@@ -11,10 +11,6 @@ import android.view.View;
  */
 class AugmentedView extends View {
 	MixViewActivity mixViewActivity;
-	int xSearch = 200;
-	int ySearch = 10;
-	int searchObjWidth = 0;
-	int searchObjHeight = 0;
 
 	Paint rangeBarLabelPaint = new Paint();
 
@@ -26,7 +22,7 @@ class AugmentedView extends View {
 
 			mixViewActivity.killOnError();
 		} catch (Exception ex) {
-			mixViewActivity.doError(ex, mixViewActivity.GENERAL_ERROR);
+			mixViewActivity.doError(ex, MixViewActivity.GENERAL_ERROR);
 		}
 	}
 
@@ -34,19 +30,6 @@ class AugmentedView extends View {
 	protected void onDraw(Canvas canvas) {
 
 		try {
-			// if (mixViewActivity.fError) {
-			//
-			// Paint errPaint = new Paint();
-			// errPaint.setColor(Color.RED);
-			// errPaint.setTextSize(16);
-			//
-			// /*Draws the Error code*/
-			// canvas.drawText("ERROR: ", 10, 20, errPaint);
-			// canvas.drawText("" + mixViewActivity.fErrorTxt, 10, 40, errPaint);
-			//
-			// return;
-			// }
-
 			mixViewActivity.killOnError();
 
 			MixViewActivity.getPaintScreen().setWidth(canvas.getWidth());
@@ -54,8 +37,8 @@ class AugmentedView extends View {
 
 			MixViewActivity.getPaintScreen().setCanvas(canvas);
 
-			if (!MixViewActivity.getMarkerRenderer().isInited()) {
-				MixViewActivity.getMarkerRenderer().init(MixViewActivity.getPaintScreen().getWidth(),
+			if (!mixViewActivity.getMarkerRenderer().isInited()) {
+                mixViewActivity.getMarkerRenderer().init(MixViewActivity.getPaintScreen().getWidth(),
 						MixViewActivity.getPaintScreen().getHeight());
 			}
 			if (mixViewActivity.isRangeBarVisible()) {
@@ -64,25 +47,23 @@ class AugmentedView extends View {
 				String startKM, endKM;
 				endKM = "80km";
 				startKM = "0km";
-				/*
-				 * if(MixListView.getDataSource().equals("Twitter")){ startKM =
-				 * "1km"; }
-				 */
+
 				canvas.drawText(startKM, canvas.getWidth() / 100 * 4,
 						canvas.getHeight() / 100 * 85, rangeBarLabelPaint);
 				canvas.drawText(endKM, canvas.getWidth() / 100 * 99 + 25,
 						canvas.getHeight() / 100 * 85, rangeBarLabelPaint);
 
-				int height = canvas.getHeight() / 100 * 85;
+				int yPos = canvas.getHeight() / 100 * 85;
 				int rangeBarProgress = mixViewActivity.getRangeBarProgress();
-				if (rangeBarProgress > 92 || rangeBarProgress < 6) {
-					height = canvas.getHeight() / 100 * 80;
+				if (rangeBarProgress > 92 || rangeBarProgress < 6) { // at beginning/end, jump up because of ster/end labels
+					yPos = canvas.getHeight() / 100 * 80;
 				}
+
 				canvas.drawText(mixViewActivity.getRangeLevel(), (canvas.getWidth()) / 100
-						* rangeBarProgress + 20, height, rangeBarLabelPaint);
+						* rangeBarProgress + 20, yPos, rangeBarLabelPaint);
 			}
 
-			MixViewActivity.getMarkerRenderer().draw(MixViewActivity.getPaintScreen());
+            mixViewActivity.getMarkerRenderer().draw(MixViewActivity.getPaintScreen());
 		} catch (Exception ex) {
 			mixViewActivity.doError(ex, MixViewActivity.GENERAL_ERROR);
 		}

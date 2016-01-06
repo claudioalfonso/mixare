@@ -100,7 +100,7 @@ public class Elevation {
 	 *            The longitude of the point
 	 * @return The elevation of the point
 	 */
-	public String calcElevation(double lat, double lng) {
+	public Double lookupElevation(double lat, double lng) {
 		String requestUrl = url + "astergdem?lat=" + lat + "&lng=" + lng
 				+ "&username=" + username;
 		boolean closeLooper = false;
@@ -120,7 +120,8 @@ public class Elevation {
         if (closeLooper) {
             Looper.myLooper().quit();
         }
-        return content;
+
+        return Double.valueOf(content);
 	}
 
 	private class Downloader extends AsyncTask<String, Void, String> {

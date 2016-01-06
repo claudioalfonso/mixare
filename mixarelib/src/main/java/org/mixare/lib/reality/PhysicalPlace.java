@@ -125,23 +125,6 @@ public class PhysicalPlace implements Parcelable {
 		dest.setLongitude(Math.toDegrees(lon2));
 	}
 
-	public static void convLocToVec(Location org, PhysicalPlace gp, MixVector v) {
-		float[] z = new float[1];
-		z[0] = 0;
-		Location.distanceBetween(org.getLatitude(), org.getLongitude(),
-				gp.getLatitude(), org.getLongitude(), z);
-		float[] x = new float[1];
-		Location.distanceBetween(org.getLatitude(), org.getLongitude(),
-				org.getLatitude(), gp.getLongitude(), x);
-		double y = gp.getAltitude() - org.getAltitude();
-		if (org.getLatitude() < gp.getLatitude())
-			z[0] *= -1;
-		if (org.getLongitude() > gp.getLongitude())
-			x[0] *= -1;
-
-		v.set(x[0], (float) y, z[0]);
-	}
-
 	public static void convertVecToLoc(MixVector v, Location org, Location gp) {
 		double brngNS = 0, brngEW = 90;
 		if (v.z > 0)

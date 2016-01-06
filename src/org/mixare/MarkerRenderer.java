@@ -100,9 +100,7 @@ public class MarkerRenderer {
 	 */
 	public MarkerRenderer(MixContext ctx) {
 		this.mixContext = ctx;
-		radar = new Radar(this.mixContext, this);
-		radar.markerRenderer = this;
-
+		radar = new Radar(this);
 	}
 
 	public MixContext getContext() {
@@ -164,7 +162,7 @@ public class MarkerRenderer {
 
 		} catch (Exception ex) {
 			// ex.printStackTrace();
-			Log.e(MixViewActivity.TAG, ex.getMessage());
+			Log.e(Config.TAG, ex.getMessage());
 		}
 		frozen = false;
 		isInit = true;
@@ -174,7 +172,7 @@ public class MarkerRenderer {
 		DownloadRequest request = new DownloadRequest(new DataSource(
 				"LAUNCHER", url, DataSource.TYPE.MIXARE,
 				DataSource.DISPLAY.CIRCLE_MARKER, true));
-		mixContext.getDataSourceManager().setAllDataSourcesforLauncher(
+		mixContext.getDataSourceManager().setAllDataSourcesForLauncher(
 				request.getSource());
 		mixContext.getDownloadManager().submitJob(request);
 		state.nextLStatus = MixState.PROCESSING;
@@ -193,7 +191,7 @@ public class MarkerRenderer {
 
 	public void draw(PaintScreen paintScreen) {
 		mixContext.getRM(cam.transform);
-		curFix = mixContext.getLocationFinder().getCurrentLocation();
+		curFix = mixContext.getLocationFinder().getCurrentLocation();  // why get location on every draw cycle instead of only when it changed?
 
 		state.calcPitchBearing(cam.transform);
 
@@ -208,13 +206,13 @@ public class MarkerRenderer {
 			
 			if (dm.isDone()) {
               //  dataSourceWorking=false;
-               // mixContext.updateDataSourceStatus(false,false,null);
+                mixContext.updateDataSourceStatus(false,false,null);
 				retry = 0;
 				state.nextLStatus = MixState.DONE;
 
 				dataHandler = new DataHandler(); //why throw away the previous markers/DataHandler?
 				dataHandler.addMarkers(markers);
-				dataHandler.onLocationChanged(curFix); // why call onLocationChanged every draw cycle instead of only when it changed?
+				dataHandler.setCurLocation(curFix); // why call setCurLocation every draw cycle instead of only when it changed?
 
 				if (refreshTimer == null) { // start the refresh timer if it is
 											// null
@@ -231,13 +229,13 @@ public class MarkerRenderer {
 				}
 			} else {
                // dataSourceWorking=true;
-              //  mixContext.updateDataSourceStatus(true,false,null);
+                mixContext.updateDataSourceStatus(true,false,null);
                 dataHandler.addMarkers(markers);
-				dataHandler.onLocationChanged(curFix);
+				dataHandler.setCurLocation(curFix);
 			}
 
 		} else {
-           // mixContext.updateDataSourceStatus(false,false,null);
+           mixContext.updateDataSourceStatus(false,false,null);
         }
 
 		// Update markers
@@ -250,7 +248,7 @@ public class MarkerRenderer {
 
 				// To increase performance don't recalculate position vector
 				// for every marker on every draw call, instead do this only
-				// after onLocationChanged and after downloading new marker
+				// after setCurLocation and after downloading new marker
 				// if (!frozen)
 				// ma.update(curFix);
 				if (!frozen) {
@@ -263,7 +261,7 @@ public class MarkerRenderer {
 		// Draw Radar
 		drawRadar(paintScreen);
 
-       // mixContext.getActualMixViewActivity().updateHud(curFix); //FIXME Problem: synchronized access prevents uiEvents from being processed
+        mixContext.getActualMixViewActivity().updateHud(curFix); //FIXME Problem: synchronized access prevents uiEvents from being processed
 
 		// Get next event
 		UIEvent evt = null;
@@ -327,7 +325,7 @@ public class MarkerRenderer {
 			if (!dRes.isError()) {
 				if (dRes.getMarkers() != null) {
 					// jLayer = (DataHandler) dRes.obj;
-					Log.i(MixViewActivity.TAG, "Adding Markers");
+					Log.i(Config.TAG, "Adding Markers");
 					markers.addAll(dRes.getMarkers());
 
 					// Notification

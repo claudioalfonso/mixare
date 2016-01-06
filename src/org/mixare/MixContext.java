@@ -65,7 +65,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		// TODO: RE-ORDER THIS SEQUENCE... IS NECESSARY?
 		getDataSourceManager().refreshDataSources();
 
-		if (!getDataSourceManager().isAtLeastOneDatasourceSelected()) {
+		if (!getDataSourceManager().isAtLeastOneDataSourceSelected()) {
 			rotationM.toIdentity();
 		}
 		getLocationFinder().switchOn();
@@ -103,7 +103,9 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 
 	@Override
 	public void updateDataSourceStatus(boolean working, boolean problem, String statusText) {
-		getActualMixViewActivity().setDataSourcesActivity(working, problem, statusText);
+		if(Config.useHUD) {
+			getActualMixViewActivity().hudView.setDataSourcesActivity(working, problem, statusText);
+		}
 	}
 
 	@Override

@@ -24,7 +24,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mixare.MixViewActivity;
+import org.mixare.Config;
 import org.mixare.data.MarkerBuilder;
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
@@ -75,7 +75,7 @@ public class WikiDataProcessor extends DataHandler implements DataProcessor{
 			if (jo.has("title") && jo.has("lat") && jo.has("lng")
 					&& jo.has("elevation") && jo.has("wikipediaUrl")) {
 	
-				Log.v(MixViewActivity.TAG, "processing Wikipedia JSON object");
+				Log.v(Config.TAG, "processing Wikipedia JSON object");
 		
 				//no unique ID is provided by the web service according to http://www.geonames.org/export/wikipedia-webservice.html
 				ma = new MarkerBuilder().setId("wikiid")

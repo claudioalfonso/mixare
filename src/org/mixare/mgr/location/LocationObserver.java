@@ -18,9 +18,8 @@
  */
 package org.mixare.mgr.location;
 
-import org.mixare.MixContext;
+import org.mixare.Config;
 //import org.mixare.map.GoogleMap;
-import org.mixare.MixViewActivity;
 import org.mixare.mgr.downloader.DownloadManager;
 
 //import com.google.android.maps.GeoPoint;
@@ -55,7 +54,7 @@ class LocationObserver implements LocationListener {
 
 
 	public void onLocationChanged(Location location) {
-		Log.d(MixViewActivity.TAG, "Normal Location Changed: " + location.getProvider()
+		Log.d(Config.TAG, "Normal Location Changed: " + location.getProvider()
 						+ " lat: " + location.getLatitude() + " lon: "
 						+ location.getLongitude() + " alt: "
 						+ location.getAltitude() + " acc: "
@@ -63,7 +62,7 @@ class LocationObserver implements LocationListener {
 		try {
 			addWalkingPathPosition(location);
 			deleteAllDownloadActivity();
-			Log.v(MixViewActivity.TAG, "Location Changed: " + location.getProvider()
+			Log.v(Config.TAG, "Location Changed: " + location.getProvider()
 							+ " lat: " + location.getLatitude() + " lon: "
 							+ location.getLongitude() + " alt: "
 							+ location.getAltitude() + " acc: "

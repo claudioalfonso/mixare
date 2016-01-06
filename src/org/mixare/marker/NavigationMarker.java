@@ -45,6 +45,7 @@ public class NavigationMarker extends LocalMarker {
 
 	@Override
 	public void update(Location curGPSFix) {
+		getGeoLocation().setAltitude(curGPSFix.getAltitude());
 	
 		super.update(curGPSFix);
 		
@@ -52,7 +53,7 @@ public class NavigationMarker extends LocalMarker {
 		// your surrounding sphere so we set the height component of 
 		// the position vector radius/2 (in meter) below the user
 
-		locationVector.y-= MixViewActivity.getMarkerRenderer().getRadius()*500f;
+		locationVector.y-= MixViewActivity.getMarkerRendererStatically().getRadius()*500f;
 		//locationVector.y+=-1000;
 	}
 

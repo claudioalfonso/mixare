@@ -46,7 +46,6 @@ class MixViewDataHolder {
 	private Matrix m3;
 	private Matrix m4;
 	private SeekBar rangeBar;
-	private PowerManager.WakeLock mWakeLock;
 	private int compassErrorDisplayed;
 	private String rangeLevel;
 	private int rangeBarProgress;
@@ -299,14 +298,6 @@ class MixViewDataHolder {
 
 	public void setRangeBar(SeekBar rangeBar) {
 		this.rangeBar = rangeBar;
-	}
-
-	public PowerManager.WakeLock getmWakeLock() {
-		return mWakeLock;
-	}
-
-	public void setmWakeLock(PowerManager.WakeLock mWakeLock) {
-		this.mWakeLock = mWakeLock;
 	}
 
 	public int getCompassErrorDisplayed() {

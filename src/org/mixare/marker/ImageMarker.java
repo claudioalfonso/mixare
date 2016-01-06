@@ -20,7 +20,6 @@ package org.mixare.marker;
 
 import java.io.IOException;
 
-import org.mixare.MixViewActivity;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.TextObj;
@@ -30,6 +29,7 @@ import org.mixare.lib.marker.draw.DrawImage;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.util.Log;
 
 
@@ -99,7 +99,7 @@ public class ImageMarker extends LocalMarker {
 			final java.net.URL imageURI = new java.net.URL (ImageUrl);
 			this.setImage(BitmapFactory.decodeStream(imageURI.openConnection().getInputStream()));
 		} catch (IOException e) {  //also catches MalformedURLException
-			Log.e(MixViewActivity.TAG, e.getMessage());
+			Log.e(org.mixare.Config.TAG, e.getMessage());
 		}finally {
 			if (null == this.getImage()){
 				this.setImage(Bitmap.createBitmap(10, 10, Config.ARGB_4444));
@@ -173,4 +173,9 @@ public class ImageMarker extends LocalMarker {
 		this.image = image;
 	}
 
+
+    @Override
+	public void update(Location curGPSFix) {
+		super.update(curGPSFix);
+	}
 }

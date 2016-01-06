@@ -25,8 +25,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.mixare.Config;
 import org.mixare.MixContext;
-import org.mixare.MixViewActivity;
 import org.mixare.data.convert.DataConvertor;
 import org.mixare.lib.marker.Marker;
 import org.mixare.mgr.HttpTools;
@@ -125,7 +125,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 			}
 		} catch (Exception ex) {
 			result.setError(ex, request);
-			Log.w(MixViewActivity.TAG, "ERROR ON DOWNLOAD REQUEST", ex);
+			Log.w(Config.TAG, "ERROR ON DOWNLOAD REQUEST", ex);
 		}
 	}
 		return result;
@@ -162,7 +162,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 			if (!todoList.contains(job)) {
 				mJob = new ManagedDownloadRequest(job);
 				todoList.add(mJob);
-				Log.i(MixViewActivity.TAG, "Submitted " + job.toString());
+				Log.i(Config.TAG, "Submitted " + job.toString());
 				jobId = mJob.getUniqueKey();
 			}
 		}
@@ -223,7 +223,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 		if (DownloadManagerState.OffLine.equals(getState()) || stop==true){
 		    executor.execute(this);
 		}else{
-			Log.i(MixViewActivity.TAG, "DownloadManager already started");
+			Log.i(Config.TAG, "DownloadManager already started");
 		}
 	}
 

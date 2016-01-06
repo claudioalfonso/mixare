@@ -27,11 +27,11 @@ import org.mixare.data.DataSource;
 public interface DataSourceManager {
 
 	/**
-	 * Is At Least One Datasource Selected
+	 * Is At Least One DataSource Selected
 	 * 
 	 * @return boolean
 	 */
-	boolean isAtLeastOneDatasourceSelected();
+	boolean isAtLeastOneDataSourceSelected();
 
 	/**
 	 * Sync DataSouceManager with DataSourceStorage.
@@ -39,19 +39,19 @@ public interface DataSourceManager {
 	void refreshDataSources();
 
 	/**
-	 * Clean all old datasource and insert only source.
+	 * Clean all old DataSources and insert only one source.
 	 * 
-	 * @param source
+	 * @param source new DataSource to be inserted
 	 */
-	void setAllDataSourcesforLauncher(DataSource source);
+	void setAllDataSourcesForLauncher(DataSource source);
 
 	/**
-	 * send command to download data information from datasource
+	 * send command to download data information from DataSource
 	 * 
-	 * @param lat
-	 * @param lon
-	 * @param alt
-	 * @param radius
+	 * @param lat latitude
+	 * @param lon longitude
+	 * @param alt altitude
+	 * @param radius radius
 	 */
 	void requestDataFromAllActiveDataSource(double lat, double lon, double alt,
 			float radius);
