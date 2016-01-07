@@ -39,10 +39,8 @@ public class MixMenu extends SherlockActivity {
     DrawerLayout drawerLayout;
     ListView drawerList;
     ActionBarDrawerToggle drawerToggle;
-    ActionBarDrawerToggle drawerToggle2;
 
     MenuListAdapter menuListAdapter;
-    MenuListAdapter menuListAdapter2;
 
     String[] title;
     private CharSequence drawerTitle;

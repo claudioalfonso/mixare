@@ -74,6 +74,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * This class is the main application which uses the other classes for different
@@ -550,7 +551,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	private void maintainAugmentedView() {
 		if (augmentedView == null) {
 			augmentedView = new AugmentedView(this);
-			camera_view.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
+			cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT));
 			//addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
@@ -560,7 +561,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			((ViewGroup) augmentedView.getParent()).removeView(augmentedView);
 			//addContentView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
-			camera_view.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
+			cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT));
 		}
 
@@ -1132,7 +1133,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 	}
 
-	public void killOnError() throws Exception {
+	public void
+	killOnError() throws Exception {
 		if (fError)
 			throw new Exception();
 	}
