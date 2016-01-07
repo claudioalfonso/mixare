@@ -129,7 +129,34 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			killOnError();
 			//requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+			if(getSupportActionBar() != null){
+				getSupportActionBar().hide();
+			}
+
 			maintainViews();
+			augmentedView.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View view, MotionEvent me) {
+					try {
+						killOnError();
+						float xPress = me.getX();
+						float yPress = me.getY();
+						if (me.getAction() == MotionEvent.ACTION_UP) {
+							getMarkerRenderer().clickEvent(xPress, yPress);
+						}// TODO add gesture events (low)
+
+						return true;
+					} catch (Exception ex) {
+						// doError(ex);
+						ex.printStackTrace();
+						//return super.onTouchEvent(me);
+					}
+					return true;
+
+				}
+
+			});
+
 
 			if (!isInited) {
 				setPaintScreen(new PaintScreen());
