@@ -430,6 +430,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 
 		Log.d(Config.TAG, "resume");
+        if(getMarkerRenderer() == null){
+            return;
+        }
 		if (getMarkerRenderer().isFrozen()
 				&& getMixViewData().getSearchNotificationTxt() == null) {
 			getMixViewData().setSearchNotificationTxt(new TextView(this));
@@ -447,10 +450,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 					Color.WHITE);
 
 			getMixViewData().getSearchNotificationTxt()
-					.setOnTouchListener(this);
-			addContentView(getMixViewData().getSearchNotificationTxt(),
-					new LayoutParams(LayoutParams.MATCH_PARENT,
-							LayoutParams.WRAP_CONTENT));
+                    .setOnTouchListener(this);
+            addContentView(getMixViewData().getSearchNotificationTxt(),
+                    new LayoutParams(LayoutParams.MATCH_PARENT,
+                            LayoutParams.WRAP_CONTENT));
 		} else if (!getMarkerRenderer().isFrozen()
 				&& getMixViewData().getSearchNotificationTxt() != null) {
 			getMixViewData().getSearchNotificationTxt()
