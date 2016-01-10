@@ -19,7 +19,6 @@
 package org.mixare.data;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -28,25 +27,22 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.mixare.Config;
 import org.mixare.R;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 
 /**
@@ -58,7 +54,7 @@ public class DataSourceStorage {
 	private static Context ctx;
 	public static DataSourceStorage instance;
 	private static String xmlPreferencesKey = "xmlDataSources";
-	private static List<DataSource> dataSourceList = new ArrayList<DataSource>();
+	private static List<DataSource> dataSourceList = new ArrayList<>();
 
 	/**
 	 * Private constructor to ensure that only one instance can be created
@@ -92,7 +88,7 @@ public class DataSourceStorage {
 			if (ctx != null) {
 				init(ctx);
 			} else {
-				Log.d("DataSourceStorage", "instance and ctx are null");
+				Log.d(Config.TAG, "instance and ctx are null");
 			}
 		}
 		return instance;
@@ -296,7 +292,7 @@ public class DataSourceStorage {
 				}
 			}
 		} catch (Exception e) {
-			Log.d("DataSourceStorage", "getDataSource: " + id + " Failed");
+			Log.d(Config.TAG, "getDataSource: " + id + " Failed");
 		}
 		return null;
 	}
@@ -352,7 +348,7 @@ public class DataSourceStorage {
 	private static String getTagValue(String sTag, Element element) {
 		NodeList nlList = element.getElementsByTagName(sTag).item(0)
 				.getChildNodes();
-		Node nValue = (Node) nlList.item(0);
+		Node nValue = nlList.item(0);
 		return nValue.getNodeValue();
 	}
 

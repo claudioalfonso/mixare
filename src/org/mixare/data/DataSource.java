@@ -27,16 +27,7 @@ import org.mixare.data.convert.DataConvertor;
 import org.mixare.data.convert.PanoramioDataProcessor;
 import org.mixare.utils.TwitterClient;
 
-import android.app.Activity;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 /**
  * The DataSource class is able to create the URL where the information about a
@@ -69,10 +60,10 @@ public class DataSource {
 	 * @param typeString
 	 *            The type of the DataSource using DataSource.TYPE, it has to be
 	 *            a integer in a String
-	 * @param display
+	 * @param displayString
 	 *            The type of the DataSource using DataSource.DISPLAY, it has to
 	 *            be a integer in a String
-	 * @param enabled
+	 * @param enabledString
 	 *            Whether the DataSource is enabled or not
 	 */
 	public DataSource(int id, String name, String url, String typeString,
@@ -335,11 +326,11 @@ public class DataSource {
 	
 	public enum TYPE {
 		WIKIPEDIA, TWITTER, OSM, MIXARE, ARENA, PANORAMIO, NOTSET
-	};
+	}
 
 	public enum DISPLAY {
 		CIRCLE_MARKER, NAVIGATION_MARKER, IMAGE_MARKER, NOTSET
-	};
+	}
 
 	public enum BLUR {
 		NONE, ADD_RANDOM, TRUNCATE

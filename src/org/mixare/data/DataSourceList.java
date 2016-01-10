@@ -31,9 +31,7 @@ import com.actionbarsherlock.view.SubMenu;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +39,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -107,8 +104,10 @@ public class DataSourceList extends SherlockListActivity {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
-	//TODO: check if it's really needed
+
+    /*
+     * returns String with list of active DataSources to be used as explanation for search
+     */
 	public static String getDataSourcesStringList() {
 		String ret="";
 		boolean first=true;
@@ -122,7 +121,6 @@ public class DataSourceList extends SherlockListActivity {
 				first=false;
 			}
 		}
-
 		return ret;
 	}
 
@@ -206,17 +204,16 @@ public class DataSourceList extends SherlockListActivity {
 
 	/* DataSourceAdapter */
 	
-	private class DataSourceAdapter extends BaseAdapter implements
-			OnCheckedChangeListener {
+	private class DataSourceAdapter extends BaseAdapter  {
 
-		private List<DataSource> mDataSource = new ArrayList<DataSource>();
+		private List<DataSource> mDataSource = new ArrayList<>();
 
-		public boolean getItemEnabled(int k) {
-			return mDataSource.get(k).getEnabled();
+		public boolean getItemEnabled(int index) {
+			return mDataSource.get(index).getEnabled();
 		}
 
-		public String getItemName(int k) {
-			return mDataSource.get(k).getName();
+		public String getItemName(int index) {
+			return mDataSource.get(index).getName();
 		}
 
 		public void addItem(final DataSource item) {
@@ -224,12 +221,12 @@ public class DataSourceList extends SherlockListActivity {
 			notifyDataSetChanged();
 		}
 
-		public void deleteItem(final int id) {
-			if (mDataSource.get(id).getEnabled()) {
-				mDataSource.get(id).setEnabled(false);
+		public void deleteItem(final int index) {
+			if (mDataSource.get(index).getEnabled()) {
+				mDataSource.get(index).setEnabled(false);
 				notifyDataSetChanged();
 			}
-			mDataSource.remove(id);
+			mDataSource.remove(index);
 			notifyDataSetChanged();
 		}
 
@@ -239,8 +236,8 @@ public class DataSourceList extends SherlockListActivity {
 		}
 
 		@Override
-		public long getItemId(int position) {
-			return position;
+		public long getItemId(int index) {
+			return mDataSource.get(index).getDataSourceId();
 		}
 
 		@Override
@@ -249,12 +246,12 @@ public class DataSourceList extends SherlockListActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder holder = null;
+		public View getView(int index, View convertView, ViewGroup parent) {
+			ViewHolder holder;
 
 			if (convertView == null) {
 				LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = mInflater.inflate(R.layout.datasourcelist, null);
+				convertView = mInflater.inflate(R.layout.datasourcelist, parent, false);
 				
 				holder = new ViewHolder();
 				holder.text = (TextView) convertView
@@ -263,8 +260,6 @@ public class DataSourceList extends SherlockListActivity {
 						.findViewById(R.id.description_text);
 				holder.checkbox = (CheckBox) convertView
 						.findViewById(R.id.list_checkbox);
-				holder.checkbox.setTag(position);
-				holder.checkbox.setOnCheckedChangeListener(this);
 				holder.datasource_icon = (ImageView) convertView
 						.findViewById(R.id.datasource_icon);
 
@@ -273,26 +268,25 @@ public class DataSourceList extends SherlockListActivity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			DataSource ds = mDataSource.get(position);
+			DataSource ds = mDataSource.get(index);
 			if (ds != null) {
 				holder.text.setText(ds.getName());
 				holder.description.setText(ds.getUrl());
 				holder.datasource_icon.setImageResource(ds.getDataSourceIcon());
 				holder.checkbox.setChecked(ds.getEnabled());
-			}
+                holder.checkbox.setTag(ds.getDataSourceId());
+                holder.checkbox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View checkBoxView) {
+                        if (checkBoxView.getTag() != null) {
+                            int id = (Integer) checkBoxView.getTag();
+                            DataSourceStorage.getInstance()
+                                    .getDataSource(id).setEnabled(((CheckBox)checkBoxView).isChecked());
+                        }
+                    }
+                });
+            }
 			return convertView;
-		}
-
-		@Override
-		public void onCheckedChanged(CompoundButton buttonView,
-				boolean isChecked) {
-			int position = (Integer) buttonView.getTag();
-			if (isChecked) {
-				buttonView.setChecked(true);
-			} else {
-				buttonView.setChecked(false);
-			}
-			mDataSource.get(position).setEnabled(isChecked);
 		}
 
 		private class ViewHolder {
