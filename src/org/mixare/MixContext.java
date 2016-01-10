@@ -104,7 +104,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	@Override
 	public void updateDataSourceStatus(boolean working, boolean problem, String statusText) {
 		if(Config.useHUD) {
-			getActualMixViewActivity().hudView.setDataSourcesActivity(working, problem, statusText);
+			//getActualMixViewActivity().hudView.setDataSourcesActivity(working, problem, statusText);
 		}
 	}
 
