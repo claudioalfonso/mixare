@@ -81,7 +81,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	/* Different error messages */
 	protected static final int UNSUPPORTED_HARDWARE = 0;
 	protected static final int GPS_ERROR = 1;
-	protected static final int GENERAL_ERROR = 2;
+	public static final int GENERAL_ERROR = 2;
 	protected static final int NO_NETWORK_ERROR = 4;
 
     /**
@@ -90,7 +90,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * - Lock Screen.
 	 * - Initiate Camera View
 	 * - Initiate markerRenderer {@link MarkerRenderer#draw(PaintScreen) MarkerRenderer}
-	 * - Initiate RangeBar {@link android.widget.SeekBar SeekBar widget}
 	 * - Display License Agreement if mixViewActivity first used.
 	 * 
 	 * {@inheritDoc}
@@ -137,11 +136,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 			if (!isInited) {
 				setPaintScreen(new PaintScreen());
- //               setMarkerRenderer(new MarkerRenderer(MixContext.getInstance()));
                 getMarkerRenderer();
 
-				/* set the radius in data markerRenderer to the last selected by the user */
-				//setRangeLevel();
 				refreshDownload();
 				isInited = true;
 			}
@@ -268,7 +264,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				Log.d(Config.TAG + " WorkFlow",
                         "MixViewActivity - Received Refresh Screen Request .. about to refresh");
 				repaint();
-				//setRangeLevel();
 				refreshDownload();
 			}
 		} catch (Exception ex) {
@@ -301,7 +296,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			HttpTools.setContext(MixContext.getInstance());
 			
 			//repaint(); //repaint when requested
-			//setRangeLevel();
 			getMarkerRenderer().doStart();
 			getMarkerRenderer().clearEvents();
 			MixContext.getInstance().getNotificationManager().setEnabled(true);
@@ -509,7 +503,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		if(Config.useHUD) {
 			maintainHudView();
 		}
-		maintainRangeBar();
 	}
 	
 	/* ********* Operators ***********/ 
@@ -520,10 +513,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	public void repaint() {
 		// clear stored data
 		getMarkerRenderer().clearEvents();
-		//setMarkerRenderer(null); //It's smelly code, but enforce garbage collector to release data.
-		//setMarkerRenderer(new MarkerRenderer(MixContext.getInstance()));
 		setPaintScreen(new PaintScreen());
-
     }
 
 	/**
@@ -577,24 +567,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
         else {
             ((ViewGroup) hudView.getParent()).removeView(hudView);
         }
-        addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
-
-	/**
-	 * Creates a range bar and adds it to markerRenderer.
-	 */
-	private void maintainRangeBar() {
-		SharedPreferences settings = getSharedPreferences(Config.PREFS_NAME, 0);
-        /*
-		FrameLayout rangeBarView = createRangeBar(settings);
-		addContentView(rangeBarView, new FrameLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,
-				Gravity.BOTTOM));
-				*/
-		//camera_view.addView(frameLayout, new FrameLayout.LayoutParams(
-		//		LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,
-		//		Gravity.BOTTOM));
-	}
 
 	/**
 	 * Refreshes Download TODO refresh downloads
@@ -885,6 +859,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			}
 			
 			augmentedView.postInvalidate();
+			hudView.postInvalidate();
 
 			int rotation = Compatibility.getRotation(this);
 
@@ -1099,22 +1074,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
         }
         return markerRenderer;
     }
-
-	/**
-	 * @param markerRenderer the markerRenderer to set
-	 */
-    /*
-	static void setMarkerRenderer(MarkerRenderer markerRenderer) {
-		MixViewActivity.markerRenderer = markerRenderer;
-	}
-
-	public void setRangeLevel() {
-		float rangeLevel = calcRangeLevel();
-
-		getMarkerRenderer().setRadius(rangeLevel);
-		getMixViewData().setRangeLevel(String.valueOf(rangeLevel));
-	}
-	*/
 
     public void updateHud(Location curFix){
         if(Config.useHUD) {

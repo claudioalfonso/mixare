@@ -2,6 +2,9 @@ package org.mixare.gui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 
 import org.mixare.Config;
 import org.mixare.MixContext;
+import org.mixare.MixViewActivity;
 import org.mixare.MixViewDataHolder;
 import org.mixare.R;
 
@@ -32,6 +36,9 @@ public class HudView extends RelativeLayout {
     private ImageView dataSourcesStatusIcon;
     private ImageView sensorsStatusIcon;
     private SeekBar rangeBar;
+
+    Paint rangeBarLabelPaint = new Paint();
+
 
     public HudView(Context context){
         super(context);
@@ -54,6 +61,7 @@ public class HudView extends RelativeLayout {
      * Mixare support ranges between 0-80km and default value of 20km,
      * {@link SeekBar SeekBar} on the other hand, is 0-100 base.
      * This method handles the Range level conversion between Mixare range and SeekBar progress.
+     * So the range resolution on the seek bar is fine in proximity and coarse in the distance
      *
      * @return int Range base 80
      */
@@ -75,7 +83,6 @@ public class HudView extends RelativeLayout {
         } else {
             range = (30 + (rangeBarProgress - 75) * 2f);
         }
-
         return range;
     }
 
@@ -183,5 +190,35 @@ public class HudView extends RelativeLayout {
 
     public int getRangeBarProgress() {
         return rangeBar.getProgress();
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        try {
+            if (isRangeBarVisible()) {
+                rangeBarLabelPaint.setColor(Color.WHITE);
+                rangeBarLabelPaint.setTextSize(14);
+                String startKM, endKM;
+                endKM = "80km";
+                startKM = "0km";
+
+                canvas.drawText(startKM, canvas.getWidth() / 100 * 4,
+                        canvas.getHeight() / 100 * 85, rangeBarLabelPaint);
+                canvas.drawText(endKM, canvas.getWidth() / 100 * 99 + 25,
+                        canvas.getHeight() / 100 * 85, rangeBarLabelPaint);
+
+                int yPos = canvas.getHeight() / 100 * 85;
+                int rangeBarProgress = getRangeBarProgress();
+                if (rangeBarProgress > 92 || rangeBarProgress < 6) { // at beginning/end, jump up because of start/end labels
+                    yPos = canvas.getHeight() / 100 * 80;
+                }
+
+                canvas.drawText(MixViewDataHolder.getInstance().getRangeString(), (canvas.getWidth()) / 100
+                        * rangeBarProgress + 20, yPos, rangeBarLabelPaint);
+            }
+        } catch (Exception ex) {
+            MixContext.getInstance().getActualMixViewActivity().doError(ex, MixViewActivity.GENERAL_ERROR);
+        }
+        super.dispatchDraw(canvas);
     }
 }

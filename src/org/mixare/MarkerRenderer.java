@@ -120,8 +120,6 @@ public class MarkerRenderer {
 	}
 
 	public float getRadius() {
-      //  Log.d(Config.TAG + "RangeBar", "getRadius: " + this.radius);
-
         return radius;
 	}
 
@@ -131,8 +129,6 @@ public class MarkerRenderer {
 
 	public void setRadius(float radius) {
 		this.radius = radius;
-        Log.d(Config.TAG + "RangeBar", "setRadius: " + this.radius);
-
     }
 
 	public DataHandler getDataHandler() {

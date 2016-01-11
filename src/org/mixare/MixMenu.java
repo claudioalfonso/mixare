@@ -46,11 +46,6 @@ public class MixMenu extends SherlockActivity {
     private CharSequence drawerTitle;
     private CharSequence mTitle;
     int[] icon;
-    private MixViewDataHolder mixViewData;
-    private static boolean isBackground;
-
-
-
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
@@ -113,7 +108,6 @@ public class MixMenu extends SherlockActivity {
 
 
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-
       switch(keyCode) {
           case KeyEvent.KEYCODE_MENU:
               if (drawerLayout.isDrawerOpen(drawerList)) {
@@ -128,127 +122,73 @@ public class MixMenu extends SherlockActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (item.getItemId() == android.R.id.home ) {
-
             if (drawerLayout.isDrawerOpen(drawerList)) {
                 drawerLayout.closeDrawer(drawerList);
             } else {
                 drawerLayout.openDrawer(drawerList);
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    public class DrawerItemClickListener implements
-            ListView.OnItemClickListener {
+    public class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
         }
     }
 
     public void selectItem(int position) {
-
         switch (position) {
-		/* Data sources */
+		    /* Data sources */
             case 0:
-               // if (!getMarkerRenderer().getIsLauncherStarted()) {
-                    Intent intent = new Intent(MixMenu.this, DataSourceList.class);
-                    startActivityForResult(intent, 40);
-               // } else {
-                //    markerRenderer.getContext().getNotificationManager()
-                 //           .addNotification(getString(R.string.no_website_available));
-               // }
+                Intent intent = new Intent(MixMenu.this, DataSourceList.class);
+                startActivityForResult(intent, 40);
                 break;
 			/* Plugin View */
             case 1:
-               // if (!getMarkerRenderer().getIsLauncherStarted()) {
-                    Intent intent2 = new Intent(MixMenu.this,
-                            PluginListActivity.class);
-                    startActivityForResult(intent2, 35);
-                //} else {
-                //    markerRenderer.getContext().getNotificationManager()
-                //            .addNotification(getString(R.string.no_website_available));
-                //}
+                Intent intent2 = new Intent(MixMenu.this, PluginListActivity.class);
+                startActivityForResult(intent2, 35);
                 break;
-		/* List markerRenderer */
+		    /* List markerRenderer */
             case 2:
-			/*
-			 * if the list of titles to show in alternative list markerRenderer is not
-			 * empty
-			 */
-               // if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
-                    Intent intent3 = new Intent(MixMenu.this, MixListView.class);
-                    intent3.setAction(Intent.ACTION_VIEW);
-                    startActivityForResult(intent3, 42);
-              //  }
-			/* if the list is empty */
-             //   else {
-              //      markerRenderer.getContext().getNotificationManager().
-               //             addNotification(getString(R.string.empty_list));
-                //}
+                Intent intent3 = new Intent(MixMenu.this, MixListView.class);
+                intent3.setAction(Intent.ACTION_VIEW);
+                startActivityForResult(intent3, 42);
                 break;
-		/* Map View */
+		    /* Map View */
             case 3:
                 Intent intent4 = new Intent(MixMenu.this, MixMap.class);
                 startActivityForResult(intent4, 20);
                 break;
-		/* range level */
+		    /* range level */
             case 4:
+                // only sense in MixViewActivity, overridden there
                 break;
-		/* Search */
+		    /* Search */
             case 5:
                 onSearchRequested();
                 break;
-		/* GPS Information */
+		    /* GPS Information */
             case 6:
-                Location currentGPSInfo = MixContext.getInstance()
-                        .getLocationFinder().getCurrentLocation();
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(getString(R.string.general_info_text) + "\n\n"
-                        + getString(R.string.longitude)
-                        + currentGPSInfo.getLongitude() + "\n"
-                        + getString(R.string.latitude)
-                        + currentGPSInfo.getLatitude() + "\n"
-                        + getString(R.string.altitude)
-                        + currentGPSInfo.getAltitude() + "m\n"
-                        + getString(R.string.speed) + currentGPSInfo.getSpeed()
-                        + "km/h\n" + getString(R.string.accuracy)
-                        + currentGPSInfo.getAccuracy() + "m\n"
-                        + getString(R.string.gps_last_fix)
-                        + new Date(currentGPSInfo.getTime()).toString() + "\n");
-                builder.setNegativeButton(getString(R.string.close_button),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.setTitle(getString(R.string.general_info_title));
-                alert.show();
+                // only sense in MixViewActivity, overridden there
                 break;
-		/* Case 6: license agreements */
+		    /* Case 6: license agreements */
             case 7:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
                 builder1.setMessage(getString(R.string.license));
-			/* Retry */
-                builder1.setNegativeButton(getString(R.string.close_button),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
+			    /* Retry */
+                builder1.setNegativeButton(getString(R.string.close_button),new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) { dialog.dismiss(); }
                         });
                 AlertDialog alert1 = builder1.create();
                 alert1.setTitle(getString(R.string.license_title));
                 alert1.show();
                 break;
             case 8:
-               // doError(null, new Random().nextInt(3));
+                break;
         }
-
     }
 
     @Override
@@ -267,7 +207,6 @@ public class MixMenu extends SherlockActivity {
     public void setTitle(CharSequence title) {
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
-
     }
 
     public MixViewDataHolder getMixViewData() {
