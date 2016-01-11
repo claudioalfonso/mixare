@@ -92,7 +92,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
     public HudView hudView;
 
     private boolean isInited;
-	private static boolean isBackground;
 	private static PaintScreen paintScreen;
 	private static MarkerRenderer markerRenderer;
 	private boolean fError;
@@ -120,7 +119,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			isBackground = false;			
 			handleIntent(getIntent());
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -144,8 +142,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 						float yPress = me.getY();
 						if (me.getAction() == MotionEvent.ACTION_UP) {
 							getMarkerRenderer().clickEvent(xPress, yPress);
-						}// TODO add gesture events (low)
-
+						}
 						return true;
 					} catch (Exception ex) {
 						// doError(ex);
@@ -153,7 +150,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 						//return super.onTouchEvent(me);
 					}
 					return true;
-
 				}
 
 			});
@@ -161,7 +157,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 			if (!isInited) {
 				setPaintScreen(new PaintScreen());
-				setMarkerRenderer(new MarkerRenderer(getMixViewData().getMixContext()));
+				setMarkerRenderer(new MarkerRenderer(MixContext.getInstance()));
 
 				/* set the radius in data markerRenderer to the last selected by the user */
 				setRangeLevel();
@@ -186,11 +182,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 	@Override
 	public MixViewDataHolder getMixViewData() {
-		if (mixViewData == null && isBackground == false) {
-			// TODO: VERY important, only one!
-			mixViewData = new MixViewDataHolder(new MixContext(this));
-		}
-		return mixViewData;
+		MixContext.setActualMixViewActivity(this);
+		return MixViewDataHolder.getInstance();
 	}
 
 	/**
@@ -221,14 +214,14 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				getMixViewData().setSensorMag(null);
 				getMixViewData().setSensorGyro(null);
 
-				getMixViewData().getMixContext().getLocationFinder()
+				MixContext.getInstance().getLocationFinder()
 						.switchOff();
-				getMixViewData().getMixContext().getDownloadManager()
+				MixContext.getInstance().getDownloadManager()
 						.switchOff();
 
-				getMixViewData().getMixContext().getNotificationManager()
+				MixContext.getInstance().getNotificationManager()
 						.setEnabled(false);
-				getMixViewData().getMixContext().getNotificationManager()
+				MixContext.getInstance().getNotificationManager()
 						.clear();
 				if (getMarkerRenderer() != null) {
 					getMarkerRenderer().cancelRefreshTimer();
@@ -274,7 +267,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				
 				dialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface d, int whichButton) {
-						startActivity(new Intent(getMixViewData().getMixContext().getApplicationContext(),
+						startActivity(new Intent(MixContext.getInstance().getApplicationContext(),
 								PluginLoaderActivity.class));
 						finish();
 					}
@@ -321,21 +314,19 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	@Override
 	protected void onResume() {
 		super.onResume();
-		isBackground = false;
 		try {
 			killOnError();
-			getMixViewData().getMixContext().doResume(this);
-
-			HttpTools.setContext(getMixViewData().getMixContext());
+			MixContext.setActualMixViewActivity(this);
+			HttpTools.setContext(MixContext.getInstance());
 			
 			//repaint(); //repaint when requested
 			setRangeLevel();
 			getMarkerRenderer().doStart();
 			getMarkerRenderer().clearEvents();
-			getMixViewData().getMixContext().getNotificationManager().setEnabled(true);
+			MixContext.getInstance().getNotificationManager().setEnabled(true);
 			refreshDownload();
 			
-			getMixViewData().getMixContext().getDataSourceManager().refreshDataSources();
+			MixContext.getInstance().getDataSourceManager().refreshDataSources();
 
 			float angleX, angleY;
 
@@ -409,7 +400,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 						getMixViewData().getSensorMag(), SENSOR_DELAY_GAME);
 				
 			try {
-				GeomagneticField gmf = getMixViewData().getMixContext()
+				GeomagneticField gmf = MixContext.getInstance()
 						.getLocationFinder().getGeomagneticField();
 				angleY = (float) Math.toRadians(-gmf.getDeclination());
 				getMixViewData().getM4().set((float) Math.cos(angleY), 0f,
@@ -427,8 +418,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				Log.d(Config.TAG, "network");
 			}
 			
-			getMixViewData().getMixContext().getDownloadManager().switchOn();
-			getMixViewData().getMixContext().getLocationFinder().switchOn();
+			MixContext.getInstance().getDownloadManager().switchOn();
+			MixContext.getInstance().getLocationFinder().switchOn();
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);
 			try {
@@ -442,10 +433,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 					getMixViewData().setSensorMgr(null);
 				}
 
-				if (getMixViewData().getMixContext() != null) {
-					getMixViewData().getMixContext().getLocationFinder()
+				if (MixContext.getInstance() != null) {
+					MixContext.getInstance().getLocationFinder()
 							.switchOff();
-					getMixViewData().getMixContext().getDownloadManager()
+					MixContext.getInstance().getDownloadManager()
 							.switchOff();
 				}
 			} catch (Exception ignore) {
@@ -510,9 +501,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	protected void onDestroy(){
 		try{
 			
-			getMixViewData().getMixContext().getDownloadManager().shutDown();
+			MixContext.getInstance().getDownloadManager().shutDown();
 			getMixViewData().getSensorMgr().unregisterListener(this);
-			isBackground = true; //used to enforce garbage MixViewDataHolder
 			getMixViewData().setSensorMgr(null);
 			mixViewData = null;
 			/*
@@ -552,7 +542,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		getMarkerRenderer().clearEvents();
 		setMarkerRenderer(null); //It's smelly code, but enforce garbage collector
 							//to release data.
-		setMarkerRenderer(new MarkerRenderer(getMixViewData().getMixContext()));
+		setMarkerRenderer(new MarkerRenderer(MixContext.getInstance()));
 		setPaintScreen(new PaintScreen());
 		
 	}
@@ -608,9 +598,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
         else {
             ((ViewGroup) hudView.getParent()).removeView(hudView);
         }
-
-
-
         addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
         SeekBar rangeBar =(SeekBar) this.findViewById(R.id.rangeBar);
         getMixViewData().setRangeBar(rangeBar);
@@ -636,12 +623,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * Refreshes Download TODO refresh downloads
 	 */
 	public void refreshDownload(){
-		getMixViewData().getMixContext().getDownloadManager().switchOn();
+		MixContext.getInstance().getDownloadManager().switchOn();
 //		try {
 //			if (getMixViewData().getDownloadThread() != null){
 //				if (!getMixViewData().getDownloadThread().isInterrupted()){
 //					getMixViewData().getDownloadThread().interrupt();
-//					getMixViewData().getMixContext().getDownloadManager().restart();
+//					MixContext.getInstance().getDownloadManager().restart();
 //				}
 //			}else { //if no download thread found
 //				getMixViewData().setDownloadThread(new Thread(getMixViewData()
@@ -682,7 +669,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		builder.setPositiveButton(R.string.connection_error_dialog_button1, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				// "restart" mixare
-				startActivity(new Intent(getMixViewData().getMixContext().getApplicationContext(),
+				startActivity(new Intent(MixContext.getInstance().getApplicationContext(),
 						PluginLoaderActivity.class));
 				finish();
 			}
@@ -861,7 +848,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				break;
 		/* GPS Information */
 			case 6:
-				Location currentGPSInfo = getMixViewData().getMixContext()
+				Location currentGPSInfo = MixContext.getInstance()
 						.getLocationFinder().getCurrentLocation();
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMessage(getString(R.string.general_info_text) + "\n\n"
@@ -996,7 +983,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			getMixViewData().getSmoothR().mult(
 					1 / (float) histRLenght);
 
-			getMixViewData().getMixContext().updateSmoothRotation(
+			MixContext.getInstance().updateSmoothRotation(
 					getMixViewData().getSmoothR());
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1159,7 +1146,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 */
 	public MarkerRenderer getMarkerRenderer() {
         if(markerRenderer==null){
-            markerRenderer=new MarkerRenderer(getMixViewData().getMixContext());
+            markerRenderer=new MarkerRenderer(MixContext.getInstance());
         }
 		return markerRenderer;
 	}

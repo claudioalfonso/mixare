@@ -39,9 +39,10 @@ import android.content.Intent;
  * Cares about location management and about the data (source, inputstream)
  */
 public class MixContext extends ContextWrapper implements MixContextInterface {
-	private MixViewActivity mixViewActivity;
+	private static MixViewActivity mixViewActivity;
+    private static MixContext instance;
 
-	private final Matrix rotationM = new Matrix();
+    private final Matrix rotationM = new Matrix();
 
 	/** Responsible for all download */
 	private DownloadManager downloadManager;
@@ -58,9 +59,16 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	/** Responsible for Notification logging */
 	private NotificationManager notificationManager;
 
-	public MixContext(MixViewActivity appCtx) {
-		super(appCtx);
-		mixViewActivity = appCtx;
+    public synchronized static MixContext getInstance()
+    {
+        if (instance == null)	{
+            instance = new MixContext();
+        }
+        return instance;
+    }
+
+	private MixContext() {
+		super(mixViewActivity);
 
 		// TODO: RE-ORDER THIS SEQUENCE... IS NECESSARY?
 		getDataSourceManager().refreshDataSources();
@@ -104,17 +112,13 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	@Override
 	public void updateDataSourceStatus(boolean working, boolean problem, String statusText) {
 		if(Config.useHUD) {
-			//getActualMixViewActivity().hudView.setDataSourcesActivity(working, problem, statusText);
+			getActualMixViewActivity().hudView.setDataSourcesActivity(working, problem, statusText);
 		}
 	}
 
 	@Override
 	public void updateSensorsStatus(boolean working, boolean problem, String statusText) {
 
-	}
-
-	public void doResume(MixViewActivity mixViewActivity) {
-		setActualMixViewActivity(mixViewActivity);
 	}
 
 	public void updateSmoothRotation(Matrix smoothR) {
@@ -164,13 +168,13 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	
 	public MixViewActivity getActualMixViewActivity() {
 		synchronized (mixViewActivity) {
-			return this.mixViewActivity;
+			return mixViewActivity;
 		}
 	}
 
-	private void setActualMixViewActivity(MixViewActivity mixViewActivity) {
+	public static void setActualMixViewActivity(MixViewActivity mixViewActivity) {
 		synchronized (mixViewActivity) {
-			this.mixViewActivity = mixViewActivity;
+			MixContext.mixViewActivity = mixViewActivity;
 		}
 	}
 

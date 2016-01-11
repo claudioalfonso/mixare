@@ -208,7 +208,7 @@ public class MixMenu extends SherlockActivity {
                 break;
 		/* GPS Information */
             case 6:
-                Location currentGPSInfo = getMixViewData().getMixContext()
+                Location currentGPSInfo = MixContext.getInstance()
                         .getLocationFinder().getCurrentLocation();
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(getString(R.string.general_info_text) + "\n\n"
@@ -274,6 +274,6 @@ public class MixMenu extends SherlockActivity {
     }
 
     public MixViewDataHolder getMixViewData() {
-        return mixViewData;
+        return MixViewDataHolder.getInstance();
     }
 }

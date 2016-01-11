@@ -2,7 +2,6 @@ package org.mixare;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.PowerManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -11,7 +10,6 @@ import org.mixare.lib.render.Matrix;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Internal class that holds MixViewActivity field Data.
@@ -19,7 +17,6 @@ import java.util.List;
  * @author A B, KlemensE
  */
 class MixViewDataHolder {
-	private final MixContext mixContext;
 	private float[] RTmp;
 	private float[] Rot;
 	private float[] I;
@@ -30,8 +27,6 @@ class MixViewDataHolder {
 	private Filter gravFilter;
 	private Filter magFilter;
 	private SensorManager sensorMgr;
-	/** @deprecated */
-	private List<Sensor> sensors;
 	private Sensor sensorGrav;
 	private Sensor sensorMag;
 	private Sensor sensorGyro;
@@ -50,9 +45,10 @@ class MixViewDataHolder {
 	private String rangeLevel;
 	private int rangeBarProgress;
 	private TextView searchNotificationTxt;
+    private static MixViewDataHolder instance;
 
-	public MixViewDataHolder(MixContext mixContext) {
-		this.mixContext = mixContext;
+
+    private MixViewDataHolder() {
 		this.RTmp = new float[9];
 		this.Rot = new float[9];
 		this.I = new float[9];
@@ -76,14 +72,18 @@ class MixViewDataHolder {
 		this.m3 = new Matrix();
 		this.m4 = new Matrix();
 		this.compassErrorDisplayed = 0;
-		this.sensorList = new ArrayList<Sensor>();
+		this.sensorList = new ArrayList<>();
+	}
+
+	public synchronized static MixViewDataHolder getInstance()
+	{
+		if (instance == null)	{
+			instance = new MixViewDataHolder();
+		}
+		return instance;
 	}
 
 	/* ******* Getter and Setters ********** */
-	public MixContext getMixContext() {
-		return mixContext;
-	}
-
 	public float[] getRTmp() {
 		return RTmp;
 	}
@@ -178,22 +178,6 @@ class MixViewDataHolder {
 	 */
 	public void clearAllSensors (){
 		this.sensorList.clear();
-	}
-
-	/**
-	 * @deprecated please use {@link MixViewDataHolder#getSensor(int) getSensor}
-	 * @return List Sensors
-	 */
-	public List<Sensor> getSensors() {
-		return sensors;
-	}
-
-	/**
-	 * @deprecated please use {@link MixViewDataHolder#addListSensors(Collection)} addListSensors}
-	 * @param sensors
-	 */
-	public void setSensors(List<Sensor> sensors) {
-		this.sensors = sensors;
 	}
 
 	public Sensor getSensorGrav() {

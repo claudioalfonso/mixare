@@ -135,7 +135,7 @@
             android:id="@+id/rangeBar"
             android:progress="65"
             android:max="100"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:layout_gravity="bottom" />
     </FrameLayout>
 
