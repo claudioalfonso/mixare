@@ -22,6 +22,7 @@ import org.mixare.MixContext;
 import org.mixare.MixViewActivity;
 import org.mixare.MixViewDataHolder;
 import org.mixare.R;
+import org.mixare.lib.gui.PaintScreen;
 
 
 public class HudView extends RelativeLayout {
@@ -36,6 +37,9 @@ public class HudView extends RelativeLayout {
     private ImageView dataSourcesStatusIcon;
     private ImageView sensorsStatusIcon;
     private SeekBar rangeBar;
+
+    private Radar radar = null;
+    private PaintScreen radarPaintScreen;
 
     Paint rangeBarLabelPaint = new Paint();
 
@@ -88,6 +92,10 @@ public class HudView extends RelativeLayout {
 
     public void init() {
         addView(inflate(getContext(), R.layout.hud_view, null));
+
+        radar = new Radar();
+        radarPaintScreen = new PaintScreen();
+
         positionStatusText =(TextView) this.findViewById(R.id.positionStatusText);
         dataSourcesStatusText =(TextView) this.findViewById(R.id.dataSourcesStatusText);
         sensorsStatusText =(TextView) this.findViewById(R.id.sensorsStatusText);
@@ -138,9 +146,7 @@ public class HudView extends RelativeLayout {
 
     private SeekBar.OnSeekBarChangeListener onRangeBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
-        public void onProgressChanged(SeekBar rangeBar, int progress,
-                                      boolean fromUser) {
-            //TODO change to only update label
+        public void onProgressChanged(SeekBar rangeBar, int progress, boolean fromUser) {
             setRangeBarProgress(progress,false);
         }
 
@@ -149,8 +155,6 @@ public class HudView extends RelativeLayout {
 
         public void onStopTrackingTouch(SeekBar rangeBar) {
             setRangeBarProgress(rangeBar.getProgress(),true);
-            hideRangeBar();
-
             //repaint after range level changed.
             MixContext.getInstance().getActualMixViewActivity().repaint();
             MixContext.getInstance().getActualMixViewActivity().refreshDownload();
@@ -194,6 +198,10 @@ public class HudView extends RelativeLayout {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        // Draw Radar
+        radarPaintScreen.setCanvas(canvas);
+        radar.paint(radarPaintScreen);
+
         try {
             if (isRangeBarVisible()) {
                 rangeBarLabelPaint.setColor(Color.WHITE);

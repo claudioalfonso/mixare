@@ -33,7 +33,6 @@ import java.util.TimerTask;
 
 import org.mixare.data.DataHandler;
 import org.mixare.data.DataSource;
-import org.mixare.gui.Radar;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.marker.Marker;
 import org.mixare.lib.render.Camera;
@@ -45,8 +44,7 @@ import android.location.Location;
 import android.util.Log;
 
 /**
- * This class is able to update the markers and the radar. It also handles some
- * user events
+ * This class updates the markers. It also handles some user events
  * 
  * @author daniele
  * 
@@ -87,8 +85,6 @@ public class MarkerRenderer {
 
 	private final ArrayList<UIEvent> uiEvents = new ArrayList<>();
 
-	private Radar radar = null;
-
 	private float addX = 0, addY = 0;
 
     private List<Marker> markers;
@@ -100,7 +96,6 @@ public class MarkerRenderer {
 	 */
 	public MarkerRenderer(MixContext ctx) {
 		this.mixContext = ctx;
-		radar = new Radar(this);
 	}
 
 	public MixContext getContext() {
@@ -151,11 +146,13 @@ public class MarkerRenderer {
 	public boolean isInited() {
 		return isInit;
 	}
+    private PaintScreen paintScreen;
 
-	public void init(final int widthInit, final int heightInit) {
+	public void init(PaintScreen paintScreen){
+		this.paintScreen=paintScreen;
 		try {
-			width = widthInit;
-			height = heightInit;
+			width = paintScreen.getWidth();
+			height = paintScreen.getHeight();
 
 			cam = new Camera(width, height, true);
 			cam.setViewAngle(Camera.DEFAULT_VIEW_ANGLE);
@@ -189,7 +186,7 @@ public class MarkerRenderer {
 	// state.nextLStatus = MixState.PROCESSING;
 	// }
 
-	public void draw(PaintScreen paintScreen) {
+	public void draw() {
 		mixContext.getRM(cam.transform);
 		curFix = mixContext.getLocationFinder().getCurrentLocation();  // why get location on every draw cycle instead of only when it changed?
 
@@ -257,9 +254,6 @@ public class MarkerRenderer {
 				ma.draw(paintScreen);
 			}
 		}
-
-		// Draw Radar
-		drawRadar(paintScreen);
 
         mixContext.getActualMixViewActivity().updateHud(curFix); //FIXME Problem: synchronized access prevents uiEvents from being processed
 
@@ -337,15 +331,6 @@ public class MarkerRenderer {
 			}
 		}
 		return markers;
-	}
-
-	/**
-	 * Handles drawing radar and direction.
-	 * 
-	 * @param paintScreen screen that radar will be drawn to
-	 */
-	private void drawRadar(PaintScreen paintScreen) {
-        radar.paint(paintScreen);
 	}
 
 	private void handleKeyEvent(KeyEvent evt) {

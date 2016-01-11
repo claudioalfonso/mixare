@@ -58,9 +58,9 @@ public class Radar implements ScreenObj {
 
     private float rx = 10, ry = 20;
 
-    public Radar(MarkerRenderer markerRenderer){
-        this.markerRenderer = markerRenderer;
-        mixContext=markerRenderer.getContext();
+    public Radar(){
+        this.markerRenderer = MixContext.getInstance().getActualMixViewActivity().getMarkerRenderer();
+        mixContext= MixContext.getInstance();
         directions = new String[8];
         directions[0] = mixContext.getString(R.string.N);
         directions[1] = mixContext.getString(R.string.NE);
@@ -75,7 +75,7 @@ public class Radar implements ScreenObj {
     }
 
     public void paint(PaintScreen paintScreen) {
-        this.paintScreen =paintScreen;
+        this.paintScreen = paintScreen;
 		/** radius is in KM. */
 		range = markerRenderer.getRadius() * 1000;
         int bearing = (int) markerRenderer.getState().getCurBearing();

@@ -25,18 +25,13 @@ class AugmentedView extends View {
 	protected void onDraw(Canvas canvas) {
 		try {
 			mixViewActivity.killOnError();
-
-			MixViewActivity.getPaintScreen().setWidth(canvas.getWidth());
-			MixViewActivity.getPaintScreen().setHeight(canvas.getHeight());
-
 			MixViewActivity.getPaintScreen().setCanvas(canvas);
 
 			if (!mixViewActivity.getMarkerRenderer().isInited()) {
-                mixViewActivity.getMarkerRenderer().init(MixViewActivity.getPaintScreen().getWidth(),
-						MixViewActivity.getPaintScreen().getHeight());
+                mixViewActivity.getMarkerRenderer().init(MixViewActivity.getPaintScreen());
 			}
 
-            mixViewActivity.getMarkerRenderer().draw(MixViewActivity.getPaintScreen());
+            mixViewActivity.getMarkerRenderer().draw();
 		} catch (Exception ex) {
 			mixViewActivity.doError(ex, MixViewActivity.GENERAL_ERROR);
 		}

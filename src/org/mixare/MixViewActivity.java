@@ -115,7 +115,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			augmentedView.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent me) {
-					try {
+                    hudView.hideRangeBar();
+
+                    try {
 						killOnError();
 						float xPress = me.getX();
 						float yPress = me.getY();
@@ -528,7 +530,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			cameraView.addView(cameraSurface);
 		}
 		else {
-			cameraView.removeView(cameraSurface);
+            cameraView.removeView(cameraSurface);
 			cameraView.addView(cameraSurface);
 
 		}
@@ -551,7 +553,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			((ViewGroup) augmentedView.getParent()).removeView(augmentedView);
 			//addContentView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
-			cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
+            cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT));
 		}
 
