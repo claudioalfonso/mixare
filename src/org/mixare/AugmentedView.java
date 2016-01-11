@@ -41,7 +41,7 @@ class AugmentedView extends View {
                 mixViewActivity.getMarkerRenderer().init(MixViewActivity.getPaintScreen().getWidth(),
 						MixViewActivity.getPaintScreen().getHeight());
 			}
-			if (mixViewActivity.isRangeBarVisible()) {
+			if (mixViewActivity.hudView.isRangeBarVisible()) {
 				rangeBarLabelPaint.setColor(Color.WHITE);
 				rangeBarLabelPaint.setTextSize(14);
 				String startKM, endKM;
@@ -54,12 +54,12 @@ class AugmentedView extends View {
 						canvas.getHeight() / 100 * 85, rangeBarLabelPaint);
 
 				int yPos = canvas.getHeight() / 100 * 85;
-				int rangeBarProgress = mixViewActivity.getRangeBarProgress();
+				int rangeBarProgress = mixViewActivity.hudView.getRangeBarProgress();
 				if (rangeBarProgress > 92 || rangeBarProgress < 6) { // at beginning/end, jump up because of ster/end labels
 					yPos = canvas.getHeight() / 100 * 80;
 				}
 
-				canvas.drawText(mixViewActivity.getRangeLevel(), (canvas.getWidth()) / 100
+				canvas.drawText(MixViewDataHolder.getInstance().getRangeString(), (canvas.getWidth()) / 100
 						* rangeBarProgress + 20, yPos, rangeBarLabelPaint);
 			}
 

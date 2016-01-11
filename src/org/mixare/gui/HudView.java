@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -15,6 +15,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.mixare.Config;
+import org.mixare.MixContext;
+import org.mixare.MixViewDataHolder;
 import org.mixare.R;
 
 
@@ -29,6 +31,7 @@ public class HudView extends RelativeLayout {
     private ImageView positionStatusIcon;
     private ImageView dataSourcesStatusIcon;
     private ImageView sensorsStatusIcon;
+    private SeekBar rangeBar;
 
     public HudView(Context context){
         super(context);
@@ -46,6 +49,36 @@ public class HudView extends RelativeLayout {
         init();
     }
 
+    /**
+     * Calculate Range Level base 80.
+     * Mixare support ranges between 0-80km and default value of 20km,
+     * {@link SeekBar SeekBar} on the other hand, is 0-100 base.
+     * This method handles the Range level conversion between Mixare range and SeekBar progress.
+     *
+     * @return int Range base 80
+     */
+    public float calcRange(){
+
+        int rangeBarProgress = rangeBar.getProgress();
+        float range = 5;
+
+        if (rangeBarProgress <= 26) {
+            range = rangeBarProgress / 25f;
+        } else if (25 < rangeBarProgress && rangeBarProgress < 50) {
+            range = (1 + (rangeBarProgress - 25)) * 0.38f;
+        } else if (25 == rangeBarProgress) {
+            range = 1;
+        } else if (50 == rangeBarProgress) {
+            range = 10;
+        } else if (50 < rangeBarProgress && rangeBarProgress < 75) {
+            range = (10 + (rangeBarProgress - 50)) * 0.83f;
+        } else {
+            range = (30 + (rangeBarProgress - 75) * 2f);
+        }
+
+        return range;
+    }
+
     public void init() {
         addView(inflate(getContext(), R.layout.hud_view, null));
         positionStatusText =(TextView) this.findViewById(R.id.positionStatusText);
@@ -57,9 +90,17 @@ public class HudView extends RelativeLayout {
         positionStatusIcon =(ImageView) this.findViewById(R.id.positionStatusIcon);
         dataSourcesStatusIcon =(ImageView) this.findViewById(R.id.dataSourcesStatusIcon);
         sensorsStatusIcon =(ImageView) this.findViewById(R.id.sensorsStatusIcon);
+        initRangeBar();
     }
 
-    public void setDataSourcesActivity(boolean working, boolean problem, String statusText){
+    private void initRangeBar(){
+        rangeBar = (SeekBar) this.findViewById(R.id.rangeBar);
+        rangeBar.setOnSeekBarChangeListener(onRangeBarChangeListener);
+        SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_NAME, 0);
+        setRangeBarProgress(settings.getInt(getContext().getString(R.string.pref_rangeLevel), Config.DEFAULT_RANGE),true);
+    }
+
+    public void setDataSourcesStatus(boolean working, boolean problem, String statusText){
         if(statusText!=null && dataSourcesStatusText !=null) {
             dataSourcesStatusText.setText(getResources().getString(R.string.dataSourcesStatusText));
         }
@@ -86,73 +127,61 @@ public class HudView extends RelativeLayout {
         }
     }
 
-
-    /**
-     * Create range bar and returns FrameLayout. FrameLayout is created to be
-     * hidden and not added to markerRenderer, Caller needs to add the frameLayout to
-     * markerRenderer, and enable visibility when needed.
-     *
-     * @param settings where setting is stored
-     * @return FrameLayout Hidden Range Bar
-     */
-    private FrameLayout createRangeBar(SharedPreferences settings) {
-        SeekBar rangeBar=new SeekBar(getContext());
-        rangeBar.setMax(100);
-        rangeBar.setProgress(settings.getInt(getContext().getString(R.string.pref_rangeLevel), 65));
-     //   rangeBar.setOnSeekBarChangeListener(onRangeBarChangeListener);
-        rangeBar.setVisibility(View.INVISIBLE);
-      //  getMixViewData().setRangeBar(rangeBar);
-
-        FrameLayout frameLayout = new FrameLayout(getContext());
-
-        frameLayout.setMinimumWidth(3000);
-        ViewGroup.LayoutParams pa = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        frameLayout.setLayoutParams(pa);
-        frameLayout.addView(rangeBar);
-        frameLayout.setPadding(10, 0, 10, 10);
-
-        return frameLayout;
-    }
-
     /* ******** Operators - Sensors ****** */
-    /*
+
     private SeekBar.OnSeekBarChangeListener onRangeBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
         public void onProgressChanged(SeekBar rangeBar, int progress,
                                       boolean fromUser) {
-            float rangeLevel = calcRangeLevel();
-
-            getMixViewData().setRangeLevel(String.valueOf(rangeLevel));
-            getMixViewData().setRangeBarProgress(progress);
-
-            markerRenderer.getContext().getNotificationManager().
-                    addNotification("Radius: " + String.valueOf(rangeLevel));
+            //TODO change to only update label
+            setRangeBarProgress(progress,false);
         }
 
-        public void onStartTrackingTouch(SeekBar rangeBar) {
-            markerRenderer.getContext().getNotificationManager().addNotification("Radius: ");
-        }
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {}
 
         public void onStopTrackingTouch(SeekBar rangeBar) {
+            setRangeBarProgress(rangeBar.getProgress(),true);
+            hideRangeBar();
+
+            //repaint after range level changed.
+            MixContext.getInstance().getActualMixViewActivity().repaint();
+            MixContext.getInstance().getActualMixViewActivity().refreshDownload();
+        }
+    };
+
+    public boolean isRangeBarVisible() {
+        return rangeBar != null
+                && rangeBar.getVisibility() == View.VISIBLE;
+    }
+
+    public void hideRangeBar(){
+        if(isRangeBarVisible()){
+            rangeBar.setVisibility(View.INVISIBLE);
+        }
+    }
+    public void showRangeBar(){
+        if(!isRangeBarVisible()){
+            rangeBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setRangeBarProgress(int rangeBarProgress,boolean finalValue) {
+        rangeBar.setProgress(rangeBarProgress); // set the visual state of the SeekBar
+        float range = calcRange();
+        MixViewDataHolder.getInstance().setRange(range); // save the calculated range in km to be accessed by other processes
+        if(finalValue){
+            MixContext.getInstance().getActualMixViewActivity().getMarkerRenderer().setRadius(range); // set radius of the renderer in KM, TODO remove and access global range from MixViewDataHolder
             SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_NAME, 0);
             SharedPreferences.Editor editor = settings.edit();
-			// store the range of the range bar selected by the user
-            editor.putInt(getContext().getString(R.string.pref_rangeLevel), rangeBar.getProgress());
-            editor.commit();
-            getMixViewData().getRangeBar().setVisibility(View.INVISIBLE);
-            // rangeChanging= false;
 
-            getMixViewData().getRangeBar().setProgress(rangeBar.getProgress());
-
-            markerRenderer.getContext().getNotificationManager().clear();
-            //repaint after range level changed.
-            repaint();
-            setRangeLevel();
-            refreshDownload();
-
+            // store the range of the range bar selected by the user
+            editor.putInt(getContext().getString(R.string.pref_rangeLevel), rangeBarProgress);
+            editor.apply(); //or commit()?
         }
+    }
 
-
-    };
-*/
+    public int getRangeBarProgress() {
+        return rangeBar.getProgress();
+    }
 }

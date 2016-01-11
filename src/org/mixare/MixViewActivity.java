@@ -23,7 +23,6 @@ import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 import java.util.Date;
 import java.util.Random;
 
-import org.mixare.R.drawable;
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
@@ -32,17 +31,12 @@ import org.mixare.lib.render.Matrix;
 import org.mixare.map.MixMap;
 import org.mixare.mgr.HttpTools;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
@@ -53,15 +47,9 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.text.format.DateUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -69,13 +57,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * This class is the main application which uses the other classes for different
@@ -101,8 +83,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	protected static final int GPS_ERROR = 1;
 	protected static final int GENERAL_ERROR = 2;
 	protected static final int NO_NETWORK_ERROR = 4;
-
-    private MixViewDataHolder mixViewData  ;
 
     /**
 	 * Main application Launcher.
@@ -157,10 +137,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 			if (!isInited) {
 				setPaintScreen(new PaintScreen());
-				setMarkerRenderer(new MarkerRenderer(MixContext.getInstance()));
+ //               setMarkerRenderer(new MarkerRenderer(MixContext.getInstance()));
+                getMarkerRenderer();
 
 				/* set the radius in data markerRenderer to the last selected by the user */
-				setRangeLevel();
+				//setRangeLevel();
 				refreshDownload();
 				isInited = true;
 			}
@@ -285,9 +266,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		try {
 			if (data.getBooleanExtra("RefreshScreen", false)) {
 				Log.d(Config.TAG + " WorkFlow",
-						"MixViewActivity - Received Refresh Screen Request .. about to refresh");
+                        "MixViewActivity - Received Refresh Screen Request .. about to refresh");
 				repaint();
-				setRangeLevel();
+				//setRangeLevel();
 				refreshDownload();
 			}
 		} catch (Exception ex) {
@@ -320,7 +301,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			HttpTools.setContext(MixContext.getInstance());
 			
 			//repaint(); //repaint when requested
-			setRangeLevel();
+			//setRangeLevel();
 			getMarkerRenderer().doStart();
 			getMarkerRenderer().clearEvents();
 			MixContext.getInstance().getNotificationManager().setEnabled(true);
@@ -504,7 +485,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			MixContext.getInstance().getDownloadManager().shutDown();
 			getMixViewData().getSensorMgr().unregisterListener(this);
 			getMixViewData().setSensorMgr(null);
-			mixViewData = null;
 			/*
 			 * Invoked when the garbage collector has detected that this
 			 * instance is no longer reachable. The default implementation does
@@ -540,12 +520,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	public void repaint() {
 		// clear stored data
 		getMarkerRenderer().clearEvents();
-		setMarkerRenderer(null); //It's smelly code, but enforce garbage collector
-							//to release data.
-		setMarkerRenderer(new MarkerRenderer(MixContext.getInstance()));
+		//setMarkerRenderer(null); //It's smelly code, but enforce garbage collector to release data.
+		//setMarkerRenderer(new MarkerRenderer(MixContext.getInstance()));
 		setPaintScreen(new PaintScreen());
-		
-	}
+
+    }
 
 	/**
 	 * Checks cameraSurface, if it does not exist, it creates one.
@@ -583,7 +562,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			//addContentView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
 			cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
-					LayoutParams.WRAP_CONTENT));
+                    LayoutParams.WRAP_CONTENT));
 		}
 
 	}
@@ -598,9 +577,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
         else {
             ((ViewGroup) hudView.getParent()).removeView(hudView);
         }
-        addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
-        SeekBar rangeBar =(SeekBar) this.findViewById(R.id.rangeBar);
-        getMixViewData().setRangeBar(rangeBar);
+        addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     }
 
 	/**
@@ -667,13 +644,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 		/*Retry*/
 		builder.setPositiveButton(R.string.connection_error_dialog_button1, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				// "restart" mixare
-				startActivity(new Intent(MixContext.getInstance().getApplicationContext(),
-						PluginLoaderActivity.class));
-				finish();
-			}
-		});
+            public void onClick(DialogInterface dialog, int id) {
+                // "restart" mixare
+                startActivity(new Intent(MixContext.getInstance().getApplicationContext(),
+                        PluginLoaderActivity.class));
+                finish();
+            }
+        });
 		if (error == GPS_ERROR) {
 			/* Open settings */
 			builder.setNeutralButton(R.string.connection_error_dialog_button2,
@@ -708,46 +685,16 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 		/*Close application*/
 		builder.setNegativeButton(R.string.connection_error_dialog_button3, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				finish();
-			}
-		});
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
 		
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
 
-	/**
-	 * Calculate Range Level base 80.
-	 * Mixare support ranges between 0-80km and default value of 20km,
-	 * {@link android.widget.SeekBar SeekBar} on the other hand, is 0-100 base.
-	 * This method handles the Range level conversion between Mixare rangeLevel and SeekBar progress.
-	 * 
-	 * @return int Range Level base 80
-	 */
-	public float calcRangeLevel(){
-
-		int rangeBarProgress = getMixViewData().getRangeBar().getProgress();
-		float rangeLevel = 5;
-
-		if (rangeBarProgress <= 26) {
-			rangeLevel = rangeBarProgress / 25f;
-		} else if (25 < rangeBarProgress && rangeBarProgress < 50) {
-			rangeLevel = (1 + (rangeBarProgress - 25)) * 0.38f;
-		} else if (25 == rangeBarProgress) {
-			rangeLevel = 1;
-		} else if (50 == rangeBarProgress) {
-			rangeLevel = 10;
-		} else if (50 < rangeBarProgress && rangeBarProgress < 75) {
-			rangeLevel = (10 + (rangeBarProgress - 50)) * 0.83f;
-		} else {
-			rangeLevel = (30 + (rangeBarProgress - 75) * 2f);
-		}
-
-		return rangeLevel;
-	}
-
-	/**
+    /**
 	 * Handle First time users. It display license agreement and store user's
 	 * acceptance.
 	 * 
@@ -838,10 +785,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				break;
 		/* range level */
 			case 4:
-				getMixViewData().getRangeBar().setVisibility(View.VISIBLE);
-				getMixViewData().setRangeBarProgress(
-						getMixViewData().getRangeBar().getProgress());
-				break;
+                hudView.showRangeBar();
+                drawerLayout.closeDrawer(drawerList);
+                break;
 		/* Search */
 			case 5:
 				onSearchRequested();
@@ -992,9 +938,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
-		if (getMixViewData().getRangeBar().getVisibility() == View.VISIBLE) {
-			getMixViewData().getRangeBar().setVisibility(View.INVISIBLE);
-		}
+		hudView.hideRangeBar();
 		
 		try {
 			killOnError();
@@ -1013,13 +957,17 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 	}
 
+    /*
+     * Handler for physical key presses (menu key, back key)
+     */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		try {
 			killOnError();
-			
-			if (isRangeBarVisible()) {
-				getMixViewData().getRangeBar().setVisibility(View.INVISIBLE);
+
+			//if range bar was visible, hide it
+			if (hudView.isRangeBarVisible()) {
+                hudView.hideRangeBar();
 				if (keyCode == KeyEvent.KEYCODE_MENU) {
 					return super.onKeyDown(keyCode, event);
 				}
@@ -1060,7 +1008,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				addNotification("Compass data unreliable. Please recalibrate compass.");
 			}
 			getMixViewData().setCompassErrorDisplayed(
-					getMixViewData().getCompassErrorDisplayed() + 1);
+                    getMixViewData().getCompassErrorDisplayed() + 1);
 		}
 	}
 
@@ -1117,15 +1065,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 	/* ******* Getter and Setters ********** */
 
-	public boolean isRangeBarVisible() {
-		return getMixViewData().getRangeBar() != null
-				&& getMixViewData().getRangeBar().getVisibility() == View.VISIBLE;
-	}
-
-	public String getRangeLevel() {
-		return getMixViewData().getRangeLevel();
-	}
-
 	/**
 	 * @return the paintScreen
 	 */
@@ -1162,15 +1101,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
     }
 
 	/**
-	 * @param markerRenderer
-	 *            the markerRenderer to set
+	 * @param markerRenderer the markerRenderer to set
 	 */
+    /*
 	static void setMarkerRenderer(MarkerRenderer markerRenderer) {
 		MixViewActivity.markerRenderer = markerRenderer;
-	}
-
-	public int getRangeBarProgress() {
-		return getMixViewData().getRangeBarProgress();
 	}
 
 	public void setRangeLevel() {
@@ -1179,11 +1114,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		getMarkerRenderer().setRadius(rangeLevel);
 		getMixViewData().setRangeLevel(String.valueOf(rangeLevel));
 	}
+	*/
 
     public void updateHud(Location curFix){
         if(Config.useHUD) {
             hudView.updatePositionStatus(curFix);
-            hudView.setDataSourcesActivity(getMarkerRenderer().dataSourceWorking, false, null);
+            hudView.setDataSourcesStatus(getMarkerRenderer().dataSourceWorking, false, null);
         }
     }
 }

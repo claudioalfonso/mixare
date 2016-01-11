@@ -129,7 +129,7 @@ public class MixMenu extends SherlockActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home ) {
 
             if (drawerLayout.isDrawerOpen(drawerList)) {
                 drawerLayout.closeDrawer(drawerList);
@@ -198,9 +198,6 @@ public class MixMenu extends SherlockActivity {
                 break;
 		/* range level */
             case 4:
-                getMixViewData().getRangeBar().setVisibility(View.VISIBLE);
-                getMixViewData().setRangeBarProgress(
-                        getMixViewData().getRangeBar().getProgress());
                 break;
 		/* Search */
             case 5:

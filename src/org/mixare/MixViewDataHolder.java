@@ -16,7 +16,7 @@ import java.util.Collection;
  *
  * @author A B, KlemensE
  */
-class MixViewDataHolder {
+public class MixViewDataHolder {
 	private float[] RTmp;
 	private float[] Rot;
 	private float[] I;
@@ -40,10 +40,8 @@ class MixViewDataHolder {
 	private Matrix m2;
 	private Matrix m3;
 	private Matrix m4;
-	private SeekBar rangeBar;
 	private int compassErrorDisplayed;
-	private String rangeLevel;
-	private int rangeBarProgress;
+    private float range;
 	private TextView searchNotificationTxt;
     private static MixViewDataHolder instance;
 
@@ -276,13 +274,17 @@ class MixViewDataHolder {
 		this.m4 = m4;
 	}
 
-	public SeekBar getRangeBar() {
-		return rangeBar;
-	}
+    public float getRange() {
+        return range;
+    }
 
-	public void setRangeBar(SeekBar rangeBar) {
-		this.rangeBar = rangeBar;
-	}
+    public void setRange(float range) {
+        this.range = range;
+    }
+
+    public String getRangeString() {
+        return String.valueOf(this.range);
+    }
 
 	public int getCompassErrorDisplayed() {
 		return compassErrorDisplayed;
@@ -290,22 +292,6 @@ class MixViewDataHolder {
 
 	public void setCompassErrorDisplayed(int compassErrorDisplayed) {
 		this.compassErrorDisplayed = compassErrorDisplayed;
-	}
-
-	public String getRangeLevel() {
-		return rangeLevel;
-	}
-
-	public void setRangeLevel(String rangeLevel) {
-		this.rangeLevel = rangeLevel;
-	}
-
-	public int getRangeBarProgress() {
-		return rangeBarProgress;
-	}
-
-	public void setRangeBarProgress(int rangeBarProgress) {
-		this.rangeBarProgress = rangeBarProgress;
 	}
 
 	public TextView getSearchNotificationTxt() {

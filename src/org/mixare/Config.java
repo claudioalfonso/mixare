@@ -5,6 +5,7 @@ public class Config {
     public static final String TAG = "Mixare";
     /** string to name & access the preference file in the internal storage */
     public static final String PREFS_NAME = "MyPrefsFileForMenuItems";
+    public static final int DEFAULT_RANGE = 65;
     public static boolean drawTextBlock = true;
 
     //currently only for test purposes

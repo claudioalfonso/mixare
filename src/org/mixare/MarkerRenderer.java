@@ -120,16 +120,20 @@ public class MarkerRenderer {
 	}
 
 	public float getRadius() {
-		return radius;
+      //  Log.d(Config.TAG + "RangeBar", "getRadius: " + this.radius);
+
+        return radius;
 	}
 
 	public MixState getState (){
 		return this.state;
 	}
 
-	public void setRadius(final float radius) {
+	public void setRadius(float radius) {
 		this.radius = radius;
-	}
+        Log.d(Config.TAG + "RangeBar", "setRadius: " + this.radius);
+
+    }
 
 	public DataHandler getDataHandler() {
 		return dataHandler;
