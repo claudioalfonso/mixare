@@ -105,7 +105,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * Does:
 	 * - Lock Screen.
 	 * - Initiate Camera View
-	 * - Initiate markerRenderer {@link MarkerRenderer#draw(PaintScreen) MarkerRenderer}
+	 * - Initiate markerRenderer {@link MarkerRenderer#draw() MarkerRenderer}
 	 * - Display License Agreement if mixViewActivity first used.
 	 * 
 	 * {@inheritDoc}
@@ -308,7 +308,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	@Override
 	protected void onResume() {
 		super.onResume();
-		isBackground = false;
 		mRenderer.start();
 		mGLSurfaceView.onResume();
 		try {

@@ -126,9 +126,6 @@
         <activity android:name=".PluginListActivity" 
             android:label="@string/plugin_list">
         </activity>
-
-        <activity android:name=".RotationVektorDemo">
-        </activity>
         
     </application>
 </manifest>
