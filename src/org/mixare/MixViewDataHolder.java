@@ -2,6 +2,7 @@ package org.mixare;
 
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ public class MixViewDataHolder {
 	private int compassErrorDisplayed;
     private float range;
 	private TextView searchNotificationTxt;
+    private Location navTarget;
     private static MixViewDataHolder instance;
 
 
@@ -80,6 +82,14 @@ public class MixViewDataHolder {
 		}
 		return instance;
 	}
+
+    public Location getNavTarget() {
+        return navTarget;
+    }
+
+    public void setNavTarget(Location navTarget) {
+        this.navTarget = navTarget;
+    }
 
 	/* ******* Getter and Setters ********** */
 	public float[] getRTmp() {
