@@ -20,6 +20,9 @@ package org.mixare;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.Date;
 import java.util.Random;
 
@@ -44,6 +47,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -52,11 +56,13 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Layout;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -76,6 +82,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * This class is the main application which uses the other classes for different
  * functionalities.
@@ -86,11 +95,11 @@ import android.widget.Toast;
 public class MixViewActivity extends MixMenu implements SensorEventListener, OnTouchListener {
 
 	private CameraSurface cameraSurface;
-    private FrameLayout cameraView;
+	private FrameLayout cameraView;
 	private AugmentedView augmentedView;
-    public HudView hudView;
+	public HudView hudView;
 
-    private boolean isInited;
+	private boolean isInited;
 	private static boolean isBackground;
 	private static PaintScreen paintScreen;
 	private static MarkerRenderer markerRenderer;
@@ -102,9 +111,14 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	protected static final int GENERAL_ERROR = 2;
 	protected static final int NO_NETWORK_ERROR = 4;
 
-    private MixViewDataHolder mixViewData  ;
+	private MixViewDataHolder mixViewData;
 
-    /**
+	private GLSurfaceView mGLSurfaceView;
+	private SensorManager mSensorManager;
+	private MyRenderer mRenderer;
+
+
+	/**
 	 * Main application Launcher.
 	 * Does:
 	 * - Lock Screen.
@@ -112,28 +126,29 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * - Initiate markerRenderer {@link MarkerRenderer#draw(PaintScreen) MarkerRenderer}
 	 * - Initiate RangeBar {@link android.widget.SeekBar SeekBar widget}
 	 * - Display License Agreement if mixViewActivity first used.
-	 * 
+	 * <p/>
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			isBackground = false;			
+			isBackground = false;
 			handleIntent(getIntent());
 
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 			getMixViewData().setSensorMgr((SensorManager) getSystemService(SENSOR_SERVICE));
-			
+
 			killOnError();
 			//requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-			if(getSupportActionBar() != null){
+			if (getSupportActionBar() != null) {
 				getSupportActionBar().hide();
 			}
 
 			maintainViews();
+			maintainRotationVektorDemo();
 			augmentedView.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent me) {
@@ -179,9 +194,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				firstAccess(settings);
 			}
 		} catch (Exception ex) {
-            doError(ex, GENERAL_ERROR);
+			doError(ex, GENERAL_ERROR);
 		}
 	}
+
+
 
 	@Override
 	public MixViewDataHolder getMixViewData() {
@@ -239,7 +256,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				finish();
 			}
 		} catch (Exception ex) {
-            doError(ex, GENERAL_ERROR);
+			doError(ex, GENERAL_ERROR);
 		}
 	}
 
@@ -252,11 +269,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * {@inheritDoc}
 	 */
 	protected void onActivityResult(final int requestCode,
-			final int resultCode, Intent data) {
+									final int resultCode, Intent data) {
 		//Log.d(TAG + " WorkFlow", "MixViewActivity - onActivityResult Called");
 		// check if the returned is request to refresh screen (setting might be
 		// changed)
-		
+
 		if (requestCode == 35) {
 			if (resultCode == 1) {
 				final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -264,13 +281,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				dialog.setTitle(R.string.launch_plugins);
 				dialog.setMessage(R.string.plugins_changed);
 				dialog.setCancelable(false);
-				
+
 				// Always activate new plugins
-				
+
 //				final CheckBox checkBox = new CheckBox(ctx);
 //				checkBox.setText(R.string.remember_this_decision);
 //				dialog.setView(checkBox);		
-				
+
 				dialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface d, int whichButton) {
 						startActivity(new Intent(getMixViewData().getMixContext().getApplicationContext(),
@@ -279,7 +296,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 					}
 				});
 
-				dialog.setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
+				dialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface d, int whichButton) {
 						d.dismiss();
 					}
@@ -301,7 +318,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	/**
 	 * Part of Android LifeCycle that gets called when "MixViewActivity" resumes.
 	 * <br/>
@@ -315,25 +332,26 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * - restart markerRenderer refresh Timer.
 	 * <br/>
 	 * {@inheritDoc}
-	 * 
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
 		isBackground = false;
+		mRenderer.start();
+		mGLSurfaceView.onResume();
 		try {
 			killOnError();
 			getMixViewData().getMixContext().doResume(this);
 
 			HttpTools.setContext(getMixViewData().getMixContext());
-			
+
 			//repaint(); //repaint when requested
 			setRangeLevel();
 			getMarkerRenderer().doStart();
 			getMarkerRenderer().clearEvents();
 			getMixViewData().getMixContext().getNotificationManager().setEnabled(true);
 			refreshDownload();
-			
+
 			getMixViewData().getMixContext().getDataSourceManager().refreshDataSources();
 
 			float angleX, angleY;
@@ -382,7 +400,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 			getMixViewData().addListSensors(getMixViewData().getSensorMgr().getSensorList(
 					Sensor.TYPE_ACCELEROMETER));
-			if (getMixViewData().getSensor(0).getType() == Sensor.TYPE_ACCELEROMETER ) {
+			if (getMixViewData().getSensor(0).getType() == Sensor.TYPE_ACCELEROMETER) {
 				getMixViewData().setSensorGrav(getMixViewData().getSensor(0));
 			}//else report error (unsupported hardware)
 
@@ -391,8 +409,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			if (getMixViewData().getSensor(1).getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				getMixViewData().setSensorMag(getMixViewData().getSensor(1));
 			}//else report error (unsupported hardware)
-			
-			if (!getMixViewData().getSensorMgr().getSensorList(Sensor.TYPE_GYROSCOPE).isEmpty()){
+
+			if (!getMixViewData().getSensorMgr().getSensorList(Sensor.TYPE_GYROSCOPE).isEmpty()) {
 				getMixViewData().addListSensors(getMixViewData().getSensorMgr().getSensorList(
 						Sensor.TYPE_GYROSCOPE));
 				if (getMixViewData().getSensor(2).getType() == Sensor.TYPE_GYROSCOPE) {
@@ -401,12 +419,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				getMixViewData().getSensorMgr().registerListener(this,
 						getMixViewData().getSensorGyro(), SENSOR_DELAY_GAME);
 			}
-			
-				getMixViewData().getSensorMgr().registerListener(this,
-						getMixViewData().getSensorGrav(), SENSOR_DELAY_GAME);
-				getMixViewData().getSensorMgr().registerListener(this,
-						getMixViewData().getSensorMag(), SENSOR_DELAY_GAME);
-				
+
+			getMixViewData().getSensorMgr().registerListener(this,
+					getMixViewData().getSensorGrav(), SENSOR_DELAY_GAME);
+			getMixViewData().getSensorMgr().registerListener(this,
+					getMixViewData().getSensorMag(), SENSOR_DELAY_GAME);
+
 			try {
 				GeomagneticField gmf = getMixViewData().getMixContext()
 						.getLocationFinder().getGeomagneticField();
@@ -425,11 +443,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			} else {
 				Log.d(Config.TAG, "network");
 			}
-			
+
 			getMixViewData().getMixContext().getDownloadManager().switchOn();
 			getMixViewData().getMixContext().getLocationFinder().switchOn();
 		} catch (Exception ex) {
-            doError(ex, GENERAL_ERROR);
+			doError(ex, GENERAL_ERROR);
 			try {
 				if (getMixViewData().getSensorMgr() != null) {
 					getMixViewData().getSensorMgr().unregisterListener(this,
@@ -449,7 +467,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 			} catch (Exception ignore) {
 			}
-		}finally{
+		} finally {
 			//This does not conflict with registered sensors (sensorMag, sensorGrav)
 			//This is a place holder to API returned listed of sensors, we registered
 			//what we need, the rest is unnecessary.
@@ -457,9 +475,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 
 		Log.d(Config.TAG, "resume");
-        if(getMarkerRenderer() == null){
-            return;
-        }
+		if (getMarkerRenderer() == null) {
+			return;
+		}
 		if (getMarkerRenderer().isFrozen()
 				&& getMixViewData().getSearchNotificationTxt() == null) {
 			getMixViewData().setSearchNotificationTxt(new TextView(this));
@@ -477,10 +495,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 					Color.WHITE);
 
 			getMixViewData().getSearchNotificationTxt()
-                    .setOnTouchListener(this);
-            addContentView(getMixViewData().getSearchNotificationTxt(),
-                    new LayoutParams(LayoutParams.MATCH_PARENT,
-                            LayoutParams.WRAP_CONTENT));
+					.setOnTouchListener(this);
+			addContentView(getMixViewData().getSearchNotificationTxt(),
+					new LayoutParams(LayoutParams.MATCH_PARENT,
+							LayoutParams.WRAP_CONTENT));
 		} else if (!getMarkerRenderer().isFrozen()
 				&& getMixViewData().getSearchNotificationTxt() != null) {
 			getMixViewData().getSearchNotificationTxt()
@@ -499,16 +517,16 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		super.onRestart();
 		maintainViews();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * Deallocate memory and stops threads.
-	 * Please don't rely on this function as it's killable, 
+	 * Please don't rely on this function as it's killable,
 	 * and might not be called at all.
 	 */
-	protected void onDestroy(){
-		try{
-			
+	protected void onDestroy() {
+		try {
+
 			getMixViewData().getMixContext().getDownloadManager().shutDown();
 			getMixViewData().getSensorMgr().unregisterListener(this);
 			isBackground = true; //used to enforce garbage MixViewDataHolder
@@ -521,27 +539,28 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			 * 
 			 * Do we have to create our own finalize?
 			 */
-		}catch(Exception e){
+		} catch (Exception e) {
 			//do nothing we are shutting down
 		} catch (Throwable e) {
 			//finalize error. (this function does nothing but call native API and release 
 			//any synchronization-locked messages and threads deadlocks.
 			Log.e(Config.TAG, e.getMessage());
-		}finally{
+		} finally {
 			super.onDestroy();
 		}
 	}
 
-	private void maintainViews(){
+	private void maintainViews() {
 		maintainCamera();
 		maintainAugmentedView();
-		if(Config.useHUD) {
+		if (Config.useHUD) {
 			maintainHudView();
 		}
 		maintainRangeBar();
 	}
 	
-	/* ********* Operators ***********/ 
+	/* ********* Operators ***********/
+
 	/**
 	 * View Repainting.
 	 * It deletes viewed data and initiate new one. {@link MarkerRenderer MarkerRenderer}
@@ -550,10 +569,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		// clear stored data
 		getMarkerRenderer().clearEvents();
 		setMarkerRenderer(null); //It's smelly code, but enforce garbage collector
-							//to release data.
+		//to release data.
 		setMarkerRenderer(new MarkerRenderer(getMixViewData().getMixContext()));
 		setPaintScreen(new PaintScreen());
-		
+
 	}
 
 	/**
@@ -561,13 +580,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 */
 	private void maintainCamera() {
 
-		cameraView = (FrameLayout)findViewById(R.id.content_frame);
+		cameraView = (FrameLayout) findViewById(R.id.content_frame);
 
 		if (cameraSurface == null) {
 			cameraSurface = new CameraSurface(this);
 			cameraView.addView(cameraSurface);
-		}
-		else {
+		} else {
 			cameraView.removeView(cameraSurface);
 			cameraView.addView(cameraSurface);
 
@@ -586,7 +604,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			//addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
 		}
-		else {
+		else{
 
 			((ViewGroup) augmentedView.getParent()).removeView(augmentedView);
 			//addContentView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -602,13 +620,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 */
 	private void maintainHudView() {
 		if (hudView == null) {
-            hudView = new HudView(this);
+			hudView = new HudView(this);
+		} else {
+			((ViewGroup) hudView.getParent()).removeView(hudView);
 		}
-        else {
-            ((ViewGroup) hudView.getParent()).removeView(hudView);
-        }
-        addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
-    }
+		addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+	}
 
 	/**
 	 * Creates a range bar and adds it to markerRenderer.
@@ -623,11 +640,43 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		//		LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT,
 		//		Gravity.BOTTOM));
 	}
+	private void maintainRotationVektorDemo() {
 
+		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+		// Create our Preview view and set it as the content of our
+		// Activity
+		mRenderer = new MyRenderer();
+		mGLSurfaceView = new GLSurfaceView(this);
+
+
+		mGLSurfaceView.requestFocus();
+		mGLSurfaceView.setFocusableInTouchMode(true);
+		mGLSurfaceView.setZOrderOnTop(true);
+		mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+
+		//mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+		mGLSurfaceView.setRenderer(mRenderer);
+		//cameraView.addView(mGLSurfaceView);
+		mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+		//mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+		mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
+
+		//addContentView(mGLSurfaceView,new FrameLayout.LayoutParams(
+		//		LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,
+		//		Gravity.BOTTOM));
+		//cameraView.addView(mGLSurfaceView,4,5);
+		//cameraView.addView(mGLSurfaceView,500,600);
+		cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+
+	}
 	/**
 	 * Refreshes Download TODO refresh downloads
 	 */
-	public void refreshDownload(){
+	public void refreshDownload() {
 		getMixViewData().getMixContext().getDownloadManager().switchOn();
 //		try {
 //			if (getMixViewData().getDownloadThread() != null){
@@ -644,11 +693,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 //		}catch (Exception ex){
 //		}
 	}
-	
+
 	/**
 	 * Refreshes Viewed Data.
 	 */
-	public void refresh(){
+	public void refresh() {
 		markerRenderer.refresh();
 	}
 
@@ -656,18 +705,18 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
 		switch (error) {
-		case NO_NETWORK_ERROR:
-			builder.setMessage(getString(R.string.connection_error_dialog));
-			break;
-		case GPS_ERROR:
-			builder.setMessage(getString(R.string.gps_error_dialog));
-			break;
-		case GENERAL_ERROR:
-			builder.setMessage(getString(R.string.general_error_dialog));
-			break;
-		case UNSUPPORTED_HARDWARE:
-			builder.setMessage(getString(R.string.unsupportet_hardware_dialog));
-			break;
+			case NO_NETWORK_ERROR:
+				builder.setMessage(getString(R.string.connection_error_dialog));
+				break;
+			case GPS_ERROR:
+				builder.setMessage(getString(R.string.gps_error_dialog));
+				break;
+			case GENERAL_ERROR:
+				builder.setMessage(getString(R.string.general_error_dialog));
+				break;
+			case UNSUPPORTED_HARDWARE:
+				builder.setMessage(getString(R.string.unsupportet_hardware_dialog));
+				break;
 		}
 
 		/*Retry*/
@@ -717,7 +766,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				finish();
 			}
 		});
-		
+
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -727,10 +776,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * Mixare support ranges between 0-80km and default value of 20km,
 	 * {@link android.widget.SeekBar SeekBar} on the other hand, is 0-100 base.
 	 * This method handles the Range level conversion between Mixare rangeLevel and SeekBar progress.
-	 * 
+	 *
 	 * @return int Range Level base 80
 	 */
-	public float calcRangeLevel(){
+	public float calcRangeLevel() {
 
 		int rangeBarProgress = getMixViewData().getRangeBar().getProgress();
 		float rangeLevel = 5;
@@ -755,7 +804,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	/**
 	 * Handle First time users. It display license agreement and store user's
 	 * acceptance.
-	 * 
+	 *
 	 * @param settings
 	 */
 	private void firstAccess(SharedPreferences settings) {
@@ -786,38 +835,39 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * Create range bar and returns FrameLayout. FrameLayout is created to be
 	 * hidden and not added to markerRenderer, Caller needs to add the frameLayout to
 	 * markerRenderer, and enable visibility when needed.
-	 * 
+	 *
 	 * @param settings where setting is stored
 	 * @return FrameLayout Hidden Range Bar
 	 */
 	private FrameLayout createRangeBar(SharedPreferences settings) {
-        SeekBar rangeBar=new SeekBar(this);
-        rangeBar.setMax(100);
-        rangeBar.setProgress(settings.getInt(getString(R.string.pref_rangeLevel), 65));
-        rangeBar.setOnSeekBarChangeListener(onRangeBarChangeListener);
-        rangeBar.setVisibility(View.INVISIBLE);
-        getMixViewData().setRangeBar(rangeBar);
+		SeekBar rangeBar = new SeekBar(this);
+		rangeBar.setMax(100);
+		rangeBar.setProgress(settings.getInt(getString(R.string.pref_rangeLevel), 65));
+		rangeBar.setOnSeekBarChangeListener(onRangeBarChangeListener);
+		rangeBar.setVisibility(View.INVISIBLE);
+		getMixViewData().setRangeBar(rangeBar);
 
-        FrameLayout frameLayout = new FrameLayout(this);
+		FrameLayout frameLayout = new FrameLayout(this);
 
 		frameLayout.setMinimumWidth(3000);
 		LayoutParams pa = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		frameLayout.setLayoutParams(pa);
 		frameLayout.addView(rangeBar);
-        frameLayout.setPadding(10, 0, 10, 10);
+		frameLayout.setPadding(10, 0, 10, 10);
 
-        return frameLayout;
+		return frameLayout;
 	}
 
 	/**
 	 * Checks whether a network is available or not
+	 *
 	 * @return True if connected, false if not
 	 */
 	private boolean isNetworkAvailable() {
-	    ConnectivityManager connectivityManager 
-	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+		ConnectivityManager connectivityManager
+				= (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 
 	@Override
@@ -929,14 +979,14 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	private SeekBar.OnSeekBarChangeListener onRangeBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
 		public void onProgressChanged(SeekBar rangeBar, int progress,
-				boolean fromUser) {
+									  boolean fromUser) {
 			float rangeLevel = calcRangeLevel();
 
 			getMixViewData().setRangeLevel(String.valueOf(rangeLevel));
 			getMixViewData().setRangeBarProgress(progress);
 
 			markerRenderer.getContext().getNotificationManager().
-			addNotification("Radius: " + String.valueOf(rangeLevel));
+					addNotification("Radius: " + String.valueOf(rangeLevel));
 		}
 
 		public void onStartTrackingTouch(SeekBar rangeBar) {
@@ -959,7 +1009,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			repaint();
 			setRangeLevel();
 			refreshDownload();
-			
+
 		}
 
 	};
@@ -967,11 +1017,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	public void onSensorChanged(SensorEvent evt) {
 		try {
 			if (getMixViewData().getSensorGyro() != null) {
-				
+
 				if (evt.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
 					getMixViewData().setGyro(evt.values);
 				}
-				
+
 				if (evt.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 					getMixViewData().setGrav(
 							getMixViewData().getGravFilter().lowPassFilter(evt.values,
@@ -986,10 +1036,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 								getMixViewData().getGrav(),
 								getMixViewData().getGyro(), 30,
 								getMixViewData().getAngle()));
-				
+
 				SensorManager.getRotationMatrix(
 						getMixViewData().getRTmp(),
-						getMixViewData().getI(), 
+						getMixViewData().getI(),
 						getMixViewData().getGrav(),
 						getMixViewData().getMag());
 			} else {
@@ -1000,11 +1050,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 				SensorManager.getRotationMatrix(
 						getMixViewData().getRTmp(),
-						getMixViewData().getI(), 
+						getMixViewData().getI(),
 						getMixViewData().getGrav(),
 						getMixViewData().getMag());
 			}
-			
+
 			augmentedView.postInvalidate();
 
 			int rotation = Compatibility.getRotation(this);
@@ -1031,12 +1081,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			getMixViewData().getFinalR().prod(getMixViewData().getM3());
 			getMixViewData().getFinalR().prod(getMixViewData().getM2());
 			getMixViewData().getFinalR().invert();
-			
+
 			getMixViewData().getHistR()[getMixViewData().getrHistIdx()]
 					.set(getMixViewData().getFinalR());
-			
+
 			int histRLenght = getMixViewData().getHistR().length;
-			
+
 			getMixViewData().setrHistIdx(getMixViewData().getrHistIdx() + 1);
 			if (getMixViewData().getrHistIdx() >= histRLenght)
 				getMixViewData().setrHistIdx(0);
@@ -1062,7 +1112,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		if (getMixViewData().getRangeBar().getVisibility() == View.VISIBLE) {
 			getMixViewData().getRangeBar().setVisibility(View.INVISIBLE);
 		}
-		
+
 		try {
 			killOnError();
 
@@ -1084,7 +1134,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		try {
 			killOnError();
-			
+
 			if (isRangeBarVisible()) {
 				getMixViewData().getRangeBar().setVisibility(View.INVISIBLE);
 				if (keyCode == KeyEvent.KEYCODE_MENU) {
@@ -1124,7 +1174,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				&& getMixViewData().getCompassErrorDisplayed() == 0) {
 			for (int i = 0; i < 2; i++) {
 				markerRenderer.getContext().getNotificationManager().
-				addNotification("Compass data unreliable. Please recalibrate compass.");
+						addNotification("Compass data unreliable. Please recalibrate compass.");
 			}
 			getMixViewData().setCompassErrorDisplayed(
 					getMixViewData().getCompassErrorDisplayed() + 1);
@@ -1173,7 +1223,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			intent.setClass(this, MixListView.class);
 			startActivity(intent);
-			}
+		}
 	}
 
 	@Override
@@ -1202,8 +1252,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	}
 
 	/**
-	 * @param paintScreen
-	 *            the paintScreen to set
+	 * @param paintScreen the paintScreen to set
 	 */
 	static void setPaintScreen(PaintScreen paintScreen) {
 		MixViewActivity.paintScreen = paintScreen;
@@ -1213,25 +1262,24 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * @return the markerRenderer
 	 */
 	public MarkerRenderer getMarkerRenderer() {
-        if(markerRenderer==null){
-            markerRenderer=new MarkerRenderer(getMixViewData().getMixContext());
-        }
+		if (markerRenderer == null) {
+			markerRenderer = new MarkerRenderer(getMixViewData().getMixContext());
+		}
 		return markerRenderer;
 	}
 
-    /**
-     * @return the markerRenderer statically - only to be used in other activities/views
-     */
-    public static MarkerRenderer getMarkerRendererStatically() {
-        if(markerRenderer==null){
-            Log.d(Config.TAG,"markerRenderer was null (called statically)");
-        }
-        return markerRenderer;
-    }
+	/**
+	 * @return the markerRenderer statically - only to be used in other activities/views
+	 */
+	public static MarkerRenderer getMarkerRendererStatically() {
+		if (markerRenderer == null) {
+			Log.d(Config.TAG, "markerRenderer was null (called statically)");
+		}
+		return markerRenderer;
+	}
 
 	/**
-	 * @param markerRenderer
-	 *            the markerRenderer to set
+	 * @param markerRenderer the markerRenderer to set
 	 */
 	static void setMarkerRenderer(MarkerRenderer markerRenderer) {
 		MixViewActivity.markerRenderer = markerRenderer;
@@ -1248,11 +1296,148 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		getMixViewData().setRangeLevel(String.valueOf(rangeLevel));
 	}
 
-    public void updateHud(Location curFix){
-        if(Config.useHUD) {
-            hudView.updatePositionStatus(curFix);
-            hudView.setDataSourcesActivity(getMarkerRenderer().dataSourceWorking, false, null);
-        }
-    }
+	public void updateHud(Location curFix) {
+		if (Config.useHUD) {
+			hudView.updatePositionStatus(curFix);
+			hudView.setDataSourcesActivity(getMarkerRenderer().dataSourceWorking, false, null);
+		}
+	}
+
+	private class MyRenderer implements GLSurfaceView.Renderer, SensorEventListener {
+		private Cube mCube;
+		private Sensor mRotationVectorSensor;
+		private final float[] mRotationMatrix = new float[16];
+
+		public MyRenderer() {
+			// find the rotation-vector sensor
+			mRotationVectorSensor = mSensorManager.getDefaultSensor(
+					Sensor.TYPE_ROTATION_VECTOR);
+
+			mCube = new Cube();
+			// initialize the rotation matrix to identity
+			mRotationMatrix[0] = 1;
+			mRotationMatrix[4] = 1;
+			mRotationMatrix[8] = 1;
+			mRotationMatrix[12] = 1;
+		}
+
+		public void start() {
+			// enable our sensor when the activity is resumed, ask for
+			// 10 ms updates.
+			mSensorManager.registerListener(this, mRotationVectorSensor, 10000);
+		}
+
+		public void stop() {
+			// make sure to turn our sensor off when the activity is paused
+			mSensorManager.unregisterListener(this);
+		}
+
+		public void onSensorChanged(SensorEvent event) {
+			// we received a sensor event. it is a good practice to check
+			// that we received the proper event
+			if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+				// convert the rotation-vector to a 4x4 matrix. the matrix
+				// is interpreted by Open GL as the inverse of the
+				// rotation-vector, which is what we want.
+				SensorManager.getRotationMatrixFromVector(
+						mRotationMatrix, event.values);
+			}
+		}
+
+		public void onDrawFrame(GL10 gl) {
+			// clear screen
+			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+			// set-up modelview matrix
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0, 0, -3.0f);
+			gl.glMultMatrixf(mRotationMatrix, 0);
+
+			// draw our object
+			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+			gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
+
+			mCube.draw(gl);
+		}
+
+		public void onSurfaceChanged(GL10 gl, int width, int height) {
+			// set view-port
+			gl.glViewport(0, 0, width, height);
+			// set projection matrix
+			float ratio = (float) width / height;
+			gl.glMatrixMode(GL10.GL_PROJECTION);
+			gl.glLoadIdentity();
+			gl.glFrustumf(-ratio, ratio, -1, 1, 1, 10);
+		}
+
+		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+			// dither is enabled by default, we don't need it
+			gl.glDisable(GL10.GL_DITHER);
+			// clear screen in white
+			gl.glClearColor(0, 0, 0, 0);
+		}
+
+		class Cube {
+			// initialize our cube
+			private FloatBuffer mVertexBuffer;
+			private FloatBuffer mColorBuffer;
+			private ByteBuffer mIndexBuffer;
+
+			public Cube() {
+				final float vertices[] = {
+						-1, -1, -1, 1, -1, -1,
+						1, 1, -1, -1, 1, -1,
+						-1, -1, 1, 1, -1, 1,
+						1, 1, 1, -1, 1, 1,
+				};
+
+				final float colors[] = {
+						0, 0, 0, 1, 1, 0, 0, 1,
+						1, 1, 0, 1, 0, 1, 0, 1,
+						0, 0, 1, 1, 1, 0, 1, 1,
+						1, 1, 1, 1, 0, 1, 1, 1,
+				};
+
+				final byte indices[] = {
+						0, 4, 5, 0, 5, 1,
+						1, 5, 6, 1, 6, 2,
+						2, 6, 7, 2, 7, 3,
+						3, 7, 4, 3, 4, 0,
+						4, 7, 6, 4, 6, 5,
+						3, 0, 1, 3, 1, 2
+				};
+
+				ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
+				vbb.order(ByteOrder.nativeOrder());
+				mVertexBuffer = vbb.asFloatBuffer();
+				mVertexBuffer.put(vertices);
+				mVertexBuffer.position(0);
+
+				ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);
+				cbb.order(ByteOrder.nativeOrder());
+				mColorBuffer = cbb.asFloatBuffer();
+				mColorBuffer.put(colors);
+				mColorBuffer.position(0);
+
+				mIndexBuffer = ByteBuffer.allocateDirect(indices.length);
+				mIndexBuffer.put(indices);
+				mIndexBuffer.position(0);
+			}
+
+			public void draw(GL10 gl) {
+				gl.glEnable(GL10.GL_CULL_FACE);
+				gl.glFrontFace(GL10.GL_CW);
+				gl.glShadeModel(GL10.GL_SMOOTH);
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
+				gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
+				gl.glDrawElements(GL10.GL_TRIANGLES, 36, GL10.GL_UNSIGNED_BYTE, mIndexBuffer);
+			}
+		}
+
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		}
+	}
 }
+
 
