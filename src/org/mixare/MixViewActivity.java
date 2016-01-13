@@ -20,9 +20,13 @@ package org.mixare;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.Date;
 import java.util.Random;
 
+import org.mixare.R.drawable;
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
@@ -38,6 +42,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -46,6 +51,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -58,6 +64,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * This class is the main application which uses the other classes for different
@@ -84,7 +93,14 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	public static final int GENERAL_ERROR = 2;
 	protected static final int NO_NETWORK_ERROR = 4;
 
-    /**
+	private MixViewDataHolder mixViewData;
+
+	private GLSurfaceView mGLSurfaceView;
+	private SensorManager mSensorManager;
+	private MyRenderer mRenderer;
+
+
+	/**
 	 * Main application Launcher.
 	 * Does:
 	 * - Lock Screen.
@@ -112,6 +128,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			}
 
 			maintainViews();
+			maintainRotationVektorDemo();
 			augmentedView.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent me) {
@@ -225,7 +242,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * {@inheritDoc}
 	 */
 	protected void onActivityResult(final int requestCode,
-			final int resultCode, Intent data) {
+									final int resultCode, Intent data) {
 		//Log.d(TAG + " WorkFlow", "MixViewActivity - onActivityResult Called");
 		// check if the returned is request to refresh screen (setting might be
 		// changed)
@@ -264,7 +281,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		try {
 			if (data.getBooleanExtra("RefreshScreen", false)) {
 				Log.d(Config.TAG + " WorkFlow",
-                        "MixViewActivity - Received Refresh Screen Request .. about to refresh");
+						"MixViewActivity - Received Refresh Screen Request .. about to refresh");
 				repaint();
 				refreshDownload();
 			}
@@ -287,11 +304,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * - restart markerRenderer refresh Timer.
 	 * <br/>
 	 * {@inheritDoc}
-	 * 
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
+		isBackground = false;
+		mRenderer.start();
+		mGLSurfaceView.onResume();
 		try {
 			killOnError();
 			MixContext.setActualMixViewActivity(this);
@@ -418,7 +437,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 			} catch (Exception ignore) {
 			}
-		}finally{
+		} finally {
 			//This does not conflict with registered sensors (sensorMag, sensorGrav)
 			//This is a place holder to API returned listed of sensors, we registered
 			//what we need, the rest is unnecessary.
@@ -426,9 +445,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 
 		Log.d(Config.TAG, "resume");
-        if(getMarkerRenderer() == null){
-            return;
-        }
+		if (getMarkerRenderer() == null) {
+			return;
+		}
 		if (getMarkerRenderer().isFrozen()
 				&& getMixViewData().getSearchNotificationTxt() == null) {
 			getMixViewData().setSearchNotificationTxt(new TextView(this));
@@ -446,10 +465,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 					Color.WHITE);
 
 			getMixViewData().getSearchNotificationTxt()
-                    .setOnTouchListener(this);
-            addContentView(getMixViewData().getSearchNotificationTxt(),
-                    new LayoutParams(LayoutParams.MATCH_PARENT,
-                            LayoutParams.WRAP_CONTENT));
+					.setOnTouchListener(this);
+			addContentView(getMixViewData().getSearchNotificationTxt(),
+					new LayoutParams(LayoutParams.MATCH_PARENT,
+							LayoutParams.WRAP_CONTENT));
 		} else if (!getMarkerRenderer().isFrozen()
 				&& getMixViewData().getSearchNotificationTxt() != null) {
 			getMixViewData().getSearchNotificationTxt()
@@ -468,11 +487,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		super.onRestart();
 		maintainViews();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * Deallocate memory and stops threads.
-	 * Please don't rely on this function as it's killable, 
+	 * Please don't rely on this function as it's killable,
 	 * and might not be called at all.
 	 */
 	protected void onDestroy(){
@@ -488,26 +507,27 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			 * 
 			 * Do we have to create our own finalize?
 			 */
-		}catch(Exception e){
+		} catch (Exception e) {
 			//do nothing we are shutting down
 		} catch (Throwable e) {
 			//finalize error. (this function does nothing but call native API and release 
 			//any synchronization-locked messages and threads deadlocks.
 			Log.e(Config.TAG, e.getMessage());
-		}finally{
+		} finally {
 			super.onDestroy();
 		}
 	}
 
-	private void maintainViews(){
+	private void maintainViews() {
 		maintainCamera();
 		maintainAugmentedView();
-		if(Config.useHUD) {
+		if (Config.useHUD) {
 			maintainHudView();
 		}
 	}
 	
-	/* ********* Operators ***********/ 
+	/* ********* Operators ***********/
+
 	/**
 	 * View Repainting.
 	 * It deletes viewed data and initiate new one. {@link MarkerRenderer MarkerRenderer}
@@ -523,14 +543,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 */
 	private void maintainCamera() {
 
-		cameraView = (FrameLayout)findViewById(R.id.content_frame);
+		cameraView = (FrameLayout) findViewById(R.id.content_frame);
 
 		if (cameraSurface == null) {
 			cameraSurface = new CameraSurface(this);
 			cameraView.addView(cameraSurface);
-		}
-		else {
-            cameraView.removeView(cameraSurface);
+		} else {
+			cameraView.removeView(cameraSurface);
 			cameraView.addView(cameraSurface);
 
 		}
@@ -548,13 +567,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			//addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
 		}
-		else {
+		else{
 
 			((ViewGroup) augmentedView.getParent()).removeView(augmentedView);
 			//addContentView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
-            cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
-                    LayoutParams.WRAP_CONTENT));
+			cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
+					LayoutParams.WRAP_CONTENT));
 		}
 
 	}
@@ -572,6 +591,39 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
         addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
+	private void maintainRotationVektorDemo() {
+
+		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+		// Create our Preview view and set it as the content of our
+		// Activity
+		mRenderer = new MyRenderer();
+		mGLSurfaceView = new GLSurfaceView(this);
+
+
+		mGLSurfaceView.requestFocus();
+		mGLSurfaceView.setFocusableInTouchMode(true);
+		mGLSurfaceView.setZOrderOnTop(true);
+		mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+
+		//mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+		mGLSurfaceView.setRenderer(mRenderer);
+		//cameraView.addView(mGLSurfaceView);
+		mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+		//mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+		mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
+
+		//addContentView(mGLSurfaceView,new FrameLayout.LayoutParams(
+		//		LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,
+		//		Gravity.BOTTOM));
+		//cameraView.addView(mGLSurfaceView,4,5);
+		//cameraView.addView(mGLSurfaceView,500,600);
+		cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+
+	}
 	/**
 	 * Refreshes Download TODO refresh downloads
 	 */
@@ -985,7 +1037,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				addNotification("Compass data unreliable. Please recalibrate compass.");
 			}
 			getMixViewData().setCompassErrorDisplayed(
-                    getMixViewData().getCompassErrorDisplayed() + 1);
+					getMixViewData().getCompassErrorDisplayed() + 1);
 		}
 	}
 
@@ -1030,7 +1082,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			intent.setClass(this, MixListView.class);
 			startActivity(intent);
-			}
+		}
 	}
 
 	@Override
@@ -1050,8 +1102,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	}
 
 	/**
-	 * @param paintScreen
-	 *            the paintScreen to set
+	 * @param paintScreen the paintScreen to set
 	 */
 	static void setPaintScreen(PaintScreen paintScreen) {
 		MixViewActivity.paintScreen = paintScreen;
@@ -1083,5 +1134,141 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
             hudView.setDataSourcesStatus(getMarkerRenderer().dataSourceWorking, false, null);
         }
     }
+
+	private class MyRenderer implements GLSurfaceView.Renderer, SensorEventListener {
+		private Cube mCube;
+		private Sensor mRotationVectorSensor;
+		private final float[] mRotationMatrix = new float[16];
+
+		public MyRenderer() {
+			// find the rotation-vector sensor
+			mRotationVectorSensor = mSensorManager.getDefaultSensor(
+					Sensor.TYPE_ROTATION_VECTOR);
+
+			mCube = new Cube();
+			// initialize the rotation matrix to identity
+			mRotationMatrix[0] = 1;
+			mRotationMatrix[4] = 1;
+			mRotationMatrix[8] = 1;
+			mRotationMatrix[12] = 1;
+		}
+
+		public void start() {
+			// enable our sensor when the activity is resumed, ask for
+			// 10 ms updates.
+			mSensorManager.registerListener(this, mRotationVectorSensor, 10000);
+		}
+
+		public void stop() {
+			// make sure to turn our sensor off when the activity is paused
+			mSensorManager.unregisterListener(this);
+		}
+
+		public void onSensorChanged(SensorEvent event) {
+			// we received a sensor event. it is a good practice to check
+			// that we received the proper event
+			if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+				// convert the rotation-vector to a 4x4 matrix. the matrix
+				// is interpreted by Open GL as the inverse of the
+				// rotation-vector, which is what we want.
+				SensorManager.getRotationMatrixFromVector(
+						mRotationMatrix, event.values);
+			}
+		}
+
+		public void onDrawFrame(GL10 gl) {
+			// clear screen
+			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+			// set-up modelview matrix
+			gl.glMatrixMode(GL10.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glTranslatef(0, 0, -3.0f);
+			gl.glMultMatrixf(mRotationMatrix, 0);
+
+			// draw our object
+			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+			gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
+
+			mCube.draw(gl);
+		}
+
+		public void onSurfaceChanged(GL10 gl, int width, int height) {
+			// set view-port
+			gl.glViewport(0, 0, width, height);
+			// set projection matrix
+			float ratio = (float) width / height;
+			gl.glMatrixMode(GL10.GL_PROJECTION);
+			gl.glLoadIdentity();
+			gl.glFrustumf(-ratio, ratio, -1, 1, 1, 10);
+		}
+
+		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+			// dither is enabled by default, we don't need it
+			gl.glDisable(GL10.GL_DITHER);
+			// clear screen in white
+			gl.glClearColor(0, 0, 0, 0);
+		}
+
+		class Cube {
+			// initialize our cube
+			private FloatBuffer mVertexBuffer;
+			private FloatBuffer mColorBuffer;
+			private ByteBuffer mIndexBuffer;
+
+			public Cube() {
+				final float vertices[] = {
+						-1, -1, -1, 1, -1, -1,
+						1, 1, -1, -1, 1, -1,
+						-1, -1, 1, 1, -1, 1,
+						1, 1, 1, -1, 1, 1,
+				};
+
+				final float colors[] = {
+						0, 0, 0, 1, 1, 0, 0, 1,
+						1, 1, 0, 1, 0, 1, 0, 1,
+						0, 0, 1, 1, 1, 0, 1, 1,
+						1, 1, 1, 1, 0, 1, 1, 1,
+				};
+
+				final byte indices[] = {
+						0, 4, 5, 0, 5, 1,
+						1, 5, 6, 1, 6, 2,
+						2, 6, 7, 2, 7, 3,
+						3, 7, 4, 3, 4, 0,
+						4, 7, 6, 4, 6, 5,
+						3, 0, 1, 3, 1, 2
+				};
+
+				ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
+				vbb.order(ByteOrder.nativeOrder());
+				mVertexBuffer = vbb.asFloatBuffer();
+				mVertexBuffer.put(vertices);
+				mVertexBuffer.position(0);
+
+				ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);
+				cbb.order(ByteOrder.nativeOrder());
+				mColorBuffer = cbb.asFloatBuffer();
+				mColorBuffer.put(colors);
+				mColorBuffer.position(0);
+
+				mIndexBuffer = ByteBuffer.allocateDirect(indices.length);
+				mIndexBuffer.put(indices);
+				mIndexBuffer.position(0);
+			}
+
+			public void draw(GL10 gl) {
+				gl.glEnable(GL10.GL_CULL_FACE);
+				gl.glFrontFace(GL10.GL_CW);
+				gl.glShadeModel(GL10.GL_SMOOTH);
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
+				gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
+				gl.glDrawElements(GL10.GL_TRIANGLES, 36, GL10.GL_UNSIGNED_BYTE, mIndexBuffer);
+			}
+		}
+
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		}
+	}
 }
 
