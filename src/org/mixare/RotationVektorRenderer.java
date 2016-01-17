@@ -5,6 +5,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
+import android.widget.Toast;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -22,6 +23,7 @@ public class RotationVektorRenderer implements GLSurfaceView.Renderer, SensorEve
     private Cube mCube;
     private Sensor mRotationVectorSensor;
     private final float[] mRotationMatrix = new float[16];
+    private final float[] mRotationMatrix2 = new float[16];
     private SensorManager mSensorManager;
 
     public RotationVektorRenderer(SensorManager sensorManager) {
@@ -57,6 +59,9 @@ public class RotationVektorRenderer implements GLSurfaceView.Renderer, SensorEve
             // rotation-vector, which is what we want.
             SensorManager.getRotationMatrixFromVector(
                     mRotationMatrix, event.values);
+            mSensorManager.remapCoordinateSystem(
+                    mRotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, mRotationMatrix2);
+
         }
     }
 
@@ -68,7 +73,7 @@ public class RotationVektorRenderer implements GLSurfaceView.Renderer, SensorEve
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(0, 0, -3.0f);
-        gl.glMultMatrixf(mRotationMatrix, 0);
+        gl.glMultMatrixf(mRotationMatrix2, 0);
 
         // draw our object
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);

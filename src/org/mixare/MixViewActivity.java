@@ -20,11 +20,8 @@ package org.mixare;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+
 import java.util.Date;
-import java.util.Random;
 
 import org.mixare.R.drawable;
 import org.mixare.data.DataSourceList;
@@ -67,8 +64,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * This class is the main application which uses the other classes for different
