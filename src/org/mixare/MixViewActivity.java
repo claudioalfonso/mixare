@@ -589,12 +589,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
         addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
+
 	private void maintainRotationVektorDemo() {
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-		// Create our Preview view and set it as the content of our
-		// Activity
 		mRenderer = new RotationVektorRenderer (mSensorManager);
 		mGLSurfaceView = new GLSurfaceView(this);
 
@@ -604,22 +603,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		mGLSurfaceView.setZOrderOnTop(true);
 		mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-
-		//mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
 		mGLSurfaceView.setRenderer(mRenderer);
-		//cameraView.addView(mGLSurfaceView);
 		mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
-		//mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-
-
-		//addContentView(mGLSurfaceView,new FrameLayout.LayoutParams(
-		//		LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,
-		//		Gravity.BOTTOM));
-		//cameraView.addView(mGLSurfaceView,4,5);
-		//cameraView.addView(mGLSurfaceView,500,600);
-		//cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
 
 	}
 	/**
