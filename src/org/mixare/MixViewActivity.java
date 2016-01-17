@@ -35,6 +35,7 @@ import org.mixare.lib.render.Matrix;
 import org.mixare.map.MixMap;
 import org.mixare.mgr.HttpTools;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -52,6 +53,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -97,7 +99,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 	private GLSurfaceView mGLSurfaceView;
 	private SensorManager mSensorManager;
-	private MyRenderer mRenderer;
+	private RotationVektorRenderer mRenderer;
 
 
 	/**
@@ -308,8 +310,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mRenderer.start();
-		mGLSurfaceView.onResume();
+		if(mGLSurfaceView != null) {
+			mRenderer.start();
+			mGLSurfaceView.onResume();
+		}
 		try {
 			killOnError();
 			MixContext.setActualMixViewActivity(this);
@@ -596,7 +600,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 		// Create our Preview view and set it as the content of our
 		// Activity
-		mRenderer = new MyRenderer();
+		mRenderer = new RotationVektorRenderer (mSensorManager);
 		mGLSurfaceView = new GLSurfaceView(this);
 
 
@@ -619,7 +623,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		//		Gravity.BOTTOM));
 		//cameraView.addView(mGLSurfaceView,4,5);
 		//cameraView.addView(mGLSurfaceView,500,600);
-		cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		//cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
 
 	}
@@ -764,6 +768,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	@Override
 	public void selectItem(int position) {
 		switch (position) {
@@ -862,7 +867,14 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert1.show();
 				break;
 			case 8:
-				doError(null, new Random().nextInt(3));
+				if(mGLSurfaceView.isAttachedToWindow()==false) {
+					cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+				}
+				else {
+					cameraView.removeView(mGLSurfaceView);
+				}
+			case 9:
+				//doError(null, new Random().nextInt(3));
 		}
 
 	}
@@ -1133,141 +1145,5 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
             hudView.setDataSourcesStatus(getMarkerRenderer().dataSourceWorking, false, null);
         }
     }
-
-	private class MyRenderer implements GLSurfaceView.Renderer, SensorEventListener {
-		private Cube mCube;
-		private Sensor mRotationVectorSensor;
-		private final float[] mRotationMatrix = new float[16];
-
-		public MyRenderer() {
-			// find the rotation-vector sensor
-			mRotationVectorSensor = mSensorManager.getDefaultSensor(
-					Sensor.TYPE_ROTATION_VECTOR);
-
-			mCube = new Cube();
-			// initialize the rotation matrix to identity
-			mRotationMatrix[0] = 1;
-			mRotationMatrix[4] = 1;
-			mRotationMatrix[8] = 1;
-			mRotationMatrix[12] = 1;
-		}
-
-		public void start() {
-			// enable our sensor when the activity is resumed, ask for
-			// 10 ms updates.
-			mSensorManager.registerListener(this, mRotationVectorSensor, 10000);
-		}
-
-		public void stop() {
-			// make sure to turn our sensor off when the activity is paused
-			mSensorManager.unregisterListener(this);
-		}
-
-		public void onSensorChanged(SensorEvent event) {
-			// we received a sensor event. it is a good practice to check
-			// that we received the proper event
-			if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-				// convert the rotation-vector to a 4x4 matrix. the matrix
-				// is interpreted by Open GL as the inverse of the
-				// rotation-vector, which is what we want.
-				SensorManager.getRotationMatrixFromVector(
-						mRotationMatrix, event.values);
-			}
-		}
-
-		public void onDrawFrame(GL10 gl) {
-			// clear screen
-			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
-			// set-up modelview matrix
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-			gl.glLoadIdentity();
-			gl.glTranslatef(0, 0, -3.0f);
-			gl.glMultMatrixf(mRotationMatrix, 0);
-
-			// draw our object
-			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-			gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
-
-			mCube.draw(gl);
-		}
-
-		public void onSurfaceChanged(GL10 gl, int width, int height) {
-			// set view-port
-			gl.glViewport(0, 0, width, height);
-			// set projection matrix
-			float ratio = (float) width / height;
-			gl.glMatrixMode(GL10.GL_PROJECTION);
-			gl.glLoadIdentity();
-			gl.glFrustumf(-ratio, ratio, -1, 1, 1, 10);
-		}
-
-		public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-			// dither is enabled by default, we don't need it
-			gl.glDisable(GL10.GL_DITHER);
-			// clear screen in white
-			gl.glClearColor(0, 0, 0, 0);
-		}
-
-		class Cube {
-			// initialize our cube
-			private FloatBuffer mVertexBuffer;
-			private FloatBuffer mColorBuffer;
-			private ByteBuffer mIndexBuffer;
-
-			public Cube() {
-				final float vertices[] = {
-						-1, -1, -1, 1, -1, -1,
-						1, 1, -1, -1, 1, -1,
-						-1, -1, 1, 1, -1, 1,
-						1, 1, 1, -1, 1, 1,
-				};
-
-				final float colors[] = {
-						0, 0, 0, 1, 1, 0, 0, 1,
-						1, 1, 0, 1, 0, 1, 0, 1,
-						0, 0, 1, 1, 1, 0, 1, 1,
-						1, 1, 1, 1, 0, 1, 1, 1,
-				};
-
-				final byte indices[] = {
-						0, 4, 5, 0, 5, 1,
-						1, 5, 6, 1, 6, 2,
-						2, 6, 7, 2, 7, 3,
-						3, 7, 4, 3, 4, 0,
-						4, 7, 6, 4, 6, 5,
-						3, 0, 1, 3, 1, 2
-				};
-
-				ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
-				vbb.order(ByteOrder.nativeOrder());
-				mVertexBuffer = vbb.asFloatBuffer();
-				mVertexBuffer.put(vertices);
-				mVertexBuffer.position(0);
-
-				ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);
-				cbb.order(ByteOrder.nativeOrder());
-				mColorBuffer = cbb.asFloatBuffer();
-				mColorBuffer.put(colors);
-				mColorBuffer.position(0);
-
-				mIndexBuffer = ByteBuffer.allocateDirect(indices.length);
-				mIndexBuffer.put(indices);
-				mIndexBuffer.position(0);
-			}
-
-			public void draw(GL10 gl) {
-				gl.glEnable(GL10.GL_CULL_FACE);
-				gl.glFrontFace(GL10.GL_CW);
-				gl.glShadeModel(GL10.GL_SMOOTH);
-				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
-				gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
-				gl.glDrawElements(GL10.GL_TRIANGLES, 36, GL10.GL_UNSIGNED_BYTE, mIndexBuffer);
-			}
-		}
-
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		}
-	}
 }
 
