@@ -153,4 +153,9 @@
 	<string name="pref_rangeLevel" translatable="false">rangeLevel</string>
 	<string name="drawer_open" />
 	<string name="drawer_close" />
+	<string name="menu_item_test_augmentedview">RotationVektorDemo</string>
+	<string name="menu_item_test_destinationselect">Test Destination Select</string>
+	<string name="dest_mensa">Mensa</string>
+	<string name="dest_bib">Bibliothek</string>
+	<string name="dest_audimax">Audimax</string>
 </resources>

@@ -34,6 +34,8 @@ import org.mixare.mgr.HttpTools;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,6 +55,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -63,6 +66,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockDialogFragment;
 
 
 /**
@@ -832,7 +837,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert.setTitle(getString(R.string.general_info_title));
 				alert.show();
 				break;
-		/* Case 6: license agreements */
+		/* license agreement */
 			case 7:
 				AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
 				builder1.setMessage(getString(R.string.license));
@@ -854,10 +859,63 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				else {
 					cameraView.removeView(mGLSurfaceView);
 				}
+			/* test destination selection (from marker) */
 			case 9:
+                new DestinationSelectDialogFragment().show(getFragmentManager(),"TAG");
+                /*
+				AlertDialog.Builder destinationSelectDialogBuilder = new AlertDialog.Builder(this);
+                destinationSelectDialogBuilder.setMessage(getString(R.string.license));
+
+                destinationSelectDialogBuilder.setNegativeButton(getString(R.string.close_button),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
+							}
+						});
+				AlertDialog destinationSelectDialog = destinationSelectDialogBuilder.create();
+                destinationSelectDialog.setTitle(getString(R.string.license_title));
+                destinationSelectDialog.show();
+                */
+				break;
+            /* some random error (for testing?!)*/
+			case 10:
 				//doError(null, new Random().nextInt(3));
 		}
 
+	}
+
+	public static class DestinationSelectDialogFragment extends DialogFragment {
+
+
+		@NonNull
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+            String selectedDestination ="";
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle("Select Destination")
+                    //.setMessage("Message")
+                    .setItems(R.array.destinations,new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            Log.d(Config.TAG, which+"");
+                        }
+                    });
+                    /*
+				   .setPositiveButton("Positive", new DialogInterface.OnClickListener(){
+                       @Override
+                       public void onClick(DialogInterface dialog, int id){
+                           Log.d(Config.TAG, id+" Positive");
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int id) {
+                            Log.d(Config.TAG, id+" Negative");
+                        }
+                    });
+                    */
+			return builder.create();
+		}
 	}
 
 

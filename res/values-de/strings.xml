@@ -134,5 +134,10 @@
 	<string name="list_view_marker_in_section">Marker:</string>
 	<string name="plugin_message">Einige Plug-Ins haben sich verändert, möchtest Du die Liste der Plug-Ins ansehen?</string>
 	<string name="plugins_changed">Die Aktivierung von Plug-Ins hat sich geändert. Mixare muss die geänderten Plug-Ins neu starten. Möchtest Du das jetzt tun?</string>
+	<string name="menu_item_test_augmentedview">RotationVektorDemo</string>
+	<string name="menu_item_test_destinationselect">Test Destination Select</string>
+	<string name="dest_mensa">Mensa</string>
+	<string name="dest_bib">Bibliothek</string>
+	<string name="dest_audimax">Audimax</string>
 
 </resources>
