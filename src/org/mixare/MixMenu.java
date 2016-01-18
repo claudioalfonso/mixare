@@ -64,7 +64,7 @@ public class MixMenu extends SherlockActivity {
             // Generate title
             title = new String[]{getString(R.string.menu_item_1), getString(R.string.menu_item_2),
                     getString(R.string.menu_item_3), getString(R.string.menu_item_4), getString(R.string.menu_item_5),
-                    getString(R.string.menu_item_6), getString(R.string.menu_item_7), getString(R.string.menu_item_8)};
+                    getString(R.string.menu_item_6), getString(R.string.menu_item_7), getString(R.string.menu_item_8), "RotationVektorDemo"};
 
             // Generate icon
             icon = new int[]{R.drawable.icon_datasource,
@@ -74,7 +74,8 @@ public class MixMenu extends SherlockActivity {
                     android.R.drawable.ic_menu_zoom,
                     android.R.drawable.ic_menu_search,
                     android.R.drawable.ic_menu_info_details,
-                    android.R.drawable.ic_menu_share};
+                    android.R.drawable.ic_menu_share,
+                    R.drawable.icon_datasource};
             //         R.drawable.collections_cloud};
 
             drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

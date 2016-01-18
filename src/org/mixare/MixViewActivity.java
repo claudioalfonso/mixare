@@ -20,9 +20,10 @@ package org.mixare;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
-import java.util.Date;
-import java.util.Random;
 
+import java.util.Date;
+
+import org.mixare.R.drawable;
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
@@ -31,6 +32,7 @@ import org.mixare.lib.render.Matrix;
 import org.mixare.map.MixMap;
 import org.mixare.mgr.HttpTools;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -38,6 +40,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -46,6 +49,8 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -58,6 +63,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 
 /**
  * This class is the main application which uses the other classes for different
@@ -84,12 +90,19 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	public static final int GENERAL_ERROR = 2;
 	protected static final int NO_NETWORK_ERROR = 4;
 
-    /**
+	private MixViewDataHolder mixViewData;
+
+	private GLSurfaceView mGLSurfaceView;
+	private SensorManager mSensorManager;
+	private RotationVektorRenderer mRenderer;
+
+
+	/**
 	 * Main application Launcher.
 	 * Does:
 	 * - Lock Screen.
 	 * - Initiate Camera View
-	 * - Initiate markerRenderer {@link MarkerRenderer#draw(PaintScreen) MarkerRenderer}
+	 * - Initiate markerRenderer {@link MarkerRenderer#draw() MarkerRenderer}
 	 * - Display License Agreement if mixViewActivity first used.
 	 * 
 	 * {@inheritDoc}
@@ -112,6 +125,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			}
 
 			maintainViews();
+			maintainRotationVektorDemo();
 			augmentedView.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent me) {
@@ -225,7 +239,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * {@inheritDoc}
 	 */
 	protected void onActivityResult(final int requestCode,
-			final int resultCode, Intent data) {
+									final int resultCode, Intent data) {
 		//Log.d(TAG + " WorkFlow", "MixViewActivity - onActivityResult Called");
 		// check if the returned is request to refresh screen (setting might be
 		// changed)
@@ -264,7 +278,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		try {
 			if (data.getBooleanExtra("RefreshScreen", false)) {
 				Log.d(Config.TAG + " WorkFlow",
-                        "MixViewActivity - Received Refresh Screen Request .. about to refresh");
+						"MixViewActivity - Received Refresh Screen Request .. about to refresh");
 				repaint();
 				refreshDownload();
 			}
@@ -287,11 +301,14 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * - restart markerRenderer refresh Timer.
 	 * <br/>
 	 * {@inheritDoc}
-	 * 
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(mGLSurfaceView != null) {
+			mRenderer.start();
+			mGLSurfaceView.onResume();
+		}
 		try {
 			killOnError();
 			MixContext.setActualMixViewActivity(this);
@@ -418,7 +435,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 			} catch (Exception ignore) {
 			}
-		}finally{
+		} finally {
 			//This does not conflict with registered sensors (sensorMag, sensorGrav)
 			//This is a place holder to API returned listed of sensors, we registered
 			//what we need, the rest is unnecessary.
@@ -426,9 +443,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 
 		Log.d(Config.TAG, "resume");
-        if(getMarkerRenderer() == null){
-            return;
-        }
+		if (getMarkerRenderer() == null) {
+			return;
+		}
 		if (getMarkerRenderer().isFrozen()
 				&& getMixViewData().getSearchNotificationTxt() == null) {
 			getMixViewData().setSearchNotificationTxt(new TextView(this));
@@ -446,10 +463,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 					Color.WHITE);
 
 			getMixViewData().getSearchNotificationTxt()
-                    .setOnTouchListener(this);
-            addContentView(getMixViewData().getSearchNotificationTxt(),
-                    new LayoutParams(LayoutParams.MATCH_PARENT,
-                            LayoutParams.WRAP_CONTENT));
+					.setOnTouchListener(this);
+			addContentView(getMixViewData().getSearchNotificationTxt(),
+					new LayoutParams(LayoutParams.MATCH_PARENT,
+							LayoutParams.WRAP_CONTENT));
 		} else if (!getMarkerRenderer().isFrozen()
 				&& getMixViewData().getSearchNotificationTxt() != null) {
 			getMixViewData().getSearchNotificationTxt()
@@ -468,11 +485,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		super.onRestart();
 		maintainViews();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * Deallocate memory and stops threads.
-	 * Please don't rely on this function as it's killable, 
+	 * Please don't rely on this function as it's killable,
 	 * and might not be called at all.
 	 */
 	protected void onDestroy(){
@@ -488,26 +505,27 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			 * 
 			 * Do we have to create our own finalize?
 			 */
-		}catch(Exception e){
+		} catch (Exception e) {
 			//do nothing we are shutting down
 		} catch (Throwable e) {
 			//finalize error. (this function does nothing but call native API and release 
 			//any synchronization-locked messages and threads deadlocks.
 			Log.e(Config.TAG, e.getMessage());
-		}finally{
+		} finally {
 			super.onDestroy();
 		}
 	}
 
-	private void maintainViews(){
+	private void maintainViews() {
 		maintainCamera();
 		maintainAugmentedView();
-		if(Config.useHUD) {
+		if (Config.useHUD) {
 			maintainHudView();
 		}
 	}
 	
-	/* ********* Operators ***********/ 
+	/* ********* Operators ***********/
+
 	/**
 	 * View Repainting.
 	 * It deletes viewed data and initiate new one. {@link MarkerRenderer MarkerRenderer}
@@ -523,14 +541,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 */
 	private void maintainCamera() {
 
-		cameraView = (FrameLayout)findViewById(R.id.content_frame);
+		cameraView = (FrameLayout) findViewById(R.id.content_frame);
 
 		if (cameraSurface == null) {
 			cameraSurface = new CameraSurface(this);
 			cameraView.addView(cameraSurface);
-		}
-		else {
-            cameraView.removeView(cameraSurface);
+		} else {
+			cameraView.removeView(cameraSurface);
 			cameraView.addView(cameraSurface);
 
 		}
@@ -548,13 +565,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			//addContentView(augScreen, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
 		}
-		else {
+		else{
 
 			((ViewGroup) augmentedView.getParent()).removeView(augmentedView);
 			//addContentView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
 			//		LayoutParams.WRAP_CONTENT));
-            cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
-                    LayoutParams.WRAP_CONTENT));
+			cameraView.addView(augmentedView, new LayoutParams(LayoutParams.WRAP_CONTENT,
+					LayoutParams.WRAP_CONTENT));
 		}
 
 	}
@@ -572,6 +589,25 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
         addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
+
+	private void maintainRotationVektorDemo() {
+
+		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+		mRenderer = new RotationVektorRenderer (mSensorManager);
+		mGLSurfaceView = new GLSurfaceView(this);
+
+
+		mGLSurfaceView.requestFocus();
+		mGLSurfaceView.setFocusableInTouchMode(true);
+		mGLSurfaceView.setZOrderOnTop(true);
+		mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		mGLSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+		mGLSurfaceView.setRenderer(mRenderer);
+		mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+		mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
+	}
 	/**
 	 * Refreshes Download TODO refresh downloads
 	 */
@@ -713,6 +749,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	@Override
 	public void selectItem(int position) {
 		switch (position) {
@@ -811,7 +848,14 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert1.show();
 				break;
 			case 8:
-				doError(null, new Random().nextInt(3));
+				if(mGLSurfaceView.isAttachedToWindow()==false) {
+					cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+				}
+				else {
+					cameraView.removeView(mGLSurfaceView);
+				}
+			case 9:
+				//doError(null, new Random().nextInt(3));
 		}
 
 	}
@@ -985,7 +1029,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				addNotification("Compass data unreliable. Please recalibrate compass.");
 			}
 			getMixViewData().setCompassErrorDisplayed(
-                    getMixViewData().getCompassErrorDisplayed() + 1);
+					getMixViewData().getCompassErrorDisplayed() + 1);
 		}
 	}
 
@@ -1030,7 +1074,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			intent.setClass(this, MixListView.class);
 			startActivity(intent);
-			}
+		}
 	}
 
 	@Override
@@ -1050,8 +1094,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	}
 
 	/**
-	 * @param paintScreen
-	 *            the paintScreen to set
+	 * @param paintScreen the paintScreen to set
 	 */
 	static void setPaintScreen(PaintScreen paintScreen) {
 		MixViewActivity.paintScreen = paintScreen;
