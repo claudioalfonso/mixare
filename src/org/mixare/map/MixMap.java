@@ -19,7 +19,6 @@
 package org.mixare.map;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -27,7 +26,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.mapsforge.core.model.LatLong;
@@ -38,15 +36,13 @@ import org.mapsforge.map.layer.cache.TileCache;
 
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
+import org.mixare.Config;
 import org.mixare.MixMenu;
 import org.mixare.MixViewActivity;
 import org.mixare.R;
-import org.mixare.data.AddDataSource;
-import org.mixare.data.DataSourceStorage;
 import org.mixare.lib.MixUtils;
 
 import org.mixare.lib.marker.Marker;
-import org.mixare.mgr.location.LocationFinder;
 
 public class MixMap extends MixMenu {
     public final static byte DEFAULT_ZOOM_LEVEL =12;
@@ -102,8 +98,8 @@ public class MixMap extends MixMenu {
         // Set center of the Map to your position or a Position out of the
         // IntentExtras
         if (intent.getBooleanExtra("center", false)) {
-            setCenterZoom(intent.getDoubleExtra("latitude", LocationFinder.default_lat),
-                    intent.getDoubleExtra("longitude", LocationFinder.default_lon), DEFAULT_ZOOM_LEVEL);
+            setCenterZoom(intent.getDoubleExtra("latitude", Config.DEFAULT_FIX_LAT),
+                    intent.getDoubleExtra("longitude", Config.DEFAULT_FIX_LON), DEFAULT_ZOOM_LEVEL);
         } else {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();
@@ -181,7 +177,7 @@ public class MixMap extends MixMenu {
     protected void onStart() {
         super.onStart();
 
-        setCenterZoom(LocationFinder.default_lat, LocationFinder.default_lon, DEFAULT_ZOOM_LEVEL);
+        setCenterZoom(Config.DEFAULT_FIX_LAT, Config.DEFAULT_FIX_LON, DEFAULT_ZOOM_LEVEL);
         createOverlay();
     }
 

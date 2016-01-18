@@ -29,10 +29,6 @@ import android.location.Location;
  */
 public interface LocationFinder {
 
-	public final static double default_lat=51.46184;
-	public final static double default_lon=7.01655;
-	public final static int default_height=300;
-
 
 	/**
 	 * Possible status of LocationFinder
