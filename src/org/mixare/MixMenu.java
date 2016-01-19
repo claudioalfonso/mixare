@@ -2,34 +2,23 @@ package org.mixare;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.hardware.SensorManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.mixare.data.DataSourceList;
 import org.mixare.map.MixMap;
-
-import java.lang.reflect.Field;
-import java.util.Date;
-import java.util.Random;
 
 /**
  * Created by MelanieW on 30.12.2015.
@@ -64,10 +53,11 @@ public class MixMenu extends SherlockActivity {
             // Generate title
             title = new String[]{getString(R.string.menu_item_1), getString(R.string.menu_item_2),
                     getString(R.string.menu_item_3), getString(R.string.menu_item_4), getString(R.string.menu_item_5),
-                    getString(R.string.menu_item_6), getString(R.string.menu_item_7), getString(R.string.menu_item_8), "RotationVektorDemo"};
+                    getString(R.string.menu_item_6), getString(R.string.menu_item_7), getString(R.string.menu_item_8), getString(R.string.menu_item_test_augmentedview), getString(R.string.menu_item_test_destinationselect)};
 
             // Generate icon
-            icon = new int[]{R.drawable.icon_datasource,
+            icon = new int[]{
+                    R.drawable.icon_datasource,
                     R.drawable.icon_datasource,
                     android.R.drawable.ic_menu_view,
                     android.R.drawable.ic_menu_mapmode,
@@ -75,7 +65,9 @@ public class MixMenu extends SherlockActivity {
                     android.R.drawable.ic_menu_search,
                     android.R.drawable.ic_menu_info_details,
                     android.R.drawable.ic_menu_share,
-                    R.drawable.icon_datasource};
+                    R.drawable.icon_datasource,
+                    android.R.drawable.ic_menu_info_details
+            };
             //         R.drawable.collections_cloud};
 
             drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
