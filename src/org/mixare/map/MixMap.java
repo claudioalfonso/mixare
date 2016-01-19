@@ -19,17 +19,19 @@
 package org.mixare.map;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+import org.mapsforge.core.graphics.Paint;
+import org.mapsforge.core.graphics.Style;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
@@ -38,15 +40,18 @@ import org.mapsforge.map.layer.cache.TileCache;
 
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
+import org.mapsforge.map.layer.overlay.Polyline;
 import org.mixare.MixMenu;
 import org.mixare.MixViewActivity;
 import org.mixare.R;
-import org.mixare.data.AddDataSource;
-import org.mixare.data.DataSourceStorage;
+import org.mixare.RouteData;
 import org.mixare.lib.MixUtils;
 
 import org.mixare.lib.marker.Marker;
 import org.mixare.mgr.location.LocationFinder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MixMap extends MixMenu {
     public final static byte DEFAULT_ZOOM_LEVEL =12;
@@ -54,6 +59,12 @@ public class MixMap extends MixMenu {
 	private TileCache tileCache;
     protected TileDownloadLayer downloadLayer;
     private FrameLayout map_view;
+    List<LatLong> routeResult = new ArrayList<>();
+    Polyline polyline;
+    List<LatLong> coordinateList;
+    Double latitude;
+    Double longitute;
+    LatLong target;
 
     // the search keyword
     protected String searchKeyword = "";
@@ -65,6 +76,17 @@ public class MixMap extends MixMenu {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+
+        }
+        else {
+            latitude = extras.getDouble("lat");
+            longitute = extras.getDouble("long");
+            target = new LatLong(latitude, longitute);
+        }
 
         AndroidGraphicFactory.createInstance(this.getApplication());
         map_view = (FrameLayout)findViewById(R.id.content_frame);
@@ -108,6 +130,7 @@ public class MixMap extends MixMenu {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();
         }
+        paintRoute(target);
     }
 
 
@@ -277,5 +300,41 @@ public class MixMap extends MixMenu {
         setCenter(location.getLatitude(), location.getLongitude());
     }
 
+    public void paintRoute(LatLong target) {
 
+        Paint paint = AndroidGraphicFactory.INSTANCE.createPaint();
+        paint.setColor(Color.BLUE);
+        paint.setStrokeWidth(6);
+        paint.setStyle(Style.STROKE);
+
+// instantiating the polyline object
+        polyline = new Polyline(paint, AndroidGraphicFactory.INSTANCE);
+// set lat lng for the polyline
+        coordinateList = polyline.getLatLongs();
+
+        RoutePainter routePainter = new RoutePainter();
+        routePainter.execute(target);
+
+    }
+
+
+    private class RoutePainter extends AsyncTask<LatLong,Void,List<LatLong>> {
+        List<LatLong> latLong = new ArrayList<>();
+
+        @Override
+        protected List<LatLong> doInBackground(LatLong... params) {
+            RouteData rs = new RouteData();
+            latLong = rs.init(params[0]);
+            return latLong;
+        }
+
+        @Override
+        protected void onPostExecute(List<LatLong> latLongs) {
+            super.onPostExecute(latLongs);
+            for (LatLong latlong : latLongs) {
+                coordinateList.add(latlong);
+            }
+            mapView.getLayerManager().getLayers().add(polyline);
+        }
+    }
 }

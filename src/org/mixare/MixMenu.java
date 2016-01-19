@@ -181,6 +181,7 @@ public class MixMenu extends SherlockActivity {
                 break;
             case 8:
                 break;
+
         }
     }
 

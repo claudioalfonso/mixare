@@ -23,7 +23,7 @@ import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
 import java.util.Date;
 
-import org.mixare.R.drawable;
+import org.mapsforge.core.model.LatLong;
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
@@ -67,8 +67,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 
 /**
  * This class is the main application which uses the other classes for different
@@ -101,7 +99,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	private SensorManager mSensorManager;
 	private RotationVektorRenderer mRenderer;
 
-
 	/**
 	 * Main application Launcher.
 	 * Does:
@@ -131,6 +128,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 			maintainViews();
 			maintainRotationVektorDemo();
+
 			augmentedView.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View view, MotionEvent me) {
@@ -884,7 +882,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 	}
 
-	public static class DestinationSelectDialogFragment extends DialogFragment {
+	public  class DestinationSelectDialogFragment extends DialogFragment {
 
 
 		@NonNull
@@ -897,7 +895,19 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
                     .setItems(R.array.destinations,new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which){
-                            Log.d(Config.TAG, which+"");
+							LatLong latLong = null;
+							if(which==0){
+								latLong = new LatLong(51.46300, 7.00367);
+							}
+							else if(which == 1){
+								latLong = new LatLong(51.46404, 7.00732);
+							}
+							else if (which == 2){
+								latLong = new LatLong(51.46490, 7.00332);
+							}
+							maintainMixMap(latLong);
+
+                            Log.d(Config.TAG, which + "");
                         }
                     });
                     /*
@@ -918,8 +928,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 	}
 
-
-
+	public void maintainMixMap(LatLong latLong){
+		Intent intent3 = new Intent(this, MixMap.class);
+		intent3.putExtra("lat",latLong.latitude);
+		intent3.putExtra("long",latLong.longitude);
+		startActivity(intent3);
+	}
 
 	public void onSensorChanged(SensorEvent evt) {
 		try {
