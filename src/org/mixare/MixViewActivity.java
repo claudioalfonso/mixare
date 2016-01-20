@@ -857,6 +857,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				else {
 					cameraView.removeView(mGLSurfaceView);
 				}
+				break;
 			/* test destination selection (from marker) */
 			case 9:
                 new DestinationSelectDialogFragment().show(getFragmentManager(),"TAG");
@@ -878,6 +879,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
             /* some random error (for testing?!)*/
 			case 10:
 				//doError(null, new Random().nextInt(3));
+				break;
 		}
 
 	}
