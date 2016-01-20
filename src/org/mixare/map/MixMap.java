@@ -19,6 +19,7 @@
 package org.mixare.map;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -28,6 +29,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.mapsforge.core.graphics.Paint;
@@ -40,6 +42,7 @@ import org.mapsforge.map.layer.cache.TileCache;
 
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
+import org.mixare.Config;
 import org.mapsforge.map.layer.overlay.Polyline;
 import org.mixare.MixMenu;
 import org.mixare.MixViewActivity;
@@ -124,8 +127,8 @@ public class MixMap extends MixMenu {
         // Set center of the Map to your position or a Position out of the
         // IntentExtras
         if (intent.getBooleanExtra("center", false)) {
-            setCenterZoom(intent.getDoubleExtra("latitude", LocationFinder.default_lat),
-                    intent.getDoubleExtra("longitude", LocationFinder.default_lon), DEFAULT_ZOOM_LEVEL);
+            setCenterZoom(intent.getDoubleExtra("latitude", Config.DEFAULT_FIX_LAT),
+                    intent.getDoubleExtra("longitude", Config.DEFAULT_FIX_LON), DEFAULT_ZOOM_LEVEL);
         } else {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();
@@ -204,7 +207,7 @@ public class MixMap extends MixMenu {
     protected void onStart() {
         super.onStart();
 
-        setCenterZoom(LocationFinder.default_lat, LocationFinder.default_lon, DEFAULT_ZOOM_LEVEL);
+        setCenterZoom(Config.DEFAULT_FIX_LAT, Config.DEFAULT_FIX_LON, DEFAULT_ZOOM_LEVEL);
         createOverlay();
     }
 

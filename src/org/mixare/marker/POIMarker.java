@@ -21,6 +21,8 @@ package org.mixare.marker;
 
 import java.text.DecimalFormat;
 
+import org.mixare.lib.MixContextInterface;
+import org.mixare.lib.MixStateInterface;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.TextObj;
@@ -166,6 +168,11 @@ public class POIMarker extends LocalMarker {
 		tri.close();
 		paintScreen.paintPath(tri, cMarker.x, cMarker.y, radius * 2, radius * 2,
 				currentAngle + 90, 1);
+	}
+
+    @Override
+	public boolean fClick(float x, float y, MixContextInterface ctx, MixStateInterface state) {
+		return super.fClick(x, y, ctx, state);
 	}
 
 }

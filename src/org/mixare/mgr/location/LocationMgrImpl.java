@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.mixare.Config;
 import org.mixare.MixContext;
 import org.mixare.R;
 import org.mixare.mgr.downloader.DownloadManager;
@@ -90,13 +91,8 @@ class LocationMgrImpl implements LocationFinder {
 	
 	private void setDefaultFix() {
 		// fallback for the case where GPS and network providers are disabled
-		Location defaultFix = new Location("defaultFix");
+		Location defaultFix = Config.getDefaultFix();
 
-		defaultFix.setLatitude(default_lat);
-		defaultFix.setLongitude(default_lon);
-		defaultFix.setAltitude(default_height);
-
-		
 		curLoc = defaultFix;
 		mixContext.doPopUp(R.string.connection_GPS_dialog_text);
 	}
