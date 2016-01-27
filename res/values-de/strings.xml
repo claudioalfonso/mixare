@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Mixare</string>
     <string name="search_hint">Suche Ort</string>
     
@@ -16,21 +16,21 @@
 
     <string name="empty_list">Es tut uns leid, \nFür das Gebiet in diesem Umkreis \nwurden keine Informationen gefunden.
     \nBitte probieren Sie es mit einem etwas \ngrößerem Radius.</string>
-	<string name="option_not_available">Es tut uns leid, wir arbeiten daran... 
+	<string name="option_not_available">Es tut uns leid, wir arbeiten daran…
 		\nDiese Option wird Ihnen schon bald \nzur Verfügung stehen!</string>
 	
-	<string name="license">Copyright (C) 2010- Peer internet solutions 
-		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the 
-		GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-		or at your option) any later version. 
-		\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even 
-		the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public 
-		License for more details. 
-		\n\n You should have received a copy of the GNU General Public License along with this program. 
-		If not, see &lt;http://www.gnu.org/licenses/&gt;
-	</string>
+	<string name="license"><![CDATA[Copyright © 2010-2013 Peer internet solutions
+		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the
+		GNU General Public License as published by the Free Software Foundation, either version 3 of the License,
+		or at your option) any later version.
+		\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+		the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+		License for more details.
+		\n\n You should have received a copy of the GNU General Public License along with this program.
+		If not, see <http://www.gnu.org/licenses/>
+	]]></string>
 	
-	<string name="menu_item_1">Datenquelle</string>
+	<string name="menu_item_1">Datenquellen</string>
 	<string name="menu_item_2">Plug-Ins</string>
 	<string name="menu_item_3">Listenansicht</string>
 	<string name="menu_item_4">Karte</string>
@@ -44,7 +44,7 @@
 	<string name="connection_error_dialog_button2">Einstellungen</string>
 	<string name="connection_error_dialog_button3">Verlassen</string>
 	
-	<string name="connection_GPS_dialog_text">Die GPS-Position kann nicht aktualisiert werden... \nFalls Sie fortfahren möchten kann es sein 
+	<string name="connection_GPS_dialog_text">Die GPS-Position kann nicht aktualisiert werden… \nFalls Sie fortfahren möchten kann es sein
 		\ndass sich die Informationen nicht am richtigen Platz befinden.</string>
 	<string name="connection_GPS_dialog_button1">Fortfahren</string>
 	<string name="connection_GPS_dialog_button2">Schließen</string>
@@ -131,7 +131,7 @@
 	<string name="refreshing">Aktualisieren</string>
 	<string name="unsupportet_hardware_dialog">Mixare hatte ein Problem dabei, passende Sensoren zu finden. Stelle sicher, dass Dein Gerät die notwendigen Sensoren hat.</string>
 	<string name="problem_detected">Problem festgestellt</string>
-	<string name="list_view_marker_in_section">Marker:</string>
+	<string name="list_view_marker_in_section">Marker: %1$d</string>
 	<string name="plugin_message">Einige Plug-Ins haben sich verändert, möchtest Du die Liste der Plug-Ins ansehen?</string>
 	<string name="plugins_changed">Die Aktivierung von Plug-Ins hat sich geändert. Mixare muss die geänderten Plug-Ins neu starten. Möchtest Du das jetzt tun?</string>
 	<string name="menu_item_test_augmentedview">RotationVektorDemo</string>
@@ -139,8 +139,9 @@
 	<string name="dest_mensa">Mensa</string>
 	<string name="dest_bib">Bibliothek</string>
 	<string name="dest_audimax">Audimax</string>
-	<string name="dataSourcesStatusPlaceholder">Datenquellen: (5 min) 3/4</string>
+	<string name="dataSourcesStatusPlaceholder" tools:ignore="TypographyFractions">Datenquellen: (5 min) 3/4</string>
 	<string name="destinationStatusTextPlaceholder">destinationStatusPlaceholder</string>
-	<string name="select_destination">Select Destination</string>
+	<string name="select_destination">Ziel auswählen</string>
+	<string name="sensorsStatusTextPlaceholder">Sensoren: Probleme mit Vektor-Sensor</string>
 
 </resources>

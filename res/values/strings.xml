@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Mixare</string>
     <string name="search_hint">Search Location</string>
     
@@ -129,7 +129,7 @@
 	<string name="datahandler">Datahandler</string>
 	
 	<string name="list_view_total_markers">Total markers: </string>
-	<string name="list_view_marker_in_section">Markers:</string>
+	<string name="list_view_marker_in_section">Markers: %1$d</string>
 	<string name="list_view_search_no_result">No result found</string>
 	<string name="list_view_no_plugins_available">No plugins installed</string>
 	<string name="list_view_search_hint">Search</string>
@@ -158,8 +158,9 @@
 	<string name="dest_mensa">Mensa</string>
 	<string name="dest_bib">Bibliothek</string>
 	<string name="dest_audimax">Audimax</string>
-	<string name="dataSourcesStatusPlaceholder">Datenquellen: (5 min) 3/4</string>
-	<string name="sensorsStatusTextPlaceholder">Sensoren: Probleme mit Vektor-Sensor</string>
+	<string name="dataSourcesStatusPlaceholder" tools:ignore="TypographyFractions">Data Sources: (5 min) 3/4</string>
+	<string name="sensorsStatusTextPlaceholder">Sensors: Problems with vector sensor</string>
 	<string name="destinationStatusTextPlaceholder">destinationStatusPlaceholder</string>
 	<string name="select_destination">Select Destination</string>
+	<string name="distance_format">%1$.0fm</string>
 </resources>

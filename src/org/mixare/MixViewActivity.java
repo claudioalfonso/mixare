@@ -23,7 +23,6 @@ import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
 import java.util.Date;
 
-import org.mapsforge.core.model.LatLong;
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
@@ -784,7 +783,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			 * empty
 			 */
 				if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
-					Intent intent1 = new Intent(MixViewActivity.this, MixListView.class);
+					Intent intent1 = new Intent(MixViewActivity.this, MarkerListActivity.class);
 					intent1.setAction(Intent.ACTION_VIEW);
 					startActivityForResult(intent1, 42);
 				}
@@ -860,10 +859,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				break;
 			/* test destination selection (from marker) */
 			case 9:
-                new DestinationSelectDialogFragment().show(getFragmentManager(),"TAG");
-                /*
+              //  new DestinationSelectDialogFragment().show(getFragmentManager(), "TAG");
+                new MarkerListFragment().show(getFragmentManager(), "TAG");
+
+/*
 				AlertDialog.Builder destinationSelectDialogBuilder = new AlertDialog.Builder(this);
-                destinationSelectDialogBuilder.setMessage(getString(R.string.license));
+                //destinationSelectDialogBuilder.setAdapter(new SectionedListAdapter(this, getBaseContext()));
 
                 destinationSelectDialogBuilder.setNegativeButton(getString(R.string.close_button),
 						new DialogInterface.OnClickListener() {
@@ -890,6 +891,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		@NonNull
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             final String[] destinations=this.getResources().getStringArray(R.array.destinations);
 			builder.setTitle(R.string.select_destination)
@@ -1148,7 +1150,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			intent.setClass(this, MixListView.class);
+			intent.setClass(this, MarkerListFragment.class);
 			startActivity(intent);
 		}
 	}

@@ -27,13 +27,17 @@ import org.mixare.lib.marker.Marker;
 import org.mixare.map.MixMap;
 import org.mixare.sectionedlist.Item;
 import org.mixare.sectionedlist.SectionItem;
+
+import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -43,130 +47,37 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class MixListView extends SherlockActivity {
-	private static final int MENU_MAPVIEW_ID = 0;
-	private static final int MENU_SEARCH_ID = 1;
-	private Context ctx;
+public class MarkerListFragment extends DialogFragment {
 	private SectionedListAdapter sectionedListAdapter;
 	private ListView listView;
 	private MarkerRenderer markerRenderer;
-	private EditText editText;
+
 	private MenuItem search;
 	/* The sections for the list in meter */
 	private static final int[] sections = { 250, 500, 1000, 1500, 3500, 5000,
 			10000, 20000, 50000 };
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		this.ctx = this;
 		this.markerRenderer = MixViewActivity.getMarkerRendererStatically();
 
-		editText = new EditText(this);
-
 		List<Item> list;
-		if (Intent.ACTION_SEARCH.equals(this.getIntent().getAction())) {
-			// Get search query from IntentExtras
-			String query = this.getIntent().getStringExtra(SearchManager.QUERY);
-			list = createList(query);
-			editText.setText(query);
-		} else {
-			// MixListView is started directly
-			list = createList();
-		}
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		list = createList();
 
-		setContentView(R.layout.list);
-		sectionedListAdapter = new SectionedListAdapter(this, this, 0, list);
-		listView = (ListView) findViewById(R.id.section_list_view);
-		listView.setAdapter(sectionedListAdapter);
+		sectionedListAdapter = new SectionedListAdapter(this.getActivity(), this.getActivity(), 0, list);
+
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Open mapView
-		menu.add(MENU_MAPVIEW_ID, MENU_MAPVIEW_ID, MENU_MAPVIEW_ID, "MapView")
-				.setIcon(android.R.drawable.ic_menu_mapmode)
-				.setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_IF_ROOM
-								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-		// The editText to use for search
-		editText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.WRAP_CONTENT));
-		editText.setHint(getString(R.string.list_view_search_hint));
-		// Show the keyboard
-		editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				if (hasFocus) {
-					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-				} else {
-					imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-				}
-			}
-		});
-		// Search at typing
-		editText.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable edit) {
-				// Recreate the list
-				sectionedListAdapter.changeList(createList(edit.toString()));
-			}
-		});
-
-		// Create a ActionBarItem which adds a editText to the ActionBar used
-		// for search
-		search = menu.add(MENU_SEARCH_ID, MENU_SEARCH_ID, MENU_SEARCH_ID,
-				getString(R.string.list_view_search_hint));
-		search.setIcon(android.R.drawable.ic_menu_search);
-		search.setActionView(editText);
-		search.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
-				| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// ActionBarIcon pressed
-			finish();
-			break;
-		case MENU_MAPVIEW_ID:
-			// Start MixMap to choose which Map to start
-			Intent map = new Intent(MixListView.this, MixMap.class);
-			startActivity(map);
-			break;
-		case MENU_SEARCH_ID:
-			// give focus to searchTextBox to open Keyboard
-			editText.requestFocus();
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onSearchRequested() {
-		// Open searchBox and request focus to open Keyboard
-		search.expandActionView();
-		editText.requestFocus();
-		return false;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        View myView=inflater.inflate(R.layout.list, container, false);
+        listView = (ListView) myView.findViewById(R.id.section_list_view);
+        listView.setAdapter(sectionedListAdapter);
+        return myView;
+    }
 
 	/**
 	 * Creates the list to display without filtering. Same as createList(null).
@@ -180,12 +91,11 @@ public class MixListView extends SherlockActivity {
 	/**
 	 * Creates the list to display
 	 * 
-	 * @param query
-	 *            The query to look for or null not to filter
+	 * @param query The query to look for or null not to filter
 	 * @return The list containing Item's to display
 	 */
 	private List<Item> createList(String query) {
-		List<Item> list = new ArrayList<Item>();
+		List<Item> list = new ArrayList<>();
 		DataHandler dataHandler = markerRenderer.getDataHandler();
 		String lastSection = "";
 		int lastSectionId = -1;
@@ -242,10 +152,6 @@ public class MixListView extends SherlockActivity {
 			sectionCount++;
 		}
 
-		getSupportActionBar().setSubtitle(
-				getString(R.string.list_view_total_markers)
-						+ (list.size() - sectionCount));
-
 		return list;
 	}
 
@@ -257,8 +163,7 @@ public class MixListView extends SherlockActivity {
 	 * smallest section) distance = 60000 Method returns > 50km (if 50000 is the
 	 * biggest section)
 	 * 
-	 * @param distance
-	 *            the distance from the marker to your location
+	 * @param distance the distance from the marker to your location
 	 * @return A string that indicates how far you are away from a point
 	 * 
 	 */
@@ -369,5 +274,4 @@ public class MixListView extends SherlockActivity {
 			return false;
 		}
 	}
-
 }

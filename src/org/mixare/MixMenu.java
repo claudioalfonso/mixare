@@ -146,7 +146,7 @@ public class MixMenu extends SherlockActivity {
                 break;
 		    /* List markerRenderer */
             case 2:
-                Intent intent3 = new Intent(MixMenu.this, MixListView.class);
+                Intent intent3 = new Intent(MixMenu.this, MarkerListActivity.class);
                 intent3.setAction(Intent.ACTION_VIEW);
                 startActivityForResult(intent3, 42);
                 break;

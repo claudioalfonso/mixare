@@ -1,5 +1,6 @@
 package org.mixare;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.SpannableString;
@@ -26,13 +27,12 @@ import java.util.List;
  */
 class SectionedListAdapter extends ArrayAdapter<Item> {
 
-    private MixListView mixListView;
+    private Activity parentActivity;
     private List<Item> items;
 
-    public SectionedListAdapter(MixListView mixListView, Context context, int textViewResourceId,
-								List<Item> objects) {
+    public SectionedListAdapter(Activity parentActivity, Context context, int textViewResourceId, List<Item> objects) {
         super(context, textViewResourceId, objects);
-        this.mixListView = mixListView;
+        this.parentActivity = parentActivity;
         this.items = objects;
     }
 
@@ -64,17 +64,13 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
 
 //					Log.d(Config.TAG, "getView: " + position + " tag: " + tag + " section");
                 if (tag == null) {
-                    convertView = mixListView.getLayoutInflater().inflate(
-                            R.layout.list_item_section, null);
+                    convertView = parentActivity.getLayoutInflater().inflate(R.layout.list_item_section, null);
 
                     sectionViewHolder = new SectionViewHolder();
-                    sectionViewHolder.title = (TextView) convertView
-                            .findViewById(R.id.section_title);
-                    sectionViewHolder.markerCount = (TextView) convertView
-                            .findViewById(R.id.section_marker_count);
+                    sectionViewHolder.title = (TextView) convertView.findViewById(R.id.section_title);
+                    sectionViewHolder.markerCount = (TextView) convertView.findViewById(R.id.section_marker_count);
 
-                    convertView.setTag(R.string.list_view_section,
-                            sectionViewHolder);
+                    convertView.setTag(R.string.list_view_section, sectionViewHolder);
                 } else {
                     sectionViewHolder = (SectionViewHolder) tag;
                 }
@@ -83,10 +79,10 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                 convertView.setOnLongClickListener(null);
                 convertView.setLongClickable(false);
 
-                sectionViewHolder.title.setText(((SectionItem) i)
-                        .getTitle());
-                sectionViewHolder.markerCount.setText(mixListView.getString(R.string.list_view_marker_in_section) + ((SectionItem) i)
-                        .getMarkerCount());
+                sectionViewHolder.title.setText(((SectionItem) i).getTitle());
+                sectionViewHolder.markerCount.setText(
+                        parentActivity.getString(R.string.list_view_marker_in_section,((SectionItem) i).getMarkerCount() )
+                );
             } else {
                 ViewHolder holder;
                 Object tag = null;
@@ -96,34 +92,27 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                 }
 //					Log.d("test", "getView: " + position + " tag: " + tag + " entry");
                 if (tag == null) {
-                    convertView = mixListView.getLayoutInflater().inflate(
-                            R.layout.marker_list, null);
+                    convertView = parentActivity.getLayoutInflater().inflate(R.layout.marker_list, null);
 
                     holder = new ViewHolder();
 
-                    holder.sideBar = convertView
-                            .findViewById(R.id.side_bar);
-                    holder.title = (TextView) convertView
-                            .findViewById(R.id.marker_list_title);
-                    holder.desc = (TextView) convertView
-                            .findViewById(R.id.marker_list_summary);
-                    holder.centerMap = (ImageButton) convertView
-                            .findViewById(R.id.marker_list_mapbutton);
+                    holder.sideBar = convertView.findViewById(R.id.side_bar);
+                    holder.title = (TextView) convertView.findViewById(R.id.marker_list_title);
+                    holder.desc = (TextView) convertView.findViewById(R.id.marker_list_summary);
+                    holder.centerMap = (ImageButton) convertView.findViewById(R.id.marker_list_mapbutton);
 
                     convertView.setTag(R.string.list_view_entry, holder);
                 } else {
                     holder = (ViewHolder) tag;
                 }
 
-                MixListView.EntryItem item = (MixListView.EntryItem) i;
+                MarkerListFragment.EntryItem item = (MarkerListFragment.EntryItem) i;
 
-                MixListView.MarkerInfo markerInfo = item.getMarkerInfo();
-                SpannableString spannableString = new SpannableString(
-                        markerInfo.getTitle());
+                MarkerListFragment.MarkerInfo markerInfo = item.getMarkerInfo();
+                SpannableString spannableString = new SpannableString(markerInfo.getTitle());
 
                 if (markerInfo.getUrl() != null) {
-                    spannableString.setSpan(new UnderlineSpan(), 0,
-                            spannableString.length(), 0);
+                    spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), 0);
                     convertView.setOnClickListener(new OnClickListenerWebView(position));
                 } else {
                     convertView.setOnClickListener(null);
@@ -131,10 +120,9 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
 
                 holder.sideBar.setBackgroundColor(markerInfo.getColor());
                 holder.centerMap.setTag(position);
-                holder.centerMap
-                        .setOnClickListener(onClickListenerCenterMap);
+                holder.centerMap.setOnClickListener(onClickListenerCenterMap);
                 holder.title.setText(spannableString);
-                holder.desc.setText(Math.round(markerInfo.getDist()) + "m");
+                holder.desc.setText(getContext().getString(R.string.distance_format, markerInfo.getDist()));
             }
         }
 
@@ -164,14 +152,13 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
     View.OnClickListener onClickListenerCenterMap = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            MixListView.MarkerInfo markerInfo = ((MixListView.EntryItem) getItem((Integer) v
-                    .getTag())).getMarkerInfo();
+            MarkerListFragment.MarkerInfo markerInfo = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarkerInfo();
 
-            Intent startMap = new Intent(mixListView, MixMap.class);
+            Intent startMap = new Intent(parentActivity, MixMap.class);
             startMap.putExtra("center", true);
             startMap.putExtra("latitude", markerInfo.getLatitude());
             startMap.putExtra("longitude", markerInfo.getLongitude());
-            mixListView.startActivityForResult(startMap, 76);
+            parentActivity.startActivityForResult(startMap, 76);
         }
     };
 
@@ -186,16 +173,14 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
 
         @Override
         public void onClick(View v) {
-            MixListView.MarkerInfo markerInfo = ((MixListView.EntryItem) getItem(position))
-                    .getMarkerInfo();
+            MarkerListFragment.MarkerInfo markerInfo = ((MarkerListFragment.EntryItem) getItem(position)).getMarkerInfo();
 
             String selectedURL = markerInfo.getUrl();
             if (selectedURL != null) {
                 try {
                     if (selectedURL.startsWith("webpage")) {
                         String newUrl = MixUtils.parseAction(selectedURL);
-						MixContext.getInstance().getActualMixViewActivity().getMarkerRenderer().getContext().getWebContentManager()
-                                .loadWebPage(newUrl, MixContext.getInstance());
+						MixContext.getInstance().getWebContentManager().loadWebPage(newUrl, MixContext.getInstance());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
