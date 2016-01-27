@@ -124,42 +124,37 @@ public class MixMenu extends SherlockActivity {
     }
 
     public void selectItem(int position) {
-        switch (position) {
+        int menuItemId=getResources().obtainTypedArray(R.array.menu_item_titles).getResourceId(position,-1);
+
+        switch (menuItemId) {
 		    /* Data sources */
-            case 0:
+            case R.string.menu_item_datasources:
                 Intent intent = new Intent(MixMenu.this, DataSourceList.class);
                 startActivityForResult(intent, 40);
                 break;
 			/* Plugin View */
-            case 1:
+            case R.string.menu_item_plugins:
                 Intent intent2 = new Intent(MixMenu.this, PluginListActivity.class);
                 startActivityForResult(intent2, 35);
                 break;
-		    /* List markerRenderer */
-            case 2:
+		    /* Marker List View */
+            case R.string.menu_item_route: //fall-through intended
+            case R.string.menu_item_list:
                 Intent intent3 = new Intent(MixMenu.this, MarkerListActivity.class);
                 intent3.setAction(Intent.ACTION_VIEW);
                 startActivityForResult(intent3, 42);
                 break;
 		    /* Map View */
-            case 3:
+            case R.string.menu_item_map:
                 Intent intent4 = new Intent(MixMenu.this, MixMap.class);
                 startActivityForResult(intent4, 20);
                 break;
-		    /* range level */
-            case 4:
-                // only sense in MixViewActivity, overridden there
-                break;
 		    /* Search */
-            case 5:
+            case R.string.menu_item_search:
                 onSearchRequested();
                 break;
-		    /* GPS Information */
-            case 6:
-                // only sense in MixViewActivity, overridden there
-                break;
-		    /* Case 6: license agreements */
-            case 7:
+		    /* license agreements */
+            case R.string.menu_item_license:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
                 builder1.setMessage(getString(R.string.license));
 			    /* Retry */
@@ -170,7 +165,7 @@ public class MixMenu extends SherlockActivity {
                 alert1.setTitle(getString(R.string.license_title));
                 alert1.show();
                 break;
-            case 8:
+            default:
                 break;
 
         }
