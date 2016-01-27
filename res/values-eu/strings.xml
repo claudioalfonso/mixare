@@ -32,14 +32,14 @@
 		If not, see &lt;http://www.gnu.org/licenses/&gt;
 	</string>
 	
-	<string name="menu_item_1">Datu-iturburua</string>
-	<string name="menu_item_2">Plugins</string>
-	<string name="menu_item_3">Zerrenda ikuspegia</string>
-	<string name="menu_item_4">Mapa ikuspegia</string>
-	<string name="menu_item_5">Zoom maila</string>
-	<string name="menu_item_6">Bilatu</string>
-	<string name="menu_item_7">Informazioa</string>
-	<string name="menu_item_8">Lizentzia</string>
+	<string name="menu_item_datasources">Datu-iturburua</string>
+	<string name="menu_item_plugins">Plugins</string>
+	<string name="menu_item_list">Zerrenda ikuspegia</string>
+	<string name="menu_item_map">Mapa ikuspegia</string>
+	<string name="menu_item_range">Zoom maila</string>
+	<string name="menu_item_search">Bilatu</string>
+	<string name="menu_item_info">Informazioa</string>
+	<string name="menu_item_license">Lizentzia</string>
 	
 	<string name="cancel">Utzi</string>
 	

@@ -3,9 +3,9 @@ package org.mixare;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -59,12 +59,13 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                 Object tag = null;
                 try {
                     tag = convertView.getTag(R.string.list_view_section);
-                } catch (Exception e) {
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
 
 //					Log.d(Config.TAG, "getView: " + position + " tag: " + tag + " section");
                 if (tag == null) {
-                    convertView = parentActivity.getLayoutInflater().inflate(R.layout.list_item_section, null);
+                    convertView = parentActivity.getLayoutInflater().inflate(R.layout.list_item_section, parent, false);
 
                     sectionViewHolder = new SectionViewHolder();
                     sectionViewHolder.title = (TextView) convertView.findViewById(R.id.section_title);
@@ -88,18 +89,21 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                 Object tag = null;
                 try {
                     tag = convertView.getTag(R.string.list_view_entry);
-                } catch (Exception e) {
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
 //					Log.d("test", "getView: " + position + " tag: " + tag + " entry");
                 if (tag == null) {
-                    convertView = parentActivity.getLayoutInflater().inflate(R.layout.marker_list, null);
+                    convertView = parentActivity.getLayoutInflater().inflate(R.layout.marker_list, parent, false);
 
                     holder = new ViewHolder();
 
                     holder.sideBar = convertView.findViewById(R.id.side_bar);
                     holder.title = (TextView) convertView.findViewById(R.id.marker_list_title);
                     holder.desc = (TextView) convertView.findViewById(R.id.marker_list_summary);
-                    holder.centerMap = (ImageButton) convertView.findViewById(R.id.marker_list_mapbutton);
+                    holder.mapButton = (ImageButton) convertView.findViewById(R.id.marker_list_mapbutton);
+                    holder.directionsButton = (ImageButton) convertView.findViewById(R.id.marker_list_destinationbutton);
+
 
                     convertView.setTag(R.string.list_view_entry, holder);
                 } else {
@@ -119,8 +123,10 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                 }
 
                 holder.sideBar.setBackgroundColor(markerInfo.getColor());
-                holder.centerMap.setTag(position);
-                holder.centerMap.setOnClickListener(onClickListenerCenterMap);
+                holder.mapButton.setTag(position);
+                holder.mapButton.setOnClickListener(onClickListenerCenterMap);
+                holder.directionsButton.setTag(position);
+                holder.directionsButton.setOnClickListener(onClickListenerDirections);
                 holder.title.setText(spannableString);
                 holder.desc.setText(getContext().getString(R.string.distance_format, markerInfo.getDist()));
             }
@@ -138,15 +144,17 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
         View sideBar;
         TextView title;
         TextView desc;
-        ImageButton centerMap;
+        ImageButton mapButton;
+        ImageButton directionsButton;
+
     }
 
     public int getCount() {
         return items.size();
-    };
+    }
 
     /**
-     * Handles the click event of the centerMap Button, to center the marker
+     * Handles the click event of the mapButton, to center the marker
      * on the Map.
      */
     View.OnClickListener onClickListenerCenterMap = new View.OnClickListener() {
@@ -154,6 +162,27 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
         public void onClick(View v) {
             MarkerListFragment.MarkerInfo markerInfo = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarkerInfo();
 
+            Intent startMap = new Intent(parentActivity, MixMap.class);
+            startMap.putExtra("center", true);
+            startMap.putExtra("latitude", markerInfo.getLatitude());
+            startMap.putExtra("longitude", markerInfo.getLongitude());
+            parentActivity.startActivityForResult(startMap, 76);
+        }
+    };
+
+    /**
+     * Handles the click event of the directionsButton, to center the marker
+     * on the Map.
+     */
+    View.OnClickListener onClickListenerDirections = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            MarkerListFragment.MarkerInfo markerInfo = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarkerInfo();
+            Location destination=Config.getManualFix();
+            destination.setLatitude(markerInfo.getLatitude());
+            destination.setLongitude(markerInfo.getLongitude());
+
+            MixViewDataHolder.getInstance().setCurDestination(destination);
             Intent startMap = new Intent(parentActivity, MixMap.class);
             startMap.putExtra("center", true);
             startMap.putExtra("latitude", markerInfo.getLatitude());
@@ -187,5 +216,5 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                 }
             }
         }
-    };
+    }
 }

@@ -12,6 +12,7 @@ public class Config {
     public final static double DEFAULT_FIX_LON =7.01655;
     public final static int DEFAULT_FIX_HEIGHT =300;
     public final static String DEFAULT_FIX_NAME ="defaultFix";
+    public static final String MANUAL_FIX_NAME = "manualSet";
     public static boolean drawTextBlock = true;
 
     //currently only for test purposes
@@ -24,5 +25,11 @@ public class Config {
         defaultFix.setLongitude(DEFAULT_FIX_LON);
         defaultFix.setAltitude(DEFAULT_FIX_HEIGHT);
         return defaultFix;
+    }
+
+    public static Location getManualFix(){
+        Location manualFix = new Location(MANUAL_FIX_NAME);
+        manualFix.setTime(System.currentTimeMillis());
+        return manualFix;
     }
 }

@@ -22,6 +22,7 @@ import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
 
 import java.util.Date;
+import java.util.Random;
 
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
@@ -754,9 +755,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	@Override
 	public void selectItem(int position) {
-		switch (position) {
+		int menuItemId=getResources().obtainTypedArray(R.array.menu_item_titles).getResourceId(position,-1);
+		switch (menuItemId) {
 		/* Data sources */
-			case 0:
+			case R.string.menu_item_datasources:
 				if (!getMarkerRenderer().getIsLauncherStarted()) {
 					Intent intent = new Intent(MixViewActivity.this, DataSourceList.class);
 					startActivityForResult(intent, 40);
@@ -766,7 +768,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 				break;
 			/* Plugin View */
-			case 1:
+			case R.string.menu_item_plugins:
 				if (!getMarkerRenderer().getIsLauncherStarted()) {
 					Intent intent = new Intent(MixViewActivity.this,
 							PluginListActivity.class);
@@ -777,7 +779,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 				break;
 		/* List markerRenderer */
-			case 2:
+			case R.string.menu_item_list:
 			/*
 			 * if the list of titles to show in alternative list markerRenderer is not
 			 * empty
@@ -794,21 +796,21 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 				break;
 		/* Map View */
-			case 3:
+			case R.string.menu_item_map:
 				Intent intent2 = new Intent(MixViewActivity.this, MixMap.class);
 				startActivityForResult(intent2, 20);
 				break;
 		/* range level */
-			case 4:
+			case R.string.menu_item_range:
                 hudView.showRangeBar();
                 drawerLayout.closeDrawer(drawerList);
                 break;
 		/* Search */
-			case 5:
+			case R.string.menu_item_search:
 				onSearchRequested();
 				break;
 		/* GPS Information */
-			case 6:
+			case R.string.menu_item_info:
 				Location currentGPSInfo = MixContext.getInstance()
 						.getLocationFinder().getCurrentLocation();
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -835,7 +837,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert.show();
 				break;
 		/* license agreement */
-			case 7:
+			case R.string.menu_item_license:
 				AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
 				builder1.setMessage(getString(R.string.license));
 			/* Retry */
@@ -849,8 +851,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert1.setTitle(getString(R.string.license_title));
 				alert1.show();
 				break;
-			case 8:
-				if(mGLSurfaceView.isAttachedToWindow()==false) {
+			case R.string.menu_item_test_augmentedview:
+				if(!mGLSurfaceView.isAttachedToWindow()) {
 					cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 				}
 				else {
@@ -858,82 +860,15 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				}
 				break;
 			/* test destination selection (from marker) */
-			case 9:
-              //  new DestinationSelectDialogFragment().show(getFragmentManager(), "TAG");
+			case R.string.menu_item_route:
                 new MarkerListFragment().show(getFragmentManager(), "TAG");
-
-/*
-				AlertDialog.Builder destinationSelectDialogBuilder = new AlertDialog.Builder(this);
-                //destinationSelectDialogBuilder.setAdapter(new SectionedListAdapter(this, getBaseContext()));
-
-                destinationSelectDialogBuilder.setNegativeButton(getString(R.string.close_button),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.dismiss();
-							}
-						});
-				AlertDialog destinationSelectDialog = destinationSelectDialogBuilder.create();
-                destinationSelectDialog.setTitle(getString(R.string.license_title));
-                destinationSelectDialog.show();
-                */
 				break;
             /* some random error (for testing?!)*/
-			case 10:
-				//doError(null, new Random().nextInt(3));
+			default:
+				doError(null, new Random().nextInt(3));
 				break;
 		}
 
-	}
-
-	public  class DestinationSelectDialogFragment extends DialogFragment {
-
-
-		@NonNull
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            final String[] destinations=this.getResources().getStringArray(R.array.destinations);
-			builder.setTitle(R.string.select_destination)
-                    //.setMessage("Message")
-                    .setItems(R.array.destinations, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Location destination = new Location("manualSet");
-                            destination.setTime(System.currentTimeMillis());
-                            destination.setProvider(destinations[which]);
-                            if (which == 0) {
-                                destination.setLatitude(51.46300);
-                                destination.setLongitude(7.00367);
-                            } else if (which == 1) {
-                                destination.setLatitude(51.46404);
-                                destination.setLongitude(7.00732);
-                            } else if (which == 2) {
-                                destination.setLatitude(51.46490);
-                                destination.setLongitude(7.00332);
-                            }
-                            getMixViewData().setCurDestination(destination);
-                            switchToMixMap();
-
-                            Log.d(Config.TAG, which + ": "+destinations[which]);
-                        }
-                    });
-                    /*
-				   .setPositiveButton("Positive", new DialogInterface.OnClickListener(){
-                       @Override
-                       public void onClick(DialogInterface dialog, int id){
-                           Log.d(Config.TAG, id+" Positive");
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int id) {
-                            Log.d(Config.TAG, id+" Negative");
-                        }
-                    });
-                    */
-			return builder.create();
-		}
 	}
 
 	public void switchToMixMap(){

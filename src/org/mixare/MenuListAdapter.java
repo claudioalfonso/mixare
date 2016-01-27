@@ -1,6 +1,7 @@
 package org.mixare;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,26 +15,26 @@ public class MenuListAdapter extends BaseAdapter {
 
         // Declare Variables
         Context context;
-        String[] mTitle;
+        String[] mTitles;
         String[] mSubTitle;
-        int[] mIcon;
+        TypedArray mIcons;
         LayoutInflater inflater;
 
 
-    public MenuListAdapter(Context context, String[] title, int[] icon) {
+    public MenuListAdapter(Context context, String[] titles, TypedArray icons) {
             this.context = context;
-            this.mTitle = title;
-            this.mIcon = icon;
+            this.mTitles = titles;
+            this.mIcons = icons;
         }
 
         @Override
         public int getCount() {
-            return mTitle.length;
+            return mTitles.length;
         }
 
         @Override
         public Object getItem(int position) {
-            return mTitle[position];
+            return mTitles[position];
         }
 
         @Override
@@ -58,10 +59,10 @@ public class MenuListAdapter extends BaseAdapter {
             imgIcon = (ImageView) itemView.findViewById(R.id.icon);
 
             // Set the results into TextViews
-            txtTitle.setText(mTitle[position]);
+            txtTitle.setText(mTitles[position]);
 
             // Set the results into ImageView
-            imgIcon.setImageResource(mIcon[position]);
+            imgIcon.setImageDrawable(mIcons.getDrawable(position));
 
             return itemView;
         }

@@ -32,14 +32,14 @@
 		
 	</string>
 	
-	<string name="menu_item_1">Fuente de datos</string>
-	<string name="menu_item_2">Plugins</string>
-	<string name="menu_item_3">Lista</string>
-	<string name="menu_item_4">Mapa</string>
-	<string name="menu_item_5">Zoom</string>
-	<string name="menu_item_6">Búsqueda</string>
-	<string name="menu_item_7">Información</string>
-	<string name="menu_item_8">Licencia</string>
+	<string name="menu_item_datasources">Fuente de datos</string>
+	<string name="menu_item_plugins">Plugins</string>
+	<string name="menu_item_list">Lista</string>
+	<string name="menu_item_map">Mapa</string>
+	<string name="menu_item_range">Zoom</string>
+	<string name="menu_item_search">Búsqueda</string>
+	<string name="menu_item_info">Información</string>
+	<string name="menu_item_license">Licencia</string>
 	
 	
 	<string name="connection_error_dialog">¡Ha ocurrido un error de conexión! \nPor favor chequea si estás conectado a Internet.</string>

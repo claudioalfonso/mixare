@@ -43,14 +43,14 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 		
-	<string name="menu_item_1">Data Source</string>
-	<string name="menu_item_2">Plugins</string>
-	<string name="menu_item_3">List View</string>
-	<string name="menu_item_4">Map View</string>
-	<string name="menu_item_5">Range</string>
-	<string name="menu_item_6">Search</string>
-	<string name="menu_item_7">Info</string>
-	<string name="menu_item_8">License</string>
+	<string name="menu_item_datasources">Data Sources</string>
+	<string name="menu_item_plugins">Plugins</string>
+	<string name="menu_item_list">Marker List</string>
+	<string name="menu_item_map">Map</string>
+	<string name="menu_item_range">Range</string>
+	<string name="menu_item_search">Search</string>
+	<string name="menu_item_info">Info</string>
+	<string name="menu_item_license">License</string>
 
 	<string name="cancel">Cancel</string>
 
@@ -154,10 +154,7 @@
 	<string name="drawer_open" />
 	<string name="drawer_close" />
 	<string name="menu_item_test_augmentedview">RotationVektorDemo</string>
-	<string name="menu_item_test_destinationselect">Test Destination Select</string>
-	<string name="dest_mensa">Mensa</string>
-	<string name="dest_bib">Bibliothek</string>
-	<string name="dest_audimax">Audimax</string>
+	<string name="menu_item_route">Route To…</string>
 	<string name="dataSourcesStatusPlaceholder" tools:ignore="TypographyFractions">Data Sources: (5 min) 3/4</string>
 	<string name="sensorsStatusTextPlaceholder">Sensors: Problems with vector sensor</string>
 	<string name="destinationStatusTextPlaceholder">destinationStatusPlaceholder</string>

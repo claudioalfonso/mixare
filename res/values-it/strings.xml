@@ -32,14 +32,14 @@
 		If not, see &lt;http://www.gnu.org/licenses/&gt;
 	</string>
 	
-	<string name="menu_item_1">Scelta delle fonti</string>
-	<string name="menu_item_2">Plugins</string>
-	<string name="menu_item_3">Lista dei risultati</string>
-	<string name="menu_item_4">Mappa</string>
-	<string name="menu_item_5">Raggio visualizzato</string>
-	<string name="menu_item_6">Ricerca</string>
-	<string name="menu_item_7">Info</string>
-	<string name="menu_item_8">Licenza</string>
+	<string name="menu_item_datasources">Scelta delle fonti</string>
+	<string name="menu_item_plugins">Plugins</string>
+	<string name="menu_item_list">Lista dei risultati</string>
+	<string name="menu_item_map">Mappa</string>
+	<string name="menu_item_range">Raggio visualizzato</string>
+	<string name="menu_item_search">Ricerca</string>
+	<string name="menu_item_info">Info</string>
+	<string name="menu_item_license">Licenza</string>
 
 	<string name="cancel">Annulla</string>
 

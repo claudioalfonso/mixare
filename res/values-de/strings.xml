@@ -30,14 +30,14 @@
 		If not, see <http://www.gnu.org/licenses/>
 	]]></string>
 	
-	<string name="menu_item_1">Datenquellen</string>
-	<string name="menu_item_2">Plug-Ins</string>
-	<string name="menu_item_3">Listenansicht</string>
-	<string name="menu_item_4">Karte</string>
-	<string name="menu_item_5">Reichweite</string>
-	<string name="menu_item_6">Suche</string>
-	<string name="menu_item_7">Info</string>
-	<string name="menu_item_8">Lizenz</string>
+	<string name="menu_item_datasources">Datenquellen</string>
+	<string name="menu_item_plugins">Plug-Ins</string>
+	<string name="menu_item_list">Marker-Liste</string>
+	<string name="menu_item_map">Karte</string>
+	<string name="menu_item_range">Reichweite</string>
+	<string name="menu_item_search">Suche</string>
+	<string name="menu_item_info">Info</string>
+	<string name="menu_item_license">Lizenz</string>
 	
 	<string name="connection_error_dialog">Es tut uns leid, Verbindungsfehler ist aufgetreten! \nBitte kontrollieren Sie ob eine Verbindung zum Internet besteht.</string>
 	<string name="connection_error_dialog_button1">Erneut Versuchen</string>
@@ -135,10 +135,7 @@
 	<string name="plugin_message">Einige Plug-Ins haben sich verändert, möchtest Du die Liste der Plug-Ins ansehen?</string>
 	<string name="plugins_changed">Die Aktivierung von Plug-Ins hat sich geändert. Mixare muss die geänderten Plug-Ins neu starten. Möchtest Du das jetzt tun?</string>
 	<string name="menu_item_test_augmentedview">RotationVektorDemo</string>
-	<string name="menu_item_test_destinationselect">Test Destination Select</string>
-	<string name="dest_mensa">Mensa</string>
-	<string name="dest_bib">Bibliothek</string>
-	<string name="dest_audimax">Audimax</string>
+	<string name="menu_item_route">Route zu…</string>
 	<string name="dataSourcesStatusPlaceholder" tools:ignore="TypographyFractions">Datenquellen: (5 min) 3/4</string>
 	<string name="destinationStatusTextPlaceholder">destinationStatusPlaceholder</string>
 	<string name="select_destination">Ziel auswählen</string>

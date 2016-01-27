@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -31,10 +33,10 @@ public class MixMenu extends SherlockActivity {
 
     MenuListAdapter menuListAdapter;
 
-    String[] title;
+    String[] menuItemTitles;
     private CharSequence drawerTitle;
     private CharSequence mTitle;
-    int[] icon;
+    TypedArray menuItemIcons;
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
@@ -49,31 +51,20 @@ public class MixMenu extends SherlockActivity {
 
             // Get the Title
             mTitle = drawerTitle = getTitle();
+            Resources res = getResources();
 
-            // Generate title
-            title = new String[]{getString(R.string.menu_item_1), getString(R.string.menu_item_2),
-                    getString(R.string.menu_item_3), getString(R.string.menu_item_4), getString(R.string.menu_item_5),
-                    getString(R.string.menu_item_6), getString(R.string.menu_item_7), getString(R.string.menu_item_8), getString(R.string.menu_item_test_augmentedview), getString(R.string.menu_item_test_destinationselect)};
+            // retrieve icons
+            menuItemIcons = res.obtainTypedArray(R.array.menu_item_icons);
 
-            // Generate icon
-            icon = new int[]{
-                    R.drawable.icon_datasource,
-                    R.drawable.icon_datasource,
-                    android.R.drawable.ic_menu_view,
-                    android.R.drawable.ic_menu_mapmode,
-                    android.R.drawable.ic_menu_zoom,
-                    android.R.drawable.ic_menu_search,
-                    android.R.drawable.ic_menu_info_details,
-                    android.R.drawable.ic_menu_share,
-                    R.drawable.icon_datasource,
-                    android.R.drawable.ic_menu_info_details
-            };
-            //         R.drawable.collections_cloud};
+            // retrieve menuItemTitles
+            menuItemTitles = res.getStringArray(R.array.menu_item_titles);
+
+
 
             drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawerList = (ListView) findViewById(R.id.listview_drawer);
 
-            menuListAdapter = new MenuListAdapter(MixMenu.this, title, icon);
+            menuListAdapter = new MenuListAdapter(MixMenu.this, menuItemTitles, menuItemIcons);
             drawerList.setAdapter(menuListAdapter);
             drawerList.setOnItemClickListener(new DrawerItemClickListener());
             drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,

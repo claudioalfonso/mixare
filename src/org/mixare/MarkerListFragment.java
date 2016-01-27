@@ -114,8 +114,7 @@ public class MarkerListFragment extends DialogFragment {
 
 			// Check the query
 			if (query != null) {
-				if (marker.getTitle().toLowerCase()
-						.indexOf(query.toLowerCase().trim()) < 0) {
+				if (!marker.getTitle().toLowerCase().contains(query.toLowerCase().trim())) {
 					continue;
 				}
 			}
@@ -221,7 +220,7 @@ public class MarkerListFragment extends DialogFragment {
 		 * Constructor
 		 * 
 		 * @param title
-		 *            The title of the marker
+		 *            The menuItemTitles of the marker
 		 * @param url
 		 *            The URL where the marker points to
 		 * @param dist

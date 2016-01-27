@@ -32,14 +32,14 @@
 		If not, see &lt;http://www.gnu.org/licenses/&gt;
 	</string>
 
-	<string name="menu_item_1">المصادر</string>
-	<string name="menu_item_2">Plugins</string>
-	<string name="menu_item_3">اللائحه</string>
-	<string name="menu_item_4">الخريطة</string>
-	<string name="menu_item_5">القطر</string>
-	<string name="menu_item_6">بحث</string>
-	<string name="menu_item_7">معلومات</string>
-	<string name="menu_item_8">الترخيص</string>
+	<string name="menu_item_datasources">المصادر</string>
+	<string name="menu_item_plugins">Plugins</string>
+	<string name="menu_item_list">اللائحه</string>
+	<string name="menu_item_map">الخريطة</string>
+	<string name="menu_item_range">القطر</string>
+	<string name="menu_item_search">بحث</string>
+	<string name="menu_item_info">معلومات</string>
+	<string name="menu_item_license">الترخيص</string>
 
 	<string name="cancel">إلغاء</string>
 
