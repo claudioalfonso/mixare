@@ -1150,7 +1150,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			intent.setClass(this, MarkerListFragment.class);
+			intent.setClass(this, MarkerListActivity.class);
 			startActivity(intent);
 		}
 	}

@@ -18,50 +18,44 @@
  */
 package org.mixare;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ListView;
 
 import org.mixare.data.DataHandler;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.marker.Marker;
-import org.mixare.map.MixMap;
 import org.mixare.sectionedlist.Item;
 import org.mixare.sectionedlist.SectionItem;
 
-import android.app.DialogFragment;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ListView;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MarkerListFragment extends DialogFragment {
 	private SectionedListAdapter sectionedListAdapter;
 	private ListView listView;
 	private MarkerRenderer markerRenderer;
 
-	private MenuItem search;
+    private String searchString="";
+
 	/* The sections for the list in meter */
 	private static final int[] sections = { 250, 500, 1000, 1500, 3500, 5000,
 			10000, 20000, 50000 };
 
+	public MarkerListFragment(){
+		this.markerRenderer = MixViewActivity.getMarkerRendererStatically();
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		this.markerRenderer = MixViewActivity.getMarkerRendererStatically();
 
 		List<Item> list;
 
@@ -71,12 +65,25 @@ public class MarkerListFragment extends DialogFragment {
 
 	}
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View myView=inflater.inflate(R.layout.list, container, false);
         listView = (ListView) myView.findViewById(R.id.section_list_view);
         listView.setAdapter(sectionedListAdapter);
         return myView;
+    }
+
+    public void updateList(String searchString){
+        this.searchString=searchString;
+        if(getActivity()!=null) {
+            sectionedListAdapter.changeList(createList(searchString));
+        }
+    }
+
+    @Override
+    public void onAttach(Context context){
+        updateList(this.searchString);
     }
 
 	/**
@@ -94,7 +101,7 @@ public class MarkerListFragment extends DialogFragment {
 	 * @param query The query to look for or null not to filter
 	 * @return The list containing Item's to display
 	 */
-	private List<Item> createList(String query) {
+	protected List<Item> createList(String query) {
 		List<Item> list = new ArrayList<>();
 		DataHandler dataHandler = markerRenderer.getDataHandler();
 		String lastSection = "";
@@ -187,6 +194,13 @@ public class MarkerListFragment extends DialogFragment {
 		return section;
 	}
 
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState){
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
+
 	/* private classes */
 
 	/**
@@ -261,7 +275,7 @@ public class MarkerListFragment extends DialogFragment {
 	public class EntryItem implements Item {
 		MarkerInfo markerInfo;
 
-		private EntryItem(MarkerInfo info) {
+		EntryItem(MarkerInfo info) {
 			this.markerInfo = info;
 		}
 

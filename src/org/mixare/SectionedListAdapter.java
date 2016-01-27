@@ -52,7 +52,7 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Item i = getItem(position);
-        Log.d(Config.TAG, "getView: " + position);
+//        Log.d(Config.TAG, "getView: " + position);
         if (i != null) {
             if (i.isSection()) {
                 SectionViewHolder sectionViewHolder;
