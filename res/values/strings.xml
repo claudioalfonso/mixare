@@ -158,4 +158,8 @@
 	<string name="dest_mensa">Mensa</string>
 	<string name="dest_bib">Bibliothek</string>
 	<string name="dest_audimax">Audimax</string>
+	<string name="dataSourcesStatusPlaceholder">Datenquellen: (5 min) 3/4</string>
+	<string name="sensorsStatusTextPlaceholder">Sensoren: Probleme mit Vektor-Sensor</string>
+	<string name="destinationStatusTextPlaceholder">destinationStatusPlaceholder</string>
+	<string name="select_destination">Select Destination</string>
 </resources>

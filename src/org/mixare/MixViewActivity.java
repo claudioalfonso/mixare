@@ -890,26 +890,30 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		@NonNull
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
-            String selectedDestination ="";
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle("Select Destination")
+            final String[] destinations=this.getResources().getStringArray(R.array.destinations);
+			builder.setTitle(R.string.select_destination)
                     //.setMessage("Message")
-                    .setItems(R.array.destinations,new DialogInterface.OnClickListener() {
+                    .setItems(R.array.destinations, new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which){
-							LatLong latLong = null;
-							if(which==0){
-								latLong = new LatLong(51.46300, 7.00367);
-							}
-							else if(which == 1){
-								latLong = new LatLong(51.46404, 7.00732);
-							}
-							else if (which == 2){
-								latLong = new LatLong(51.46490, 7.00332);
-							}
-							maintainMixMap(latLong);
+                        public void onClick(DialogInterface dialog, int which) {
+                            Location destination = new Location("manualSet");
+                            destination.setTime(System.currentTimeMillis());
+                            destination.setProvider(destinations[which]);
+                            if (which == 0) {
+                                destination.setLatitude(51.46300);
+                                destination.setLongitude(7.00367);
+                            } else if (which == 1) {
+                                destination.setLatitude(51.46404);
+                                destination.setLongitude(7.00732);
+                            } else if (which == 2) {
+                                destination.setLatitude(51.46490);
+                                destination.setLongitude(7.00332);
+                            }
+                            getMixViewData().setCurDestination(destination);
+                            switchToMixMap();
 
-                            Log.d(Config.TAG, which + "");
+                            Log.d(Config.TAG, which + ": "+destinations[which]);
                         }
                     });
                     /*
@@ -930,11 +934,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 	}
 
-	public void maintainMixMap(LatLong latLong){
-		Intent intent3 = new Intent(this, MixMap.class);
-		intent3.putExtra("lat",latLong.latitude);
-		intent3.putExtra("long",latLong.longitude);
-		startActivity(intent3);
+	public void switchToMixMap(){
+		Intent mixMapIntent = new Intent(this, MixMap.class);
+		startActivity(mixMapIntent);
 	}
 
 	public void onSensorChanged(SensorEvent evt) {
@@ -1198,6 +1200,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
         if(Config.useHUD) {
             hudView.updatePositionStatus(curFix);
             hudView.setDataSourcesStatus(getMarkerRenderer().dataSourceWorking, false, null);
+            hudView.setDestinationStatus(getMixViewData().getCurDestination());
         }
     }
 }

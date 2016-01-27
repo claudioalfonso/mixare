@@ -53,7 +53,7 @@
         android:layout_toStartOf="@+id/positionStatusProgress"
         android:linksClickable="false"
         android:padding="5dp"
-        android:text="Datenquellen: (5 min) 3/4"
+        android:text="@string/dataSourcesStatusPlaceholder"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#ff0000" />
 
@@ -91,7 +91,7 @@
         android:layout_toStartOf="@+id/sensorsStatusProgress"
         android:linksClickable="false"
         android:padding="5dp"
-        android:text="Sensoren: Probleme mit Vektor-Sensor"
+        android:text="@string/sensorsStatusTextPlaceholder"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#ff0000" />
 
@@ -121,6 +121,20 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/destinationWrapper">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/destinationStatusTextPlaceholder"
+            android:id="@+id/destinationStatusText"
+            android:layout_gravity="left|bottom"
+            android:padding="5dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:minWidth="3000dp"
         android:paddingLeft="10dp"
@@ -137,5 +151,6 @@
             android:max="100"
             android:visibility="invisible"
             android:layout_gravity="bottom" />
+
     </FrameLayout>
 </RelativeLayout>

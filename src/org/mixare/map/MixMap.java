@@ -27,6 +27,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -65,8 +66,6 @@ public class MixMap extends MixMenu {
     List<LatLong> routeResult = new ArrayList<>();
     Polyline polyline;
     List<LatLong> coordinateList;
-    Double latitude;
-    Double longitute;
     LatLong target;
 
     // the search keyword
@@ -81,14 +80,9 @@ public class MixMap extends MixMenu {
         super.onCreate(savedInstanceState);
 
 
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-
-        }
-        else {
-            latitude = extras.getDouble("lat");
-            longitute = extras.getDouble("long");
-            target = new LatLong(latitude, longitute);
+        Location curDestination = getMixViewData().getCurDestination();
+        if (curDestination != null) {
+            target = new LatLong(curDestination.getLatitude(), curDestination.getLongitude());
         }
 
         AndroidGraphicFactory.createInstance(this.getApplication());

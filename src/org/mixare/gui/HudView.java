@@ -8,9 +8,7 @@ import android.graphics.Paint;
 import android.location.Location;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -26,13 +24,15 @@ import org.mixare.lib.gui.PaintScreen;
 
 
 public class HudView extends RelativeLayout {
-    private TextView positionStatusText; // the textView on the HUD to show information about gpsPosition
-    private TextView dataSourcesStatusText; // the textView on the HUD to show information about dataSources
-    private TextView sensorsStatusText; // the textView on the HUD to show information about sensors
+    private TextView positionStatusText; // the TextView on the HUD to show information about gpsPosition
+    private TextView dataSourcesStatusText; // the TextView on the HUD to show information about dataSources
+    private TextView sensorsStatusText; // the TextView on the HUD to show information about sensors
+    private TextView destinationStatusText; // the TextView on the HUD to show information about the currently selected destination to navigate to
 
     private ProgressBar positionStatusProgress;
     private ProgressBar dataSourcesStatusProgress;
     private ProgressBar sensorsStatusProgress;
+
     private ImageView positionStatusIcon;
     private ImageView dataSourcesStatusIcon;
     private ImageView sensorsStatusIcon;
@@ -42,6 +42,7 @@ public class HudView extends RelativeLayout {
     private PaintScreen radarPaintScreen;
 
     Paint rangeBarLabelPaint = new Paint();
+
 
 
     public HudView(Context context){
@@ -105,6 +106,7 @@ public class HudView extends RelativeLayout {
         positionStatusIcon =(ImageView) this.findViewById(R.id.positionStatusIcon);
         dataSourcesStatusIcon =(ImageView) this.findViewById(R.id.dataSourcesStatusIcon);
         sensorsStatusIcon =(ImageView) this.findViewById(R.id.sensorsStatusIcon);
+        destinationStatusText = (TextView) this.findViewById(R.id.destinationStatusText);
         initRangeBar();
     }
 
@@ -135,10 +137,14 @@ public class HudView extends RelativeLayout {
         }
     }
 
+    private String formatLocation(Location location){
+        CharSequence relativeTime =  DateUtils.getRelativeTimeSpanString(location.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
+        return getResources().getString(R.string.positionStatusText,location.getProvider(),location.getAccuracy(),relativeTime,location.getLatitude(),location.getLongitude(),location.getAltitude());
+    }
+
     public void updatePositionStatus(Location curFix){
-        CharSequence relativeTime =  DateUtils.getRelativeTimeSpanString(curFix.getTime(), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
         if(positionStatusText !=null) {
-            positionStatusText.setText(getResources().getString(R.string.positionStatusText,curFix.getProvider(),curFix.getAccuracy(),relativeTime,curFix.getLatitude(),curFix.getLongitude(),curFix.getAltitude()));
+            positionStatusText.setText(formatLocation(curFix));
         }
     }
 
@@ -228,5 +234,11 @@ public class HudView extends RelativeLayout {
             MixContext.getInstance().getActualMixViewActivity().doError(ex, MixViewActivity.GENERAL_ERROR);
         }
         super.dispatchDraw(canvas);
+    }
+
+    public void setDestinationStatus(Location destination) {
+        if(destination!=null && destinationStatusText !=null) {
+            destinationStatusText.setText(formatLocation(destination));
+        }
     }
 }
