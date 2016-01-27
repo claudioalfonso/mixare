@@ -32,20 +32,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -55,7 +47,7 @@ public class MixListView extends SherlockActivity {
 	private static final int MENU_MAPVIEW_ID = 0;
 	private static final int MENU_SEARCH_ID = 1;
 	private Context ctx;
-	private SectionAdapter sectionAdapter;
+	private SectionedListAdapter sectionedListAdapter;
 	private ListView listView;
 	private MarkerRenderer markerRenderer;
 	private EditText editText;
@@ -87,9 +79,9 @@ public class MixListView extends SherlockActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		setContentView(R.layout.list);
-		sectionAdapter = new SectionAdapter(this, 0, list);
+		sectionedListAdapter = new SectionedListAdapter(this, this, 0, list);
 		listView = (ListView) findViewById(R.id.section_list_view);
-		listView.setAdapter(sectionAdapter);
+		listView.setAdapter(sectionedListAdapter);
 	}
 
 	@Override
@@ -133,7 +125,7 @@ public class MixListView extends SherlockActivity {
 			@Override
 			public void afterTextChanged(Editable edit) {
 				// Recreate the list
-				sectionAdapter.changeList(createList(edit.toString()));
+				sectionedListAdapter.changeList(createList(edit.toString()));
 			}
 		});
 
@@ -298,7 +290,7 @@ public class MixListView extends SherlockActivity {
 	 * @author KlemensE
 	 * 
 	 */
-	private class MarkerInfo {
+	public class MarkerInfo {
 		private String title;
 		private String url;
 		private Double dist;
@@ -361,7 +353,7 @@ public class MixListView extends SherlockActivity {
 	 * 
 	 * @author KlemensE
 	 */
-	private class EntryItem implements Item {
+	public class EntryItem implements Item {
 		MarkerInfo markerInfo;
 
 		private EntryItem(MarkerInfo info) {
@@ -378,188 +370,4 @@ public class MixListView extends SherlockActivity {
 		}
 	}
 
-	/**
-	 * This class extends the ArrayAdapter to be able to create our own View and
-	 * OnClickListeners
-	 * 
-	 * @author KlemensE
-	 */
-	private class SectionAdapter extends ArrayAdapter<Item> {
-
-		private List<Item> items;
-
-		public SectionAdapter(Context context, int textViewResourceId,
-				List<Item> objects) {
-			super(context, textViewResourceId, objects);
-			this.items = objects;
-		}
-
-		public void changeList(List<Item> items) {
-			this.items = items;
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public Item getItem(int position) {
-			if (position > items.size()) {
-				return null;
-			}
-			return items.get(position);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			Item i = getItem(position);
-			Log.d("test", "getView: " + position);
-			if (i != null) {
-				if (i.isSection()) {
-					SectionViewHolder sectionViewHolder;
-					Object tag = null;
-					try {
-						tag = convertView.getTag(R.string.list_view_section);
-					} catch (Exception e) {
-					}
-
-//					Log.d("test", "getView: " + position + " tag: " + tag + " section");
-					if (tag == null) {
-						convertView = getLayoutInflater().inflate(
-								R.layout.list_item_section, null);
-
-						sectionViewHolder = new SectionViewHolder();
-						sectionViewHolder.title = (TextView) convertView
-								.findViewById(R.id.section_title);
-						sectionViewHolder.markerCount = (TextView) convertView
-								.findViewById(R.id.section_marker_count);
-
-						convertView.setTag(R.string.list_view_section,
-								sectionViewHolder);
-					} else {
-						sectionViewHolder = (SectionViewHolder) tag;
-					}
-
-					convertView.setOnClickListener(null);
-					convertView.setOnLongClickListener(null);
-					convertView.setLongClickable(false);
-
-					sectionViewHolder.title.setText(((SectionItem) i)
-							.getTitle());
-					sectionViewHolder.markerCount.setText(getString(R.string.list_view_marker_in_section) + ((SectionItem) i)
-							.getMarkerCount());
-				} else {
-					ViewHolder holder;
-					Object tag = null;
-					try {
-						tag = convertView.getTag(R.string.list_view_entry);
-					} catch (Exception e) {
-					}
-//					Log.d("test", "getView: " + position + " tag: " + tag + " entry");
-					if (tag == null) {
-						convertView = getLayoutInflater().inflate(
-								R.layout.marker_list, null);
-
-						holder = new ViewHolder();
-
-						holder.sideBar = convertView
-								.findViewById(R.id.side_bar);
-						holder.title = (TextView) convertView
-								.findViewById(R.id.marker_list_title);
-						holder.desc = (TextView) convertView
-								.findViewById(R.id.marker_list_summary);
-						holder.centerMap = (ImageButton) convertView
-								.findViewById(R.id.marker_list_mapbutton);
-
-						convertView.setTag(R.string.list_view_entry, holder);
-					} else {
-						holder = (ViewHolder) tag;
-					}
-
-					EntryItem item = (EntryItem) i;
-
-					MarkerInfo markerInfo = item.getMarkerInfo();
-					SpannableString spannableString = new SpannableString(
-							markerInfo.getTitle());
-
-					if (markerInfo.getUrl() != null) {
-						spannableString.setSpan(new UnderlineSpan(), 0,
-								spannableString.length(), 0);
-						convertView.setOnClickListener(new OnClickListenerWebView(position));
-					} else {
-						convertView.setOnClickListener(null);
-					}
-
-					holder.sideBar.setBackgroundColor(markerInfo.getColor());
-					holder.centerMap.setTag(position);
-					holder.centerMap
-							.setOnClickListener(onClickListenerCenterMap);
-					holder.title.setText(spannableString);
-					holder.desc.setText(Math.round(markerInfo.getDist()) + "m");
-				}
-			}
-
-			return convertView;
-		}
-		
-		private class SectionViewHolder {
-			TextView title;
-			TextView markerCount;
-		}
-		
-		private class ViewHolder {
-			View sideBar;
-			TextView title;
-			TextView desc;
-			ImageButton centerMap;
-		}
-		
-		public int getCount() {
-			return items.size();
-		};
-
-		/**
-		 * Handles the click event of the centerMap Button, to center the marker
-		 * on the Map.
-		 */
-		OnClickListener onClickListenerCenterMap = new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MarkerInfo markerInfo = ((EntryItem) getItem((Integer) v
-						.getTag())).getMarkerInfo();
-
-				Intent startMap = new Intent(MixListView.this, MixMap.class);
-				startMap.putExtra("center", true);
-				startMap.putExtra("latitude", markerInfo.getLatitude());
-				startMap.putExtra("longitude", markerInfo.getLongitude());
-				startActivityForResult(startMap, 76);
-			}
-		};
-
-		/**
-		 * Handles the click on the list row to open the WebView
-		 */
-		private class OnClickListenerWebView implements OnClickListener {
-			private int position;
-			public OnClickListenerWebView (int position) {
-				this.position = position;
-			}
-			
-			@Override
-			public void onClick(View v) {
-				MarkerInfo markerInfo = ((EntryItem) getItem(position))
-						.getMarkerInfo();
-
-				String selectedURL = markerInfo.getUrl();
-				if (selectedURL != null) {
-					try {
-						if (selectedURL.startsWith("webpage")) {
-							String newUrl = MixUtils.parseAction(selectedURL);
-							markerRenderer.getContext().getWebContentManager()
-									.loadWebPage(newUrl, ctx);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		};
-	}
 }
