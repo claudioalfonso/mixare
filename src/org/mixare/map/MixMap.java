@@ -304,9 +304,7 @@ public class MixMap extends MixMenu {
         paint.setStrokeWidth(6);
         paint.setStyle(Style.STROKE);
 
-// instantiating the polyline object
         polyline = new Polyline(paint, AndroidGraphicFactory.INSTANCE);
-// set lat lng for the polyline
         coordinateList = polyline.getLatLongs();
 
         RoutePainter routePainter = new RoutePainter();

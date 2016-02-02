@@ -56,6 +56,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.text.method.Touch;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -95,9 +96,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 	private MixViewDataHolder mixViewData;
 
-	private GLSurfaceView mGLSurfaceView;
+	//private GLSurfaceView mGLSurfaceView;
 	private SensorManager mSensorManager;
-	private RotationVektorRenderer mRenderer;
+	//private RotationVektorRenderer mRenderer;
+	private TouchSurfaceView cubeView;
+	private CubeRenderer mRenderer;
+	private Sensor mOrienation;
+
 
 	/**
 	 * Main application Launcher.
@@ -116,7 +121,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			handleIntent(getIntent());
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			
+
 			getMixViewData().setSensorMgr((SensorManager) getSystemService(SENSOR_SERVICE));
 			
 			killOnError();
@@ -198,6 +203,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		super.onPause();
 		try {
 			cameraSurface.surfaceDestroyed(null);
+			mSensorManager.unregisterListener(this);
+
 			try {
 				getMixViewData().getSensorMgr().unregisterListener(this,
 						getMixViewData().getSensorGrav());
@@ -308,10 +315,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(mGLSurfaceView != null) {
-			mRenderer.start();
-			mGLSurfaceView.onResume();
+		if(cubeView != null) {
+			//mRenderer.start();
+			cubeView.onResume();
 		}
+		mSensorManager.registerListener(cubeView, mOrienation, SensorManager.SENSOR_DELAY_NORMAL);
+
 		try {
 			killOnError();
 			MixContext.setActualMixViewActivity(this);
@@ -596,11 +605,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	private void maintainRotationVektorDemo() {
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-		mRenderer = new RotationVektorRenderer (mSensorManager);
-		mGLSurfaceView = new GLSurfaceView(this);
+		mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
 
+		mRenderer = new CubeRenderer ();
+		cubeView = new TouchSurfaceView(this, mSensorManager);
+
+/*
 		mGLSurfaceView.requestFocus();
 		mGLSurfaceView.setFocusableInTouchMode(true);
 		mGLSurfaceView.setZOrderOnTop(true);
@@ -609,6 +620,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		mGLSurfaceView.setRenderer(mRenderer);
 		mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
 		mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+		*/
 
 	}
 	/**
@@ -852,11 +864,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert1.show();
 				break;
 			case R.string.menu_item_test_augmentedview:
-				if(!mGLSurfaceView.isAttachedToWindow()) {
-					cameraView.addView(mGLSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+				if(!cubeView.isAttachedToWindow()) {
+					cameraView.addView(cubeView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 				}
 				else {
-					cameraView.removeView(mGLSurfaceView);
+					cameraView.removeView(cubeView);
 				}
 				break;
 			/* test destination selection (from marker) */

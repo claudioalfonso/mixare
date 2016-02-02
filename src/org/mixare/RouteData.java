@@ -28,10 +28,10 @@ public class RouteData extends Connector {
     private String url= "https://cloud.locoslab.com/carta/route?origin=sch%C3%BCtzenbahn%2070,%20essen&destination=universit%C3%A4tsstra%C3%9Fe,%20essen&mode=walking";
     private Direction tmp = null;
 
-    public List<LatLong> init(LatLong target){
+    public List<LatLong> init(LatLong destination){
 
-        if (target!= null){
-            changeUrl(target);
+        if (destination!= null){
+            changeUrl(destination);
         }
 
         List<LatLong> latLongs = new ArrayList<>();
@@ -57,9 +57,9 @@ public class RouteData extends Connector {
     return latLongs;
     }
 
-    public String changeUrl(LatLong latLong){
-        Double latitude= latLong.latitude;
-        Double longitude= latLong.longitude;
+    public String changeUrl(LatLong destination){
+        Double latitude= destination.latitude;
+        Double longitude= destination.longitude;
         url="https://cloud.locoslab.com/carta/route?origin=sch%C3%BCtzenbahn%2070,%20essen&destination="+latitude+",%20+"+longitude+"&mode=walking";
         return url;
     }
