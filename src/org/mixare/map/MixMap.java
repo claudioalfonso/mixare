@@ -43,12 +43,13 @@ import org.mapsforge.map.layer.cache.TileCache;
 
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
+import org.mixare.AsyncResponse;
 import org.mixare.Config;
 import org.mapsforge.map.layer.overlay.Polyline;
 import org.mixare.MixMenu;
 import org.mixare.MixViewActivity;
 import org.mixare.R;
-import org.mixare.RouteData;
+import org.mixare.RouteDataAsyncTask;
 import org.mixare.lib.MixUtils;
 
 import org.mixare.lib.marker.Marker;
@@ -81,7 +82,6 @@ public class MixMap extends MixMenu {
 
         Location curLocation = getMixViewData().getCurLocation();
         Location curDestination = getMixViewData().getCurDestination();
-
         if (curDestination != null) {
             target = new LatLong(curDestination.getLatitude(), curDestination.getLongitude());
         }
@@ -308,29 +308,17 @@ public class MixMap extends MixMenu {
         polyline = new Polyline(paint, AndroidGraphicFactory.INSTANCE);
         coordinateList = polyline.getLatLongs();
 
-        RoutePainter routePainter = new RoutePainter();
-        routePainter.execute(routeStart, routeEnd);
 
-    }
-
-
-    private class RoutePainter extends AsyncTask<Location,Void,List<LatLong>> {
-        List<LatLong> latLong = new ArrayList<>();
-
-        @Override
-        protected List<LatLong> doInBackground(Location... params) {
-            RouteData rs = new RouteData();
-            latLong = rs.init(params[0],params[1]);
-            return latLong;
-        }
-
-        @Override
-        protected void onPostExecute(List<LatLong> latLongs) {
-            super.onPostExecute(latLongs);
-            for (LatLong latlong : latLongs) {
-                coordinateList.add(latlong);
+        RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
+            @Override
+            public void processFinish(List<LatLong> latLong) {
+                // coordinateList= latLong
+                for(LatLong lat : latLong) {
+                    coordinateList.add(lat);
+                }
+                mapView.getLayerManager().getLayers().add(polyline);
             }
-            mapView.getLayerManager().getLayers().add(polyline);
-        }
+
+        }).execute(target);
     }
 }
