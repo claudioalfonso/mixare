@@ -18,31 +18,14 @@
  */
 package org.mixare;
 
-import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
-
-
-import java.util.Date;
-import java.util.Random;
-
-import org.mixare.data.DataSourceList;
-import org.mixare.data.DataSourceStorage;
-import org.mixare.gui.HudView;
-import org.mixare.lib.gui.PaintScreen;
-import org.mixare.lib.render.Matrix;
-import org.mixare.map.MixMap;
-import org.mixare.mgr.HttpTools;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -51,12 +34,9 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.text.method.Touch;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -67,6 +47,19 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import org.mixare.data.DataSourceList;
+import org.mixare.data.DataSourceStorage;
+import org.mixare.gui.HudView;
+import org.mixare.lib.gui.PaintScreen;
+import org.mixare.lib.render.Matrix;
+import org.mixare.map.MixMap;
+import org.mixare.mgr.HttpTools;
+
+import java.util.Date;
+import java.util.Random;
+
+import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
 
 /**
@@ -865,8 +858,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				break;
 			case R.string.menu_item_test_augmentedview:
 
-				Location loc = MixContext.getInstance().getLocationFinder().getCurrentLocation();
-				Log.i("info1: ", "aktuelle Postition: " + loc.getLongitude() +", " +loc.getLatitude());
+				Location curLocation = MixViewDataHolder.getInstance().getCurLocation();
+				Log.d(Config.TAG, "info 1: aktuelle Postition: " + curLocation.getLongitude() + ", " + curLocation.getLatitude());
 
 				if(!cubeView.isAttachedToWindow()) {
 					cameraView.addView(cubeView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));

@@ -1,9 +1,9 @@
 package org.mixare;
 
+import android.location.Location;
 import android.os.AsyncTask;
 
 import org.mapsforge.core.model.LatLong;
-import org.mixare.RouteData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by MelanieW on 03.02.2016.
  */
-public class RouteDataAsyncTask extends AsyncTask<LatLong,Void,List<LatLong>> {
+public class RouteDataAsyncTask extends AsyncTask<Location,Void,List<LatLong>> {
 
     List<LatLong> coordinateList = new ArrayList<>();
     List<LatLong> latLong = new ArrayList<>();
@@ -23,9 +23,9 @@ public class RouteDataAsyncTask extends AsyncTask<LatLong,Void,List<LatLong>> {
         }
 
         @Override
-        protected List<LatLong> doInBackground(LatLong... params) {
+        protected List<LatLong> doInBackground(Location... params) {
             RouteData rs = new RouteData();
-            latLong = rs.init(params[0]);
+            latLong = rs.init(params[0],params[1]);
             return latLong;
         }
 

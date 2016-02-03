@@ -19,18 +19,14 @@
 package org.mixare.map;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.FrameLayout;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.mapsforge.core.graphics.Paint;
@@ -40,20 +36,18 @@ import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.cache.TileCache;
-
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
+import org.mapsforge.map.layer.overlay.Polyline;
 import org.mixare.AsyncResponse;
 import org.mixare.Config;
-import org.mapsforge.map.layer.overlay.Polyline;
 import org.mixare.MixMenu;
 import org.mixare.MixViewActivity;
+import org.mixare.MixViewDataHolder;
 import org.mixare.R;
 import org.mixare.RouteDataAsyncTask;
 import org.mixare.lib.MixUtils;
-
 import org.mixare.lib.marker.Marker;
-import org.mixare.mgr.location.LocationFinder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -286,8 +280,7 @@ public class MixMap extends MixMenu {
      * @return My current Location
      */
     private Location getOwnLocation() {
-        return MixViewActivity.getMarkerRendererStatically().getContext().getLocationFinder()
-                .getCurrentLocation();
+        return MixViewDataHolder.getInstance().getCurLocation();
     }
 
     /**
@@ -319,6 +312,6 @@ public class MixMap extends MixMenu {
                 mapView.getLayerManager().getLayers().add(polyline);
             }
 
-        }).execute(target);
+        }).execute(routeStart,routeEnd);
     }
 }
