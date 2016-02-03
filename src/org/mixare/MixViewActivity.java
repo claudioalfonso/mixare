@@ -864,6 +864,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert1.show();
 				break;
 			case R.string.menu_item_test_augmentedview:
+
+				Location loc = MixContext.getInstance().getLocationFinder().getCurrentLocation();
+				Log.i("info1: ", "aktuelle Postition: " + loc.getLongitude() +", " +loc.getLatitude());
+
 				if(!cubeView.isAttachedToWindow()) {
 					cameraView.addView(cubeView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 				}

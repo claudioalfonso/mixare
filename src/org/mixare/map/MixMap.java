@@ -19,18 +19,14 @@
 package org.mixare.map;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.FrameLayout;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.mapsforge.core.graphics.Paint;
@@ -43,22 +39,24 @@ import org.mapsforge.map.layer.cache.TileCache;
 
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
+import org.mixare.AsyncResponse;
 import org.mixare.Config;
 import org.mapsforge.map.layer.overlay.Polyline;
 import org.mixare.MixMenu;
 import org.mixare.MixViewActivity;
 import org.mixare.R;
-import org.mixare.RouteData;
+import org.mixare.RouteDataAsyncTask;
 import org.mixare.lib.MixUtils;
 
 import org.mixare.lib.marker.Marker;
-import org.mixare.mgr.location.LocationFinder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MixMap extends MixMenu {
-    public final static byte DEFAULT_ZOOM_LEVEL =12;
+public class MixMap extends MixMenu  {
+
+
+        public final static byte DEFAULT_ZOOM_LEVEL =12;
     private MapView mapView;
 	private TileCache tileCache;
     protected TileDownloadLayer downloadLayer;
@@ -307,29 +305,18 @@ public class MixMap extends MixMenu {
         polyline = new Polyline(paint, AndroidGraphicFactory.INSTANCE);
         coordinateList = polyline.getLatLongs();
 
-        RoutePainter routePainter = new RoutePainter();
-        routePainter.execute(target);
 
-    }
-
-
-    private class RoutePainter extends AsyncTask<LatLong,Void,List<LatLong>> {
-        List<LatLong> latLong = new ArrayList<>();
-
-        @Override
-        protected List<LatLong> doInBackground(LatLong... params) {
-            RouteData rs = new RouteData();
-            latLong = rs.init(params[0]);
-            return latLong;
-        }
-
-        @Override
-        protected void onPostExecute(List<LatLong> latLongs) {
-            super.onPostExecute(latLongs);
-            for (LatLong latlong : latLongs) {
-                coordinateList.add(latlong);
+        RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
+            @Override
+            public void processFinish(List<LatLong> latLong) {
+                // coordinateList= latLong
+                for(LatLong lat : latLong) {
+                    coordinateList.add(lat);
+                }
+                mapView.getLayerManager().getLayers().add(polyline);
             }
-            mapView.getLayerManager().getLayers().add(polyline);
-        }
+
+        }).execute(target);
     }
+
 }
