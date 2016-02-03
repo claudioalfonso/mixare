@@ -79,8 +79,9 @@ public class MixMap extends MixMenu {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        Location curLocation = getMixViewData().getCurLocation();
         Location curDestination = getMixViewData().getCurDestination();
+
         if (curDestination != null) {
             target = new LatLong(curDestination.getLatitude(), curDestination.getLongitude());
         }
@@ -127,7 +128,7 @@ public class MixMap extends MixMenu {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();
         }
-        paintRoute(target);
+        paintRoute(curLocation,curDestination);
     }
 
 
@@ -297,7 +298,7 @@ public class MixMap extends MixMenu {
         setCenter(location.getLatitude(), location.getLongitude());
     }
 
-    public void paintRoute(LatLong target) {
+    public void paintRoute(Location routeStart, Location routeEnd) {
 
         Paint paint = AndroidGraphicFactory.INSTANCE.createPaint();
         paint.setColor(Color.BLUE);
@@ -308,18 +309,18 @@ public class MixMap extends MixMenu {
         coordinateList = polyline.getLatLongs();
 
         RoutePainter routePainter = new RoutePainter();
-        routePainter.execute(target);
+        routePainter.execute(routeStart, routeEnd);
 
     }
 
 
-    private class RoutePainter extends AsyncTask<LatLong,Void,List<LatLong>> {
+    private class RoutePainter extends AsyncTask<Location,Void,List<LatLong>> {
         List<LatLong> latLong = new ArrayList<>();
 
         @Override
-        protected List<LatLong> doInBackground(LatLong... params) {
+        protected List<LatLong> doInBackground(Location... params) {
             RouteData rs = new RouteData();
-            latLong = rs.init(params[0]);
+            latLong = rs.init(params[0],params[1]);
             return latLong;
         }
 

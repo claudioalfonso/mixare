@@ -46,8 +46,9 @@ public class MixViewDataHolder {
 	private TextView searchNotificationTxt;
     private static MixViewDataHolder instance;
     private Location curDestination;
+	private Location curLocation;
 
-    private MixViewDataHolder() {
+	private MixViewDataHolder() {
 		this.RTmp = new float[9];
 		this.Rot = new float[9];
 		this.I = new float[9];
@@ -87,6 +88,14 @@ public class MixViewDataHolder {
     public Location getCurDestination() {
         return curDestination;
     }
+
+	public Location getCurLocation() {
+		return curLocation;
+	}
+
+	public void setCurLocation(Location curLocation) {
+		this.curLocation = curLocation;
+	}
 
     public void setCurDestination(Location curDestination) {
         this.curDestination = curDestination;
