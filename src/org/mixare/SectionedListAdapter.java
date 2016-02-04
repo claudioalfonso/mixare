@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -58,12 +59,14 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
             if (i.isSection()) {
                 SectionViewHolder sectionViewHolder;
                 Object tag = null;
-                try {
-                    tag = convertView.getTag(R.string.list_view_section);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
 
+                if(convertView!=null) {
+                    try {
+                        tag = convertView.getTag(R.string.list_view_section);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
 //					Log.d(Config.TAG, "getView: " + position + " tag: " + tag + " section");
                 if (tag == null) {
                     convertView = parentActivity.getLayoutInflater().inflate(R.layout.list_item_section, parent, false);
@@ -88,10 +91,12 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
             } else {
                 ViewHolder holder;
                 Object tag = null;
-                try {
-                    tag = convertView.getTag(R.string.list_view_entry);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if(convertView!=null) {
+                    try {
+                        tag = convertView.getTag(R.string.list_view_entry);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
 //					Log.d("test", "getView: " + position + " tag: " + tag + " entry");
                 if (tag == null) {
@@ -204,18 +209,7 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
         @Override
         public void onClick(View v) {
             Marker marker = ((MarkerListFragment.EntryItem) getItem(position)).getMarker();
-
-            String selectedURL = marker.getURL();
-            if (selectedURL != null) {
-                try {
-                    if (selectedURL.startsWith(MixUtils.URL_PREFIX_WEBPAGE)) {
-                        String newUrl = MixUtils.parseAction(selectedURL);
-						MixContext.getInstance().getWebContentManager().loadWebPage(newUrl, MixContext.getInstance());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            marker.doClick(0,0,MixContext.getInstance(),MixViewActivity.getMarkerRendererStatically().getState());
         }
     }
 }
