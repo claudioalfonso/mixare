@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.mixare.lib.MixUtils;
+import org.mixare.lib.marker.Marker;
 import org.mixare.map.MixMap;
 import org.mixare.sectionedlist.Item;
 import org.mixare.sectionedlist.SectionItem;
@@ -112,23 +113,23 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
 
                 MarkerListFragment.EntryItem item = (MarkerListFragment.EntryItem) i;
 
-                MarkerListFragment.MarkerInfo markerInfo = item.getMarkerInfo();
-                SpannableString spannableString = new SpannableString(markerInfo.getTitle());
+                Marker marker = item.getMarker();
+                SpannableString spannableString = new SpannableString(marker.getTitle());
 
-                if (markerInfo.getUrl() != null) {
+                if (marker.getURL() != null) {
                     spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), 0);
                     convertView.setOnClickListener(new OnClickListenerWebView(position));
                 } else {
                     convertView.setOnClickListener(null);
                 }
 
-                holder.sideBar.setBackgroundColor(markerInfo.getColor());
+                holder.sideBar.setBackgroundColor(marker.getColor());
                 holder.mapButton.setTag(position);
                 holder.mapButton.setOnClickListener(onClickListenerCenterMap);
                 holder.directionsButton.setTag(position);
                 holder.directionsButton.setOnClickListener(onClickListenerDirections);
                 holder.title.setText(spannableString);
-                holder.desc.setText(getContext().getString(R.string.distance_format, markerInfo.getDist()));
+                holder.desc.setText(getContext().getString(R.string.distance_format, marker.getDistance()));
             }
         }
 
@@ -160,12 +161,12 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
     View.OnClickListener onClickListenerCenterMap = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            MarkerListFragment.MarkerInfo markerInfo = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarkerInfo();
+            Marker marker = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
 
             Intent startMap = new Intent(parentActivity, MixMap.class);
             startMap.putExtra("center", true);
-            startMap.putExtra("latitude", markerInfo.getLatitude());
-            startMap.putExtra("longitude", markerInfo.getLongitude());
+            startMap.putExtra("latitude", marker.getLatitude());
+            startMap.putExtra("longitude", marker.getLongitude());
             parentActivity.startActivityForResult(startMap, 76);
         }
     };
@@ -177,16 +178,16 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
     View.OnClickListener onClickListenerDirections = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            MarkerListFragment.MarkerInfo markerInfo = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarkerInfo();
+            Marker marker = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
             Location destination=Config.getManualFix();
-            destination.setLatitude(markerInfo.getLatitude());
-            destination.setLongitude(markerInfo.getLongitude());
+            destination.setLatitude(marker.getLatitude());
+            destination.setLongitude(marker.getLongitude());
 
             MixViewDataHolder.getInstance().setCurDestination(destination);
             Intent startMap = new Intent(parentActivity, MixMap.class);
             startMap.putExtra("center", true);
-            startMap.putExtra("latitude", markerInfo.getLatitude());
-            startMap.putExtra("longitude", markerInfo.getLongitude());
+            startMap.putExtra("latitude", marker.getLatitude());
+            startMap.putExtra("longitude", marker.getLongitude());
             parentActivity.startActivityForResult(startMap, 76);
         }
     };
@@ -202,9 +203,9 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
 
         @Override
         public void onClick(View v) {
-            MarkerListFragment.MarkerInfo markerInfo = ((MarkerListFragment.EntryItem) getItem(position)).getMarkerInfo();
+            Marker marker = ((MarkerListFragment.EntryItem) getItem(position)).getMarker();
 
-            String selectedURL = markerInfo.getUrl();
+            String selectedURL = marker.getURL();
             if (selectedURL != null) {
                 try {
                     if (selectedURL.startsWith(MixUtils.URL_PREFIX_WEBPAGE)) {

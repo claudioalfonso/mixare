@@ -22,7 +22,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,11 +118,6 @@ public class MarkerListFragment extends DialogFragment {
 				}
 			}
 
-			// Create MarkerInfo and the section string
-			MarkerInfo markerInfo = new MarkerInfo(marker.getTitle(),
-					marker.getURL(), marker.getDistance(),
-					marker.getLatitude(), marker.getLongitude(),
-					marker.getColor());
 			String markerSection = getSection(marker.getDistance());
 
 			// If the lastSection is not equal to this Section create a new
@@ -142,7 +136,7 @@ public class MarkerListFragment extends DialogFragment {
 			}
 
 			// Add the EntryItem to the list
-			EntryItem entry = new EntryItem(markerInfo);
+			EntryItem entry = new EntryItem(marker);
 			list.add(entry);
 			markerCount++;
 		}
@@ -203,83 +197,20 @@ public class MarkerListFragment extends DialogFragment {
 	/* private classes */
 
 	/**
-	 * Save some memory. We are only interested in these 6 things.
-	 * 
-	 * @author KlemensE
-	 * 
-	 */
-	public class MarkerInfo {
-		private String title;
-		private String url;
-		private Double dist;
-		private Double latitude;
-		private Double longitude;
-		private int color;
-
-		/**
-		 * Constructor
-		 * 
-		 * @param title
-		 *            The menuItemTitles of the marker
-		 * @param url
-		 *            The URL where the marker points to
-		 * @param dist
-		 *            The distance to my position
-		 * @param latitude
-		 *            The latitude of the marker
-		 * @param longitude
-		 *            The longitude of the marker
-		 */
-		public MarkerInfo(String title, String url, Double dist,
-				Double latitude, Double longitude, int color) {
-			this.title = title;
-			this.url = url;
-			this.dist = dist;
-			this.latitude = latitude;
-			this.longitude = longitude;
-			this.color = color;
-		}
-
-		public String getTitle() {
-			return title;
-		}
-
-		public String getUrl() {
-			return url;
-		}
-
-		public Double getDist() {
-			return dist;
-		}
-
-		public Double getLatitude() {
-			return latitude;
-		}
-
-		public Double getLongitude() {
-			return longitude;
-		}
-
-		public int getColor() {
-			return this.color;
-		}
-	}
-
-	/**
 	 * This class is an implementation of the Item class which tells us whether
 	 * to draw a Section or an Entry
 	 * 
 	 * @author KlemensE
 	 */
 	public class EntryItem implements Item {
-		MarkerInfo markerInfo;
+		Marker marker;
 
-		EntryItem(MarkerInfo info) {
-			this.markerInfo = info;
+		EntryItem(Marker info) {
+			this.marker = info;
 		}
 
-		public MarkerInfo getMarkerInfo() {
-			return markerInfo;
+		public Marker getMarker() {
+			return marker;
 		}
 
 		@Override
