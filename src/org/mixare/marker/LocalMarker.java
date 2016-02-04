@@ -23,6 +23,8 @@ import java.net.URLDecoder;
 import java.text.DecimalFormat;
 
 import org.mixare.Config;
+import org.mixare.MixContext;
+import org.mixare.MixState;
 import org.mixare.data.convert.Elevation;
 import org.mixare.lib.MixContextInterface;
 import org.mixare.lib.MixStateInterface;
@@ -94,7 +96,7 @@ public abstract class LocalMarker implements Marker {
 		this.geoLocation = (new PhysicalPlace(latitude,longitude,altitude));
 		if (link != null && link.length() > 0) {
 			try {
-				this.URL = ("webpage:" + URLDecoder.decode(link, "UTF-8"));
+				this.URL = (MixUtils.URL_PREFIX_WEBPAGE + MixUtils.URL_PREFIX_SEPARATOR + URLDecoder.decode(link, MixUtils.CHARSET_NAME_UTF_8));
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -246,17 +248,34 @@ public abstract class LocalMarker implements Marker {
 			paintScreen.setStrokeWidth(1f);
 			paintScreen.setFill(true);
 			paintScreen.paintObj(txtLab, signMarker.x - txtLab.getWidth()
-					/ 2, signMarker.y + maxHeight, currentAngle + 90, 1);
+                    / 2, signMarker.y + maxHeight, currentAngle + 90, 1);
 		}
 
 	}
 
-	public boolean fClick(float x, float y, MixContextInterface ctx, MixStateInterface state) {
+	public boolean doClick(float x, float y, MixContextInterface ctxI, MixStateInterface stateI)  {
 		boolean evtHandled = false;
 
 		if (isClickValid(x, y)) {
-			if (getURL() != null)
-				evtHandled = state.handleEvent(ctx, getURL());
+			if (getURL() != null) {
+                MixContext ctx = MixContext.getInstance();
+                if(! (stateI instanceof MixState)){
+                    return false;
+                }
+                MixState state = (MixState) stateI;
+                String onPress=getURL();
+
+                if (onPress != null && onPress.startsWith(MixUtils.URL_PREFIX_WEBPAGE)) {
+                    String webpage = MixUtils.parseAction(onPress);
+                    try {
+                        ctx.getWebContentManager().loadWebPage(webpage, ctx.getActualMixViewActivity());
+                        state.setDetailsView(true);
+                        evtHandled=true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+			}
 		}
 		return evtHandled;
 	}

@@ -207,7 +207,7 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
             String selectedURL = markerInfo.getUrl();
             if (selectedURL != null) {
                 try {
-                    if (selectedURL.startsWith("webpage")) {
+                    if (selectedURL.startsWith(MixUtils.URL_PREFIX_WEBPAGE)) {
                         String newUrl = MixUtils.parseAction(selectedURL);
 						MixContext.getInstance().getWebContentManager().loadWebPage(newUrl, MixContext.getInstance());
                     }

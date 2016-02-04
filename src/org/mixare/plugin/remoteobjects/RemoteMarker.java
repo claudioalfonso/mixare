@@ -267,7 +267,7 @@ public class RemoteMarker implements Marker{
 	}
 
 	@Override
-	public boolean fClick(float x, float y, MixContextInterface ctx, MixStateInterface state) {
+	public boolean doClick(float x, float y, MixContextInterface ctx, MixStateInterface state) {
 		ClickHandler clickHandler;
 		try {
 			//sending optional information.

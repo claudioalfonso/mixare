@@ -19,14 +19,11 @@
 
 package org.mixare.marker;
 
-import java.text.DecimalFormat;
-
 import org.mixare.lib.MixContextInterface;
 import org.mixare.lib.MixStateInterface;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.gui.TextObj;
-import org.mixare.marker.LocalMarker;
 
 import android.graphics.Color;
 import android.graphics.Path;
@@ -171,8 +168,8 @@ public class POIMarker extends LocalMarker {
 	}
 
     @Override
-	public boolean fClick(float x, float y, MixContextInterface ctx, MixStateInterface state) {
-		return super.fClick(x, y, ctx, state);
+	public boolean doClick(float x, float y, MixContextInterface ctx, MixStateInterface state) {
+		return super.doClick(x, y, ctx, state);
 	}
 
 }

@@ -35,24 +35,15 @@ public class MixState implements MixStateInterface{
 	public static int DONE = 3; 
 
 	int nextLStatus = MixState.NOT_STARTED;
-	String downloadId;
 
 	private float curBearing;
 	private float curPitch;
 
 	private boolean detailsView;
 
-	public boolean handleEvent(MixContextInterface ctx, String onPress) {
-		if (onPress != null && onPress.startsWith("webpage")) {
-			try {
-				String webpage = MixUtils.parseAction(onPress);
-				this.detailsView = true;
-				ctx.loadMixViewWebPage(webpage);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} 
-		return true;
+    @Override
+	public boolean handleEvent(MixContextInterface ctxI, String onPress) {
+		return false;
 	}
 
 	public float getCurBearing() {
@@ -81,6 +72,7 @@ public class MixState implements MixStateInterface{
 		rotationM.transpose();
 		looking.set(0, 1, 0);
 		looking.prod(rotationM);
-		this.curPitch = -MixUtils.getAngle(0, 0, looking.y, looking.z);
+        //noinspection SuspiciousNameCombination
+        this.curPitch = -MixUtils.getAngle(0, 0, looking.y, looking.z);
 	}
 }

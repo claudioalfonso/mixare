@@ -18,8 +18,10 @@
  */
 package org.mixare.lib.marker;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+import org.mixare.lib.MixUtils;
 import org.mixare.lib.gui.Label;
 import org.mixare.lib.gui.TextObj;
 import org.mixare.lib.marker.draw.ClickHandler;
@@ -69,7 +71,11 @@ public abstract class PluginMarker{
 		this.title = title;
 		this.mGeoLoc = new PhysicalPlace(latitude,longitude,altitude);
 		if (link != null && link.length() > 0) {
-			URL = "webpage:" + URLDecoder.decode(link);
+			try {
+				URL = MixUtils.URL_PREFIX_WEBPAGE + MixUtils.URL_PREFIX_SEPARATOR + URLDecoder.decode(link,MixUtils.CHARSET_NAME_UTF_8);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			this.underline = true;
 		}
 		this.color = color;

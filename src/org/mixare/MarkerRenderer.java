@@ -374,7 +374,7 @@ public class MarkerRenderer {
 			for (int i = 0; i < dataHandler.getMarkerCount() && !evtHandled; i++) {
 				Marker pm = dataHandler.getMarker(i);
 
-				evtHandled = pm.fClick(evt.x, evt.y, mixContext, state);
+				evtHandled = pm.doClick(evt.x, evt.y, mixContext, state);
 			}
 		}
 		return evtHandled;

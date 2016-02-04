@@ -96,27 +96,21 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		}
 	}
 
-	/**
-	 * Shows a webpage with the given url when clicked on a marker.
-	 */
+	@Deprecated
 	public void loadMixViewWebPage(String url) throws Exception {
-		// TODO: CHECK INTERFACE METHOD
-		getWebContentManager().loadWebPage(url, getActualMixViewActivity());
+
 	}
 
-	@Override
 	public void updatePositionStatus(boolean working, boolean problem, String statusText) {
 
 	}
 
-	@Override
 	public void updateDataSourceStatus(boolean working, boolean problem, String statusText) {
 		if(Config.useHUD) {
 			getActualMixViewActivity().hudView.setDataSourcesStatus(working, problem, statusText);
 		}
 	}
 
-	@Override
 	public void updateSensorsStatus(boolean working, boolean problem, String statusText) {
 
 	}
