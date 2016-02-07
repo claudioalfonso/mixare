@@ -305,7 +305,6 @@ public class MixMap extends MixMenu {
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
             @Override
             public void processFinish(List<LatLong> latLong) {
-                // coordinateList= latLong
                 for(LatLong lat : latLong) {
                     coordinateList.add(lat);
                 }

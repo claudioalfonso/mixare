@@ -18,6 +18,7 @@
  */
 package org.mixare;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -25,6 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
@@ -37,6 +39,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -87,6 +91,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	public static final int GENERAL_ERROR = 2;
 	protected static final int NO_NETWORK_ERROR = 4;
 
+	private static final int PERMISSIONS_REQUEST_CAMERA = 1;
+	private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 2;
+	private static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
+
+
+
 	private MixViewDataHolder mixViewData;
 
 	//private GLSurfaceView mGLSurfaceView;
@@ -113,15 +123,40 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		try {
 			handleIntent(getIntent());
 
+
+
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 			getMixViewData().setSensorMgr((SensorManager) getSystemService(SENSOR_SERVICE));
-			
+
+
 			killOnError();
 			//requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 			if(getSupportActionBar() != null){
 				getSupportActionBar().hide();
+			}
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+				if (ContextCompat.checkSelfPermission(this,
+						Manifest.permission.CAMERA)
+						!= PackageManager.PERMISSION_GRANTED) {
+
+					ActivityCompat.requestPermissions(this,
+							new String[]{Manifest.permission.CAMERA},
+							PERMISSIONS_REQUEST_CAMERA);
+				}
+				if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+					ActivityCompat.requestPermissions(this,
+							new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+							PERMISSIONS_ACCESS_FINE_LOCATION);
+				}
+				if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+					ActivityCompat.requestPermissions(this,
+							new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE},
+							PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+				}
 			}
 
 			maintainViews();
@@ -171,6 +206,27 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			}
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+										   String permissions[], int[] grantResults) {
+
+
+		switch (requestCode) {
+			case PERMISSIONS_REQUEST_CAMERA: {
+				// If request is cancelled, the result arrays are empty.
+				if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					maintainViews();
+
+				} else {
+
+				}
+				return;
+			}
+
 		}
 	}
 
@@ -548,16 +604,18 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 		cameraView = (FrameLayout) findViewById(R.id.content_frame);
 
-		if (cameraSurface == null) {
-			cameraSurface = new CameraSurface(this);
-			cameraView.addView(cameraSurface);
-		} else {
-			cameraView.removeView(cameraSurface);
-			cameraView.addView(cameraSurface);
 
+
+			if (cameraSurface == null) {
+				cameraSurface = new CameraSurface(this);
+				cameraView.addView(cameraSurface);
+			} else {
+				cameraView.removeView(cameraSurface);
+				cameraView.addView(cameraSurface);
+
+			}
+			//setContentView(cameraSurface);
 		}
-		//setContentView(cameraSurface);
-	}
 
 	/**
 	 * Checks augmentedView, if it does not exist, it creates one.
