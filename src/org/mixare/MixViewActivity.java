@@ -824,7 +824,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			case R.string.menu_item_datasources:
 				if (!getMarkerRenderer().getIsLauncherStarted()) {
 					Intent intent = new Intent(MixViewActivity.this, DataSourceList.class);
-					startActivityForResult(intent, 40);
+					startActivityForResult(intent, Config.INTENT_REQUEST_CODE_DATASOURCES);
 				} else {
 					markerRenderer.getContext().getNotificationManager()
 							.addNotification(getString(R.string.no_website_available));
@@ -835,7 +835,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				if (!getMarkerRenderer().getIsLauncherStarted()) {
 					Intent intent = new Intent(MixViewActivity.this,
 							PluginListActivity.class);
-					startActivityForResult(intent, 35);
+					startActivityForResult(intent, Config.INTENT_REQUEST_CODE_PLUGINS);
 				} else {
 					markerRenderer.getContext().getNotificationManager()
 							.addNotification(getString(R.string.no_website_available));
@@ -850,7 +850,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
 					Intent intent1 = new Intent(MixViewActivity.this, MarkerListActivity.class);
 					intent1.setAction(Intent.ACTION_VIEW);
-					startActivityForResult(intent1, 42);
+					startActivityForResult(intent1, Config.INTENT_REQUEST_CODE_MARKERLIST);
 				}
 			/* if the list is empty */
 				else {
@@ -861,7 +861,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		/* Map View */
 			case R.string.menu_item_map:
 				Intent intent2 = new Intent(MixViewActivity.this, MixMap.class);
-				startActivityForResult(intent2, 20);
+				startActivityForResult(intent2, Config.INTENT_REQUEST_CODE_MAP);
 				break;
 		/* range level */
 			case R.string.menu_item_range:

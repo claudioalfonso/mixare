@@ -130,24 +130,24 @@ public class MixMenu extends SherlockActivity {
 		    /* Data sources */
             case R.string.menu_item_datasources:
                 Intent intent = new Intent(MixMenu.this, DataSourceList.class);
-                startActivityForResult(intent, 40);
+                startActivityForResult(intent, Config.INTENT_REQUEST_CODE_DATASOURCES);
                 break;
 			/* Plugin View */
             case R.string.menu_item_plugins:
                 Intent intent2 = new Intent(MixMenu.this, PluginListActivity.class);
-                startActivityForResult(intent2, 35);
+                startActivityForResult(intent2, Config.INTENT_REQUEST_CODE_PLUGINS);
                 break;
 		    /* Marker List View */
             case R.string.menu_item_route: //fall-through intended
             case R.string.menu_item_list:
                 Intent intent3 = new Intent(MixMenu.this, MarkerListActivity.class);
                 intent3.setAction(Intent.ACTION_VIEW);
-                startActivityForResult(intent3, 42);
+                startActivityForResult(intent3, Config.INTENT_REQUEST_CODE_MARKERLIST);
                 break;
 		    /* Map View */
             case R.string.menu_item_map:
                 Intent intent4 = new Intent(MixMenu.this, MixMap.class);
-                startActivityForResult(intent4, 20);
+                startActivityForResult(intent4, Config.INTENT_REQUEST_CODE_MAP);
                 break;
 		    /* Search */
             case R.string.menu_item_search:

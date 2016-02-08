@@ -13,6 +13,11 @@ public class Config {
     public final static int DEFAULT_FIX_HEIGHT =300;
     public final static String DEFAULT_FIX_NAME ="defaultFix";
     public static final String MANUAL_FIX_NAME = "manualSet";
+    public static final int INTENT_REQUEST_CODE_CENTERMAP = 76;
+    public static final int INTENT_REQUEST_CODE_DATASOURCES = 40;
+    public static final int INTENT_REQUEST_CODE_PLUGINS = 35;
+    public static final int INTENT_REQUEST_CODE_MARKERLIST = 42;
+    public static final int INTENT_REQUEST_CODE_MAP = 20;
     public static boolean drawTextBlock = true;
 
     //currently only for test purposes
