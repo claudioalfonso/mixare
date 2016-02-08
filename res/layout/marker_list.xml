@@ -54,15 +54,26 @@
         android:layout_margin="0dp"
         android:padding="0dp"
         android:scaleType="centerInside"
-        android:src="@android:drawable/ic_menu_directions" />
+        android:src="@android:drawable/ic_menu_directions"
+        android:contentDescription="@string/marker_action_start_routing" />
 
     <ImageButton
-        android:id="@+id/marker_list_mapbutton"
+    android:id="@+id/marker_list_mapbutton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="0dp"
+    android:padding="0dp"
+    android:scaleType="centerInside"
+    android:src="@android:drawable/ic_menu_mapmode"
+    android:contentDescription="@string/marker_action_show_on_map" />
+
+    <ImageButton
+        android:id="@+id/marker_list_morebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:padding="0dp"
         android:scaleType="centerInside"
-        android:src="@android:drawable/ic_menu_mapmode" />
-
+        android:src="@drawable/abs__ic_menu_moreoverflow_normal_holo_dark"
+        android:contentDescription="@string/more_actions" />
 </LinearLayout>

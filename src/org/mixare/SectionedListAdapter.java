@@ -6,16 +6,15 @@ import android.content.Intent;
 import android.location.Location;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import org.mixare.lib.MixUtils;
 import org.mixare.lib.marker.Marker;
 import org.mixare.map.MixMap;
+import org.mixare.marker.LocalMarker;
 import org.mixare.sectionedlist.Item;
 import org.mixare.sectionedlist.SectionItem;
 
@@ -109,6 +108,7 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                     holder.desc = (TextView) convertView.findViewById(R.id.marker_list_summary);
                     holder.mapButton = (ImageButton) convertView.findViewById(R.id.marker_list_mapbutton);
                     holder.directionsButton = (ImageButton) convertView.findViewById(R.id.marker_list_destinationbutton);
+                    holder.moreButton = (ImageButton) convertView.findViewById(R.id.marker_list_morebutton);
 
 
                     convertView.setTag(R.string.list_view_entry, holder);
@@ -133,6 +133,10 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                 holder.mapButton.setOnClickListener(onClickListenerCenterMap);
                 holder.directionsButton.setTag(position);
                 holder.directionsButton.setOnClickListener(onClickListenerDirections);
+                holder.moreButton.setOnClickListener(onClickListenerMoreActions);
+                holder.moreButton.setTag(position);
+
+
                 holder.title.setText(spannableString);
                 holder.desc.setText(getContext().getString(R.string.distance_format, marker.getDistance()));
             }
@@ -152,6 +156,8 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
         TextView desc;
         ImageButton mapButton;
         ImageButton directionsButton;
+        ImageButton moreButton;
+
 
     }
 
@@ -166,13 +172,11 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
     View.OnClickListener onClickListenerCenterMap = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Marker marker = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
+            LocalMarker marker = (LocalMarker) ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
 
-            Intent startMap = new Intent(parentActivity, MixMap.class);
-            startMap.putExtra("center", true);
-            startMap.putExtra("latitude", marker.getLatitude());
-            startMap.putExtra("longitude", marker.getLongitude());
-            parentActivity.startActivityForResult(startMap, 76);
+            Intent startMap = marker.prepareAction(parentActivity, MixMap.class,R.string.marker_action_show_on_map);
+
+            parentActivity.startActivityForResult(startMap, Config.INTENT_REQUEST_CODE_CENTERMAP);
         }
     };
 
@@ -183,17 +187,28 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
     View.OnClickListener onClickListenerDirections = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Marker marker = ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
+            LocalMarker marker = (LocalMarker) ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
             Location destination=Config.getManualFix();
             destination.setLatitude(marker.getLatitude());
             destination.setLongitude(marker.getLongitude());
-
             MixViewDataHolder.getInstance().setCurDestination(destination);
-            Intent startMap = new Intent(parentActivity, MixMap.class);
-            startMap.putExtra("center", true);
-            startMap.putExtra("latitude", marker.getLatitude());
-            startMap.putExtra("longitude", marker.getLongitude());
-            parentActivity.startActivityForResult(startMap, 76);
+
+            Intent startMap = marker.prepareAction(parentActivity, MixMap.class,R.string.marker_action_start_routing);
+
+            parentActivity.startActivityForResult(startMap, Config.INTENT_REQUEST_CODE_CENTERMAP);
+        }
+    };
+
+    View.OnClickListener onClickListenerMoreActions = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            LocalMarker marker = (LocalMarker) ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
+
+           // Intent startMap = marker.prepareAction(parentActivity, MixMap.class,R.string.marker_action_show_on_map);
+
+            marker.retrieveActions(parentActivity, v);
+
+           // parentActivity.startActivityForResult(startMap, Config.INTENT_REQUEST_CODE_CENTERMAP);
         }
     };
 

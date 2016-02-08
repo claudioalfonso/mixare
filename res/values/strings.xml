@@ -160,4 +160,14 @@
 	<string name="destinationStatusTextPlaceholder">destinationStatusPlaceholder</string>
 	<string name="select_destination">Select Destination</string>
 	<string name="distance_format">%1$.0fm</string>
+	<string name="marker_action_start_routing">Start routing</string>
+	<string name="marker_action_show_on_map">Show on map</string>
+	<string name="marker_action_set_as_location">Set as location</string>
+	<string name="marker_action_set_as_destination">Set as destination</string>
+	<string name="marker_action_show_details">Show details</string>
+	<string name="marker_action_show_image">Show image</string>
+	<string name="marker_action_show_website">Show website</string>
+	<string name="marker_action_show_website_externally">Show website externally</string>
+	<string name="marker_action_start_routing_externally">Start routing externally</string>
+	<string name="more_actions">More actions</string>
 </resources>

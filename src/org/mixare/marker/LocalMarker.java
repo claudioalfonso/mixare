@@ -21,10 +21,14 @@ package org.mixare.marker;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.mixare.Config;
 import org.mixare.MixContext;
 import org.mixare.MixState;
+import org.mixare.R;
 import org.mixare.data.convert.Elevation;
 import org.mixare.lib.MixContextInterface;
 import org.mixare.lib.MixStateInterface;
@@ -39,9 +43,15 @@ import org.mixare.lib.marker.draw.PrimitiveProperty;
 import org.mixare.lib.reality.PhysicalPlace;
 import org.mixare.lib.render.Camera;
 import org.mixare.lib.render.MixVector;
+import org.mixare.map.MixMap;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.view.MenuInflater;
+import android.view.View;
+import android.widget.PopupMenu;
 
 /**
  * The class represents a marker and contains its information.
@@ -52,7 +62,11 @@ import android.location.Location;
 
 public abstract class LocalMarker implements Marker {
 
-	private String ID;
+    private static final String INTENT_EXTRA_MENUENTRY = "menuentry";
+    private static final String INTENT_EXTRA_LONGITUDE = "longitude";
+    private static final String INTENT_EXTRA_LATITUDE = "latitude";
+    private static final String INTENT_EXTRA_DO_CENTER = "do_center";
+    private String ID;
 	protected String title;
 	protected boolean underline = false;
 	private String URL;
@@ -279,6 +293,33 @@ public abstract class LocalMarker implements Marker {
 		}
 		return evtHandled;
 	}
+
+    public List<Intent> retrieveActions(Context ctx, View v){
+        List<Intent> actions = new ArrayList<>();
+
+        Intent startMap = prepareAction(ctx, MixMap.class, R.string.marker_action_show_on_map);
+        startMap.putExtra(INTENT_EXTRA_DO_CENTER, true);
+        actions.add(startMap);
+
+        startMap = prepareAction(ctx, MixMap.class,R.string.marker_action_start_routing);
+        startMap.putExtra(INTENT_EXTRA_DO_CENTER, true);
+        actions.add(startMap);
+
+        PopupMenu popup = new PopupMenu(ctx,v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.marker_actions, popup.getMenu());
+        popup.show();
+
+        return actions;
+    }
+
+    public Intent prepareAction(Context ctx, Class clazz, int menuEntry){
+        Intent intent = new Intent(ctx, clazz);
+        intent.putExtra(INTENT_EXTRA_LATITUDE, this.getLatitude());
+        intent.putExtra(INTENT_EXTRA_LONGITUDE, this.getLongitude());
+        intent.putExtra(INTENT_EXTRA_MENUENTRY, menuEntry);
+        return intent;
+    }
 
 	/* ****** Getters / setters **********/
 	

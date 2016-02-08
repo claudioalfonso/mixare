@@ -140,5 +140,15 @@
 	<string name="destinationStatusTextPlaceholder">destinationStatusPlaceholder</string>
 	<string name="select_destination">Ziel auswählen</string>
 	<string name="sensorsStatusTextPlaceholder">Sensoren: Probleme mit Vektor-Sensor</string>
+	<string name="marker_action_start_routing">Navigation starten</string>
+	<string name="marker_action_show_on_map">Auf Karte anzeigen</string>
+	<string name="marker_action_set_as_location">Als Standort wählen</string>
+	<string name="marker_action_set_as_destination">Als Ziel wählen</string>
+	<string name="marker_action_show_details">Details anzeigen</string>
+	<string name="marker_action_show_website">Website anzeigen</string>
+	<string name="marker_action_start_routing_externally">Navigation extern starten</string>
+	<string name="more_actions">Mehr Aktionen</string>
+	<string name="marker_action_show_image">Bild anzeigen</string>
+	<string name="marker_action_show_website_externally">Website extern anzeigen</string>
 
 </resources>
