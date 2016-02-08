@@ -25,13 +25,16 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.actionbarsherlock.view.MenuItem;
 
+import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Paint;
 import org.mapsforge.core.graphics.Style;
 import org.mapsforge.core.model.LatLong;
+import org.mapsforge.core.model.Point;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
@@ -48,6 +51,7 @@ import org.mixare.R;
 import org.mixare.RouteDataAsyncTask;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.marker.Marker;
+import org.mixare.marker.LocalMarker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,19 +170,46 @@ public class MixMap extends MixMenu {
             // is empty or does match
 
 
-
-            // Creates a new GeoPoint of the markers Location
-            final LatLong point = new LatLong(marker.getLatitude(),
-                    marker.getLongitude());
-            // Creates a new OverlayItem with the markers Location, the Title
-            // and the Url
-
             // If no URL is specified change the icon
             if (marker.getURL() == null || marker.getURL().isEmpty()) {
                 icon=markerNoLink;
             }
 
-            this.mapView.getLayerManager().getLayers().add(new org.mapsforge.map.layer.overlay.Marker(point, AndroidGraphicFactory.convertToBitmap(icon), 0, -icon.getIntrinsicHeight() / 2));
+            MixMapMarker mapMarker = new MixMapMarker(marker, icon);
+
+            this.mapView.getLayerManager().getLayers().add(mapMarker);
+        }
+    }
+
+    class MixMapMarker extends org.mapsforge.map.layer.overlay.Marker  {
+        Marker marker;
+        /**
+         * @param latLong          the initial geographical coordinates of this marker (may be null).
+         * @param bitmap           the initial {@code Bitmap} of this marker (may be null).
+         * @param horizontalOffset the horizontal marker offset.
+         * @param verticalOffset
+         */
+        public MixMapMarker(LatLong latLong, Bitmap bitmap, int horizontalOffset, int verticalOffset) {
+            super(latLong, bitmap, horizontalOffset, verticalOffset);
+        }
+
+        public MixMapMarker(Marker marker, Drawable icon) {
+            this(new LatLong(marker.getLatitude(),
+                    marker.getLongitude()), AndroidGraphicFactory.convertToBitmap(icon), 0, -icon.getIntrinsicHeight() / 2);
+            this.marker=marker;
+            // Creates a new GeoPoint of the markers Location
+            // Creates a new OverlayItem with the markers Location, the Title
+            // and the Url
+        }
+
+        @Override
+        public boolean onTap(LatLong tapLatLong, Point layerXY, Point tapXY){
+            Log.d(Config.TAG,"Map onTap"+tapLatLong);
+            if(marker instanceof LocalMarker){
+                LocalMarker localMarker = (LocalMarker) marker;
+                localMarker.retrieveActionPopupMenu(MixMap.this,mapView).show();
+            }
+            return true;
         }
     }
 
