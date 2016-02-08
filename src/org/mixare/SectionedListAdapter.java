@@ -2,8 +2,6 @@ package org.mixare;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.mixare.lib.marker.Marker;
-import org.mixare.map.MixMap;
 import org.mixare.marker.LocalMarker;
 import org.mixare.sectionedlist.Item;
 import org.mixare.sectionedlist.SectionItem;
@@ -106,10 +103,7 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                     holder.sideBar = convertView.findViewById(R.id.side_bar);
                     holder.title = (TextView) convertView.findViewById(R.id.marker_list_title);
                     holder.desc = (TextView) convertView.findViewById(R.id.marker_list_summary);
-                    holder.mapButton = (ImageButton) convertView.findViewById(R.id.marker_list_mapbutton);
-                    holder.directionsButton = (ImageButton) convertView.findViewById(R.id.marker_list_destinationbutton);
                     holder.moreButton = (ImageButton) convertView.findViewById(R.id.marker_list_morebutton);
-
 
                     convertView.setTag(R.string.list_view_entry, holder);
                 } else {
@@ -129,10 +123,6 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                 }
 
                 holder.sideBar.setBackgroundColor(marker.getColor());
-                holder.mapButton.setTag(position);
-                holder.mapButton.setOnClickListener(onClickListenerCenterMap);
-                holder.directionsButton.setTag(position);
-                holder.directionsButton.setOnClickListener(onClickListenerDirections);
                 holder.moreButton.setOnClickListener(onClickListenerMoreActions);
                 holder.moreButton.setTag(position);
 
@@ -154,61 +144,19 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
         View sideBar;
         TextView title;
         TextView desc;
-        ImageButton mapButton;
-        ImageButton directionsButton;
         ImageButton moreButton;
-
-
     }
 
     public int getCount() {
         return items.size();
     }
 
-    /**
-     * Handles the click event of the mapButton, to center the marker
-     * on the Map.
-     */
-    View.OnClickListener onClickListenerCenterMap = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            LocalMarker marker = (LocalMarker) ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
-
-            Intent startMap = marker.prepareAction(parentActivity, MixMap.class,R.string.marker_action_show_on_map);
-
-            parentActivity.startActivityForResult(startMap, Config.INTENT_REQUEST_CODE_CENTERMAP);
-        }
-    };
-
-    /**
-     * Handles the click event of the directionsButton, to center the marker
-     * on the Map.
-     */
-    View.OnClickListener onClickListenerDirections = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            LocalMarker marker = (LocalMarker) ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
-            Location destination=Config.getManualFix();
-            destination.setLatitude(marker.getLatitude());
-            destination.setLongitude(marker.getLongitude());
-            MixViewDataHolder.getInstance().setCurDestination(destination);
-
-            Intent startMap = marker.prepareAction(parentActivity, MixMap.class,R.string.marker_action_start_routing);
-
-            parentActivity.startActivityForResult(startMap, Config.INTENT_REQUEST_CODE_CENTERMAP);
-        }
-    };
-
     View.OnClickListener onClickListenerMoreActions = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             LocalMarker marker = (LocalMarker) ((MarkerListFragment.EntryItem) getItem((Integer) v.getTag())).getMarker();
 
-           // Intent startMap = marker.prepareAction(parentActivity, MixMap.class,R.string.marker_action_show_on_map);
-
-            marker.retrieveActions(parentActivity, v);
-
-           // parentActivity.startActivityForResult(startMap, Config.INTENT_REQUEST_CODE_CENTERMAP);
+            marker.retrieveActionPopupMenu(parentActivity, v).show();
         }
     };
 

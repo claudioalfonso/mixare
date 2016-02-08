@@ -26,8 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mixare.Config;
+import org.mixare.MarkerListFragment;
 import org.mixare.MixContext;
 import org.mixare.MixState;
+import org.mixare.MixViewDataHolder;
 import org.mixare.R;
 import org.mixare.data.convert.Elevation;
 import org.mixare.lib.MixContextInterface;
@@ -50,6 +52,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
@@ -294,23 +297,65 @@ public abstract class LocalMarker implements Marker {
 		return evtHandled;
 	}
 
-    public List<Intent> retrieveActions(Context ctx, View v){
-        List<Intent> actions = new ArrayList<>();
-
-        Intent startMap = prepareAction(ctx, MixMap.class, R.string.marker_action_show_on_map);
-        startMap.putExtra(INTENT_EXTRA_DO_CENTER, true);
-        actions.add(startMap);
-
-        startMap = prepareAction(ctx, MixMap.class,R.string.marker_action_start_routing);
-        startMap.putExtra(INTENT_EXTRA_DO_CENTER, true);
-        actions.add(startMap);
-
+    public PopupMenu retrieveActionPopupMenu(final Context ctx, final View v){
         PopupMenu popup = new PopupMenu(ctx,v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.marker_actions, popup.getMenu());
-        popup.show();
 
-        return actions;
+        MenuInflater inflater = popup.getMenuInflater();
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            Intent popupAction = null;
+
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                boolean eventHandled;
+
+                switch (menuItem.getItemId()){
+                    case R.id.menuitem_show_on_map:
+                        popupAction = prepareAction(ctx, MixMap.class, R.string.marker_action_show_on_map);
+                        popupAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
+                        eventHandled=true;
+                        break;
+                    case R.id.menuitem_set_as_location:
+                        eventHandled=true;
+                        break;
+                    case R.id.menuitem_set_as_destination:
+                        eventHandled=true;
+                        break;
+                    case R.id.menuitem_show_website:
+                        eventHandled=true;
+                        break;
+                    case R.id.menuitem_show_website_external:
+                        eventHandled=true;
+                        break;
+                    case R.id.menuitem_show_details:
+                        eventHandled=true;
+                        break;
+                    case R.id.menuitem_show_image:
+                        eventHandled=true;
+                        break;
+                    case R.id.menuitem_start_routing:
+                        Location destination=Config.getManualFix();
+                        destination.setLatitude(LocalMarker.this.getLatitude());
+                        destination.setLongitude(LocalMarker.this.getLongitude());
+                        MixViewDataHolder.getInstance().setCurDestination(destination);
+
+                        popupAction = prepareAction(ctx, MixMap.class,R.string.marker_action_start_routing);
+                        popupAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
+                        eventHandled=true;
+                        break;
+                    case R.id.menuitem_start_routing_external:
+                        eventHandled=true;
+                        break;
+                    default:
+                        eventHandled=false;
+                }
+                ctx.startActivity(popupAction);
+                return eventHandled;
+            }
+        });
+        inflater.inflate(R.menu.marker_actions, popup.getMenu());
+
+        return popup;
     }
 
     public Intent prepareAction(Context ctx, Class clazz, int menuEntry){
