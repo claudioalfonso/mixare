@@ -302,57 +302,57 @@ public abstract class LocalMarker implements Marker {
 
         MenuInflater inflater = popup.getMenuInflater();
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            Intent popupAction = null;
+			Intent popupAction = null;
 
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
+			@Override
+			public boolean onMenuItemClick(MenuItem menuItem) {
 
-                boolean eventHandled;
+				boolean eventHandled;
 
-                switch (menuItem.getItemId()){
-                    case R.id.menuitem_show_on_map:
-                        popupAction = prepareAction(ctx, MixMap.class, R.string.marker_action_show_on_map);
-                        popupAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
-                        eventHandled=true;
-                        break;
-                    case R.id.menuitem_set_as_location:
-                        eventHandled=true;
-                        break;
-                    case R.id.menuitem_set_as_destination:
-                        eventHandled=true;
-                        break;
-                    case R.id.menuitem_show_website:
-                        eventHandled=true;
-                        break;
-                    case R.id.menuitem_show_website_external:
-                        eventHandled=true;
-                        break;
-                    case R.id.menuitem_show_details:
-                        eventHandled=true;
-                        break;
-                    case R.id.menuitem_show_image:
-                        eventHandled=true;
-                        break;
-                    case R.id.menuitem_start_routing:
-                        Location destination=Config.getManualFix();
-                        destination.setLatitude(LocalMarker.this.getLatitude());
-                        destination.setLongitude(LocalMarker.this.getLongitude());
-                        MixViewDataHolder.getInstance().setCurDestination(destination);
+				switch (menuItem.getItemId()) {
+					case R.id.menuitem_show_on_map:
+						popupAction = prepareAction(ctx, MixMap.class, R.string.marker_action_show_on_map);
+						popupAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
+						eventHandled = true;
+						break;
+					case R.id.menuitem_set_as_location:
+						eventHandled = true;
+						break;
+					case R.id.menuitem_set_as_destination:
+						eventHandled = true;
+						break;
+					case R.id.menuitem_show_website:
+						eventHandled = true;
+						break;
+					case R.id.menuitem_show_website_external:
+						eventHandled = true;
+						break;
+					case R.id.menuitem_show_details:
+						eventHandled = true;
+						break;
+					case R.id.menuitem_show_image:
+						eventHandled = true;
+						break;
+					case R.id.menuitem_start_routing:
+						Location destination = Config.getManualFix();
+						destination.setLatitude(LocalMarker.this.getLatitude());
+						destination.setLongitude(LocalMarker.this.getLongitude());
+						MixViewDataHolder.getInstance().setCurDestination(destination);
 
-                        popupAction = prepareAction(ctx, MixMap.class,R.string.marker_action_start_routing);
-                        popupAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
-                        eventHandled=true;
-                        break;
-                    case R.id.menuitem_start_routing_external:
-                        eventHandled=true;
-                        break;
-                    default:
-                        eventHandled=false;
-                }
-                ctx.startActivity(popupAction);
-                return eventHandled;
-            }
-        });
+						popupAction = prepareAction(ctx, MixMap.class, R.string.marker_action_start_routing);
+						popupAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
+						eventHandled = true;
+						break;
+					case R.id.menuitem_start_routing_external:
+						eventHandled = true;
+						break;
+					default:
+						eventHandled = false;
+				}
+				ctx.startActivity(popupAction);
+				return eventHandled;
+			}
+		});
         inflater.inflate(R.menu.marker_actions, popup.getMenu());
 
         return popup;
@@ -508,7 +508,10 @@ public abstract class LocalMarker implements Marker {
 	/**
 	 * @return the geoLocation
 	 */
-	protected PhysicalPlace getGeoLocation() {
+	/*protected PhysicalPlace getGeoLocation() {
+		return geoLocation;
+	} */
+	public PhysicalPlace getGeoLocation() {
 		return geoLocation;
 	}
 

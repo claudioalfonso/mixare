@@ -2,6 +2,7 @@ package org.mixare;
 
 import android.location.Location;
 import android.net.Uri;
+import android.util.Log;
 
 import com.locoslab.api.data.carta.route.direction.Direction;
 import com.locoslab.api.data.carta.route.direction.Route;

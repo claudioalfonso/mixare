@@ -2,6 +2,7 @@ package org.mixare;
 
 import android.location.Location;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
 

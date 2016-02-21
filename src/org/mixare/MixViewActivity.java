@@ -52,15 +52,19 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.mapsforge.core.model.LatLong;
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.render.Matrix;
 import org.mixare.map.MixMap;
+import org.mixare.marker.RouteMarker;
 import org.mixare.mgr.HttpTools;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
@@ -107,6 +111,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	private Sensor mOrienation;
 
 
+	private List<RouteMarker> routeMarkerList;
+	private List<LatLong> coordinates;
+
 	/**
 	 * Main application Launcher.
 	 * Does:
@@ -114,7 +121,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * - Initiate Camera View
 	 * - Initiate markerRenderer {@link MarkerRenderer#draw() MarkerRenderer}
 	 * - Display License Agreement if mixViewActivity first used.
-	 * 
+	 *
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -302,7 +309,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		//Log.d(TAG + " WorkFlow", "MixViewActivity - onActivityResult Called");
 		// check if the returned is request to refresh screen (setting might be
 		// changed)
-		
+
 		if (requestCode == 35) {
 			if (resultCode == 1) {
 				final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -310,13 +317,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				dialog.setTitle(R.string.launch_plugins);
 				dialog.setMessage(R.string.plugins_changed);
 				dialog.setCancelable(false);
-				
+
 				// Always activate new plugins
-				
+
 //				final CheckBox checkBox = new CheckBox(ctx);
 //				checkBox.setText(R.string.remember_this_decision);
-//				dialog.setView(checkBox);		
-				
+//				dialog.setView(checkBox);
+
 				dialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface d, int whichButton) {
 						startActivity(new Intent(MixContext.getInstance().getApplicationContext(),
@@ -346,7 +353,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	/**
 	 * Part of Android LifeCycle that gets called when "MixViewActivity" resumes.
 	 * <br/>
@@ -374,13 +381,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			killOnError();
 			MixContext.setActualMixViewActivity(this);
 			HttpTools.setContext(MixContext.getInstance());
-			
+
 			//repaint(); //repaint when requested
 			getMarkerRenderer().doStart();
 			getMarkerRenderer().clearEvents();
 			MixContext.getInstance().getNotificationManager().setEnabled(true);
 			refreshDownload();
-			
+
 			MixContext.getInstance().getDataSourceManager().refreshDataSources();
 
 			float angleX, angleY;
@@ -438,7 +445,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			if (getMixViewData().getSensor(1).getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 				getMixViewData().setSensorMag(getMixViewData().getSensor(1));
 			}//else report error (unsupported hardware)
-			
+
 			if (!getMixViewData().getSensorMgr().getSensorList(Sensor.TYPE_GYROSCOPE).isEmpty()){
 				getMixViewData().addListSensors(getMixViewData().getSensorMgr().getSensorList(
 						Sensor.TYPE_GYROSCOPE));
@@ -448,12 +455,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				getMixViewData().getSensorMgr().registerListener(this,
 						getMixViewData().getSensorGyro(), SENSOR_DELAY_GAME);
 			}
-			
+
 				getMixViewData().getSensorMgr().registerListener(this,
 						getMixViewData().getSensorGrav(), SENSOR_DELAY_GAME);
 				getMixViewData().getSensorMgr().registerListener(this,
 						getMixViewData().getSensorMag(), SENSOR_DELAY_GAME);
-				
+
 			try {
 				GeomagneticField gmf = MixContext.getInstance()
 						.getLocationFinder().getGeomagneticField();
@@ -472,7 +479,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			} else {
 				Log.d(Config.TAG, "network");
 			}
-			
+
 			MixContext.getInstance().getDownloadManager().switchOn();
 			MixContext.getInstance().getLocationFinder().switchOn();
 		} catch (Exception ex) {
@@ -555,7 +562,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 */
 	protected void onDestroy(){
 		try{
-			
+
 			MixContext.getInstance().getDownloadManager().shutDown();
 			getMixViewData().getSensorMgr().unregisterListener(this);
 			getMixViewData().setSensorMgr(null);
@@ -563,13 +570,13 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			 * Invoked when the garbage collector has detected that this
 			 * instance is no longer reachable. The default implementation does
 			 * nothing, but this method can be overridden to free resources.
-			 * 
+			 *
 			 * Do we have to create our own finalize?
 			 */
 		} catch (Exception e) {
 			//do nothing we are shutting down
 		} catch (Throwable e) {
-			//finalize error. (this function does nothing but call native API and release 
+			//finalize error. (this function does nothing but call native API and release
 			//any synchronization-locked messages and threads deadlocks.
 			Log.e(Config.TAG, e.getMessage());
 		} finally {
@@ -584,7 +591,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			maintainHudView();
 		}
 	}
-	
+
 	/* ********* Operators ***********/
 
 	/**
@@ -656,10 +663,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	private void maintainRotationVektorDemo() {
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+		//mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-
-
-		mRenderer = new CubeRenderer ();
 		cubeView = new TouchSurfaceView(this, mSensorManager);
 
 /*
@@ -694,7 +699,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 //		}catch (Exception ex){
 //		}
 	}
-	
+
 	/**
 	 * Refreshes Viewed Data.
 	 */
@@ -767,7 +772,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
                 finish();
             }
         });
-		
+
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -775,7 +780,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
     /**
 	 * Handle First time users. It display license agreement and store user's
 	 * acceptance.
-	 * 
+	 *
 	 * @param settings
 	 */
 	private void firstAccess(SharedPreferences settings) {
@@ -809,7 +814,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * @return True if connected, false if not
 	 */
 	private boolean isNetworkAvailable() {
-	    ConnectivityManager connectivityManager 
+	    ConnectivityManager connectivityManager
 	          = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
@@ -916,8 +921,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				break;
 			case R.string.menu_item_test_augmentedview:
 
+				List<LatLong> latLongList = new ArrayList();
+				final List<RouteMarker> routeMarkers = new ArrayList();
+
 				Location curLocation = MixViewDataHolder.getInstance().getCurLocation();
 				Log.d(Config.TAG, "info 1: aktuelle Postition: " + curLocation.getLongitude() + ", " + curLocation.getLatitude());
+
 
 				if(!cubeView.isAttachedToWindow()) {
 					cameraView.addView(cubeView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -925,6 +934,11 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				else {
 					cameraView.removeView(cubeView);
 				}
+				Route r = new Route(cubeView);
+				r.getRoute();
+				//latLongList = r.getRoute();
+				//routeMarkers = r.convertIntoMarker(latLongList);
+
 				break;
 			/* test destination selection (from marker) */
 			case R.string.menu_item_route:
@@ -937,6 +951,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		}
 
 	}
+
 
 	public void switchToMixMap(){
 		Intent mixMapIntent = new Intent(this, MixMap.class);

@@ -25,6 +25,7 @@ import android.os.Parcelable;
 import org.mixare.lib.reality.PhysicalPlace;
 
 import java.lang.Math;
+import java.util.Vector;
 
 /**
  * This class holds information of a point in a three-dimensional coordinate
@@ -210,4 +211,15 @@ public class MixVector implements Parcelable{
         }
 		this.set(x[0], (float) y, z[0]);
 	}
+
+	public float getX() {
+		return x;
+	}
+	public float getY() {
+		return y;
+	}
+	public float getZ()  {
+		return z;
+	}
+
 }

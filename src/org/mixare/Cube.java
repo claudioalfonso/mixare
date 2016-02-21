@@ -25,8 +25,28 @@ import javax.microedition.khronos.opengles.GL10;
  */
 class Cube
 {
-    public Cube()
+    public float getZ() {
+        return z;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float x;
+    public float y;
+    public float z;
+    public Cube(float x, float y, float z)
     {
+
+        this.x = x;
+        this.y = y;
+        this.z = z;
+
         int one = 0x10000;
         int vertices[] = {
                 -one, -one, -one,
