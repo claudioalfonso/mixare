@@ -22,8 +22,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 class CubeRenderer implements GLSurfaceView.Renderer{
 
-    private Cube mCube;
-    private Cube bCube;
+
     private float pitch = 0.0F;
     private float roll = 0.0F;
     private float azimuth = 0.0F;
@@ -36,11 +35,16 @@ class CubeRenderer implements GLSurfaceView.Renderer{
     float yy =0;
     float zz =0;
 
-    private final float[] mRotationMatrix = new float[16];
-    private final float[] mRotationMatrix2 = new float[16];
+    private  float[] rotationMatrix = new float[16];
+
+    private Sensor mRotationVectorSensor;
+
+    private SensorManager mSensorManager;
 
 
     public CubeRenderer() {
+
+
 
       /*  for(RouteMarker routeMarker : routeMarkerList){
             cubes.add(new Cube());
@@ -53,6 +57,8 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
     public  void onDrawFrame(GL10 gl) {
 
+
+
         /* clear screen*/
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
@@ -63,12 +69,16 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
         gl.glLoadIdentity();
 
+        gl.glMultMatrixf(rotationMatrix,0);
+
         //for View (Camera)
-       gl.glScalef(1, 1, 1);
-        gl.glRotatef(azimuth, 0, 0, 1);
-        gl.glRotatef(-pitch, 0, 1, 0);
-        gl.glRotatef(roll, 1, 0, 0);
-        gl.glTranslatef(1, -1, -4f);
+        /*gl.glScalef(1, 1, 1);
+        gl.glRotatef(-roll, 0, 0, 1);
+        gl.glRotatef(-azimuth, 0, 1, 0);
+        gl.glRotatef(pitch, 1, 0, 0);
+        */
+        //gl.glTranslatef(1, -1, -4f);
+        gl.glTranslatef(0, 0, -3f);
 
 
 
@@ -99,10 +109,9 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
                     // for Model
                     //gl.glTranslatef(-pitch, 0, -8f);
-
                    // gl.glLoadIdentity();
 
-                    gl.glTranslatef(cube.getX(), cube.getY(), cube.getZ());
+                    gl.glTranslatef(cube.getX(),cube.getY() , cube.getZ());
 
                     gl.glRotatef(0, 1, 0, 0);
                     gl.glRotatef(0, 0, 1, 0);
@@ -172,8 +181,8 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
         for(RouteMarker routeMarker : routeMarkerList) {
             xx = 0;
-            yy = yy+2;
-            zz = 0;
+            yy = yy+3;
+            zz = -4;
             //  zz = 0;
             synchronized (cubes) {
                 cubes.add(new Cube(xx, yy, zz));
@@ -203,10 +212,11 @@ class CubeRenderer implements GLSurfaceView.Renderer{
       * be set when the viewport is resized.
       */
 
-        float ratio = (float) width / height;
+        float ratio = (float) width / (float) height;
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
-        gl.glFrustumf(-ratio, ratio, -1, 1, 1, 6000);
+        //gl.glFrustumf(-ratio, ratio, -1, 1, 1, 6000);
+        GLU.gluPerspective(gl, 45f, ratio, 1, 1000);
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -244,7 +254,11 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         this.roll = roll;
     }
 
-    public void setPitch(Float pitch){
+    public void setPitch(Float pitch) {
         this.pitch = pitch;
+    }
+
+    public void setRotationMatrix(float[] rotationMatrix) {
+        this.rotationMatrix = rotationMatrix;
     }
 }

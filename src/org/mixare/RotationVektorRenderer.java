@@ -5,6 +5,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.nio.ByteBuffer;
@@ -61,6 +62,8 @@ public class RotationVektorRenderer implements GLSurfaceView.Renderer, SensorEve
                     mRotationMatrix, event.values);
             mSensorManager.remapCoordinateSystem(
                     mRotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, mRotationMatrix2);
+            for (int i = 0; i<mRotationMatrix2.length; i ++) {
+            }
 
         }
     }

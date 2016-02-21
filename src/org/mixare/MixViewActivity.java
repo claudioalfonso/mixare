@@ -664,7 +664,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		//mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-		mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+		mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 		cubeView = new TouchSurfaceView(this, mSensorManager);
 
 /*
@@ -926,6 +926,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 				Location curLocation = MixViewDataHolder.getInstance().getCurLocation();
 				Log.d(Config.TAG, "info 1: aktuelle Postition: " + curLocation.getLongitude() + ", " + curLocation.getLatitude());
+				Log.i ("Info11",  "OrientatioN" +cameraView.getDisplay().getRotation());
 
 
 				if(!cubeView.isAttachedToWindow()) {
