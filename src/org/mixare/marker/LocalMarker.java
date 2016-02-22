@@ -52,7 +52,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -113,15 +112,8 @@ public abstract class LocalMarker implements Marker {
 		this.active = false;
 		this.title = title;
 		this.geoLocation = (new PhysicalPlace(latitude,longitude,altitude));
-		if (link != null && link.length() > 0) {
-			try {
-				this.URL = (MixUtils.URL_PREFIX_WEBPAGE + MixUtils.URL_PREFIX_SEPARATOR + URLDecoder.decode(link, MixUtils.CHARSET_NAME_UTF_8));
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			this.underline = true;
-		}
+        this.setURL(link);
+
 		this.color = color;
 		this.ID = id + "##" + type + "##" + title;
 	}
@@ -267,7 +259,7 @@ public abstract class LocalMarker implements Marker {
 			paintScreen.setStrokeWidth(1f);
 			paintScreen.setFill(true);
 			paintScreen.paintObj(txtLab, signMarker.x - txtLab.getWidth()
-					/ 2, signMarker.y + maxHeight, currentAngle + 90, 1);
+                    / 2, signMarker.y + maxHeight, currentAngle + 90, 1);
 		}
 
 	}
@@ -276,26 +268,15 @@ public abstract class LocalMarker implements Marker {
 		boolean evtHandled = false;
 
 		if (isClickValid(x, y)) {
-			if (getURL() != null) {
-                MixContext ctx = MixContext.getInstance();
-                if(! (stateI instanceof MixState)){
-                    return false;
-                }
-                MixState state = (MixState) stateI;
-                String onPress=getURL();
+            MixContext ctx = MixContext.getInstance();
+            if(! (stateI instanceof MixState)){
+                return false;
+            }
+            MixState state = (MixState) stateI;
 
-                if (onPress != null && onPress.startsWith(MixUtils.URL_PREFIX_WEBPAGE)) {
-                    String webpage = MixUtils.parseAction(onPress);
-                    try {
-                        ctx.getWebContentManager().loadWebPage(webpage, ctx.getActualMixViewActivity());
-                        state.setDetailsView(true);
-                        evtHandled=true;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-			}
-		}
+            evtHandled=openWebPage(ctx);
+            state.setDetailsView(evtHandled);
+        }
 		return evtHandled;
 	}
 
@@ -309,7 +290,7 @@ public abstract class LocalMarker implements Marker {
 			@Override
 			public boolean onMenuItemClick(MenuItem menuItem) {
 
-				boolean eventHandled;
+				boolean eventHandled=false;
 
 				switch (menuItem.getItemId()) {
 					case R.id.menuitem_show_on_map:
@@ -324,8 +305,7 @@ public abstract class LocalMarker implements Marker {
                         eventHandled = true;
 						break;
 					case R.id.menuitem_show_website:
-						//TODO open popup with webview
-						eventHandled = true;
+                        eventHandled = openWebPage(MixContext.getInstance());
 						break;
 					case R.id.menuitem_show_website_external:
 						popupAction = getBrowseAction(ctx);
@@ -370,26 +350,19 @@ public abstract class LocalMarker implements Marker {
     }
 
 	private Intent getBrowseAction(Context ctx){
-        Uri webpage = null;
-        Log.d(Config.TAG, "" + this.getURL());
-
-        if (this.getURL()!=null) {
-            webpage = Uri.parse(this.getURL());
-            Log.d(Config.TAG,webpage.toString());
-        }
-		if(webpage== null || webpage.getScheme()==null || webpage.getScheme().equals("")){
-            Log.d(Config.TAG,"NULL");
-
+        if (this.getURL()==null) {
             return null;
-		}
+
+        }
+        Uri webpage = Uri.parse(this.getURL());
+
 		Intent browseAction = new Intent(Intent.ACTION_VIEW, webpage);
-        Log.d(Config.TAG,"intent: "+browseAction);
 
         return browseAction;
 	}
 
 	private Intent getGeoAction(Context ctx){
-		Uri geoUri= Uri.parse("geo:"+this.getLatitude()+","+this.getLongitude()+"?z=19");
+		Uri geoUri= Uri.parse("geo:" + this.getLatitude() + "," + this.getLongitude() + "?z=19");
 		Intent geoAction = new Intent(Intent.ACTION_VIEW);
 		geoAction.setData(geoUri);
 		return geoAction;
@@ -408,6 +381,20 @@ public abstract class LocalMarker implements Marker {
         intent.putExtra(INTENT_EXTRA_LONGITUDE, this.getLongitude());
         intent.putExtra(INTENT_EXTRA_MENUENTRY, menuEntry);
         return intent;
+    }
+
+    private boolean openWebPage(MixContext ctx){
+        String webpage=getURL();
+
+        if (webpage != null) {
+            try {
+                ctx.getWebContentManager().loadWebPage(webpage, ctx.getActualMixViewActivity());
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
 	/* ****** Getters / setters **********/
@@ -542,10 +529,29 @@ public abstract class LocalMarker implements Marker {
 
 
 	/**
-	 * @param uRL the uRL to set
+	 * @param url the url to set
 	 */
-	protected void setURL(String uRL) {
-		URL = uRL;
+	protected void setURL(String url) {
+        Uri webpage = null;
+        if (url != null && url.length() > 0 && !url.isEmpty()) {
+            try {
+                url = URLDecoder.decode(url, MixUtils.CHARSET_NAME_UTF_8);
+                if (url!=null) {
+                    webpage = Uri.parse(url);
+                }
+                if(webpage== null || webpage.getScheme()==null || webpage.getScheme().isEmpty()){
+                    url = null;
+                }
+                URL = url;
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            this.underline = true;
+        } else {
+            URL = null;
+            this.underline = false;
+        }
 	}
 
 

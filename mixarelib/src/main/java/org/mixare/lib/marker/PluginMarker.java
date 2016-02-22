@@ -72,7 +72,7 @@ public abstract class PluginMarker{
 		this.mGeoLoc = new PhysicalPlace(latitude,longitude,altitude);
 		if (link != null && link.length() > 0) {
 			try {
-				URL = MixUtils.URL_PREFIX_WEBPAGE + MixUtils.URL_PREFIX_SEPARATOR + URLDecoder.decode(link,MixUtils.CHARSET_NAME_UTF_8);
+				URL = URLDecoder.decode(link,MixUtils.CHARSET_NAME_UTF_8);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

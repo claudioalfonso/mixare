@@ -27,19 +27,7 @@ import java.lang.Math;
  * unit.
  */
 public class MixUtils {
-	public static final String URL_PREFIX_SEPARATOR = ":";
-	public static final String URL_PREFIX_WEBPAGE = "webpage";
 	public static final String CHARSET_NAME_UTF_8 = "UTF-8";
-
-	/**
-	 * 
-	 * @param action
-	 * @return
-	 */
-	public static String parseAction(String action) {
-		return (action.substring(action.indexOf(URL_PREFIX_SEPARATOR) + 1, action.length()))
-				.trim();
-	}
 
 	/**
 	 * Formats a given distance in meters.
