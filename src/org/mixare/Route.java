@@ -43,6 +43,9 @@ public class Route {
         //curDestination=Config.getDefaultFix();
         curDestination.setLatitude(51.51017);
         curDestination.setLongitude(7.45083);
+
+
+
         coordinateList = new ArrayList();
         routeMarkerList = new ArrayList();
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {

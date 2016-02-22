@@ -21,7 +21,4 @@ public class RouteMarker extends POIMarker {
     public void draw(PaintScreen paintScreen){
 
     }
-
-
-
 }
