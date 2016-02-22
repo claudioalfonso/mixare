@@ -48,6 +48,8 @@ class CubeRenderer implements GLSurfaceView.Renderer{
     double endCoordX;
     double endCoordY;
     double endCoordZ;
+    double end2CoordX;
+    double end2CoordY;
 
 
 
@@ -60,44 +62,53 @@ class CubeRenderer implements GLSurfaceView.Renderer{
             cubes.add(new Cube());
         } */
 
-        //  mCube = new Cube();
-        //  bCube = new Cube();
+
         cubes = new ArrayList<>();
 
 
-        double lat1 =51.47156;
-        double lat2 = 51.48220;
-        double lon1 = 6.94567;
-        double lon2 =6.94362;
+        double lat1 =51.50595;
+        double lat2 = 51.50694;
+        double lat3 =51.49895;
+        double lon1 = 7.44921;
+        double lon2 =7.45076;
+        double lon3 = 7.45303;
+
 
         Log.d(Config.TAG, "vorher");
 
+
        //startCoordY =  MercatorProjection.latitudeToTileY(lat1,10000);
-        endCoordY = MercatorProjection.latitudeToPixelY(lat1, 10);
-        endCoordX = MercatorProjection.longitudeToPixelX(lon1,10);
-        endCoordZ = -3f;
+       // endCoordY = MercatorProjection.latitudeToPixelY(lat1, 10);
+       // endCoordX = MercatorProjection.longitudeToPixelX(lon1,10);
+       // endCoordZ = -3f;
+
+
 
 
         Log.d(Config.TAG, "nachher" + endCoordX +" "+ endCoordY);
        // double earthRadius = 6.371;
-        double earthRadius = 6378137.0;;
+        double earthRadius = 6378137.0;
 
-        lat1 *= Math.PI / 180.0;
-        lat2 *= Math.PI / 180.0;
-        lon1 *= Math.PI / 180.0;
-        lon2 *= Math.PI / 180.0;
 
-        //startCoordX = earthRadius*Math.cos(lat1)*Math.cos(lon1);
-        //startCoordY = earthRadius*Math.cos(lat1)*Math.sin(lon1);
-      //  startCoordZ = earthRadius*Math.sin(lat1);
 
-       /* endCoordX = earthRadius*Math.cos(lat2)*Math.cos(lon2);
-        endCoordY = earthRadius*Math.cos(lat2)*Math.sin(lon2);
-        endCoordZ = earthRadius*Math.sin(lat2);
-        */
 
-        //Log.i("Info7", "startX"+ startCoordX+ "StartY"+ startCoordY+ "startZ"+ startCoordZ);
-        //Log.i("Info7", "endX"+ endCoordX+ "StartY"+ endCoordY+ "startZ"+ endCoordZ);
+        startCoordZ = -3f;
+        endCoordZ = 0f;
+        endCoordZ = 0f;
+
+        startCoordY = MercatorProjection.latitudeToPixelY(lat1, 1000000);
+        startCoordX =  MercatorProjection.longitudeToPixelX(lon1, 1000000);
+        Log.i("Info7", "startX"+ startCoordX+ "StartY"+ startCoordY+ "startZ"+ startCoordZ);
+
+        endCoordY = MercatorProjection.latitudeToPixelY(lat2, 1000000);
+        endCoordX =  MercatorProjection.longitudeToPixelX(lon2, 1000000);
+
+        end2CoordY = MercatorProjection.latitudeToPixelY(lat3, 1000000);
+        end2CoordX =  MercatorProjection.longitudeToPixelX(lon3, 1000000);
+
+        Log.i("Info7", "endX"+ endCoordX+ "StartY"+ endCoordY+ "startZ"+ endCoordZ);
+        Log.i("Info7", "endX"+ end2CoordX+ "StartY"+ end2CoordY+ "startZ"+ endCoordZ);
+
 
     }
 
@@ -124,9 +135,13 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         gl.glRotatef(pitch, 1, 0, 0);
         */
         //gl.glTranslatef(1, -1, -4f);
+       // gl.glTranslatef(0, 0, -3f);
+
+
+
         gl.glTranslatef(0, 0, -3f);
 
-       // gl.glTranslatef((float) startCoordX, (float) startCoordY, (float) startCoordZ);
+         //gl.glTranslatef((float) startCoordX , (float)startCoordY ,(float) startCoordZ);
         //gl.glTranslatef((float) startCoordX, (float) startCoordZ, (float) startCoordY);
 
 
@@ -157,14 +172,15 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         if (cubes != null) {
             synchronized (cubes) {
 
-                for (Cube cube : cubes) {
+            /*    for (Cube cube : cubes) {
 
 
                     // for Model
                     //gl.glTranslatef(-pitch, 0, -8f);
                    // gl.glLoadIdentity();
 
-                    //gl.glTranslatef(cube.getX(),cube.getY() , cube.getZ());
+                  //  gl.glTranslatef(cube.getX(),cube.getY() , cube.getZ());
+
                     gl.glTranslatef((float)endCoordX,(float)endCoordY ,(float) endCoordZ);
                     //gl.glTranslatef((float)endCoordX, (float) endCoordZ ,(float)endCoordY);
 
@@ -184,12 +200,37 @@ class CubeRenderer implements GLSurfaceView.Renderer{
                     //gl.glPopMatrix();
 
                     // z = z+1;
-                    Log.i("Info2", "Z Wert des LocatioNVektors:" + cube.getZ());
-                    Log.i("Info2", "y Wert des LocatioNVektors:" + cube.getY());
+                 //   Log.i("Info2", "Z Wert des LocatioNVektors:" + cube.getZ());
+                  //  Log.i("Info2", "y Wert des LocatioNVektors:" + cube.getY());
 
+                } */
+
+               // gl.glTranslatef((float) endCoordX, (float) endCoordY, (float)endCoordZ);
+                //gl.glTranslatef((float)endCoordX, (float) endCoordZ ,(float)endCoordY);
+
+
+
+                gl.glRotatef(0, 1, 0, 0);
+                gl.glRotatef(0, 0, 1, 0);
+                gl.glRotatef(0, 0, 0, 1);
+
+                gl.glTranslatef((float) endCoordX - (float) startCoordX, (float) startCoordY - (float) endCoordY, 0);
+
+                if (cubes.size()>0) {
+                    cubes.get(0).draw(gl);
+                }
+                gl.glTranslatef(-((float)endCoordX- (float)startCoordX),-((float)startCoordY-(float)endCoordY),0);
+
+                gl.glTranslatef(((float)end2CoordX- (float)startCoordX),((float)startCoordY-(float)end2CoordY),0);
+
+
+                if (cubes.size()>0) {
+                    cubes.get(1).draw(gl);
                 }
 
-               // gl.glLoadIdentity();
+                gl.glTranslatef(-((float)end2CoordX- (float)startCoordX),-((float)startCoordY-(float)end2CoordY),0);
+
+                // gl.glLoadIdentity();
                 gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
                 gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 
@@ -198,17 +239,6 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
                 //GLU.gluLookAt(gl, 0.0F, 2.0F, 0.0F,pitch,roll, 0.0F, 0.0F,1.0F,0.0F);
 
-        /*
-        mCube.draw(gl);
-
-        gl.glTranslatef(0, 5, -5);
-        gl.glRotatef(0, 1, 0, 0);
-        gl.glRotatef(0, 0, 1, 0);
-        gl.glRotatef(0, 0, 0, 1);
-
-        bCube.draw(gl);
-
-*/
 
             }
         }
