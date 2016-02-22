@@ -51,6 +51,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -265,7 +267,7 @@ public abstract class LocalMarker implements Marker {
 			paintScreen.setStrokeWidth(1f);
 			paintScreen.setFill(true);
 			paintScreen.paintObj(txtLab, signMarker.x - txtLab.getWidth()
-                    / 2, signMarker.y + maxHeight, currentAngle + 90, 1);
+					/ 2, signMarker.y + maxHeight, currentAngle + 90, 1);
 		}
 
 	}
@@ -311,51 +313,93 @@ public abstract class LocalMarker implements Marker {
 
 				switch (menuItem.getItemId()) {
 					case R.id.menuitem_show_on_map:
-						popupAction = prepareAction(ctx, MixMap.class, R.string.marker_action_show_on_map);
-						popupAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
+						popupAction = getMapAction(ctx);
 						eventHandled = true;
 						break;
 					case R.id.menuitem_set_as_location:
 						eventHandled = true;
 						break;
 					case R.id.menuitem_set_as_destination:
-						eventHandled = true;
+                        setAsDestination();
+                        eventHandled = true;
 						break;
 					case R.id.menuitem_show_website:
+						//TODO open popup with webview
 						eventHandled = true;
 						break;
 					case R.id.menuitem_show_website_external:
+						popupAction = getBrowseAction(ctx);
 						eventHandled = true;
 						break;
 					case R.id.menuitem_show_details:
+						//TODO open popup with marker details
 						eventHandled = true;
 						break;
 					case R.id.menuitem_show_image:
+						//TODO open popup with image
 						eventHandled = true;
 						break;
 					case R.id.menuitem_start_routing:
-						Location destination = Config.getManualFix();
-						destination.setLatitude(LocalMarker.this.getLatitude());
-						destination.setLongitude(LocalMarker.this.getLongitude());
-						MixViewDataHolder.getInstance().setCurDestination(destination);
-
-						popupAction = prepareAction(ctx, MixMap.class, R.string.marker_action_start_routing);
-						popupAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
+						setAsDestination();
+                        popupAction = getMapAction(ctx);
 						eventHandled = true;
 						break;
 					case R.id.menuitem_start_routing_external:
+						popupAction = getGeoAction(ctx);
 						eventHandled = true;
 						break;
 					default:
 						eventHandled = false;
 				}
-				ctx.startActivity(popupAction);
+
+				if (popupAction!=null  && popupAction.resolveActivity(ctx.getPackageManager()) != null) {
+					ctx.startActivity(popupAction);
+				}
 				return eventHandled;
 			}
 		});
         inflater.inflate(R.menu.marker_actions, popup.getMenu());
 
         return popup;
+    }
+
+    private Intent getMapAction(Context ctx){
+        Intent mapAction=prepareAction(ctx, MixMap.class, R.string.marker_action_start_routing);
+        mapAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
+        return mapAction;
+    }
+
+	private Intent getBrowseAction(Context ctx){
+        Uri webpage = null;
+        Log.d(Config.TAG, "" + this.getURL());
+
+        if (this.getURL()!=null) {
+            webpage = Uri.parse(this.getURL());
+            Log.d(Config.TAG,webpage.toString());
+        }
+		if(webpage== null || webpage.getScheme()==null || webpage.getScheme().equals("")){
+            Log.d(Config.TAG,"NULL");
+
+            return null;
+		}
+		Intent browseAction = new Intent(Intent.ACTION_VIEW, webpage);
+        Log.d(Config.TAG,"intent: "+browseAction);
+
+        return browseAction;
+	}
+
+	private Intent getGeoAction(Context ctx){
+		Uri geoUri= Uri.parse("geo:"+this.getLatitude()+","+this.getLongitude()+"?z=19");
+		Intent geoAction = new Intent(Intent.ACTION_VIEW);
+		geoAction.setData(geoUri);
+		return geoAction;
+	}
+
+    private void setAsDestination(){
+        Location destination = Config.getManualFix();
+        destination.setLatitude(LocalMarker.this.getLatitude());
+        destination.setLongitude(LocalMarker.this.getLongitude());
+        MixViewDataHolder.getInstance().setCurDestination(destination);
     }
 
     public Intent prepareAction(Context ctx, Class clazz, int menuEntry){
