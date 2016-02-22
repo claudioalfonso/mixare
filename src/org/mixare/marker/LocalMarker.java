@@ -52,6 +52,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -272,10 +273,12 @@ public abstract class LocalMarker implements Marker {
             if(! (stateI instanceof MixState)){
                 return false;
             }
-            MixState state = (MixState) stateI;
 
-            evtHandled=openWebPage(ctx);
-            state.setDetailsView(evtHandled);
+            View newView=new View(ctx);
+            newView.setX(x);
+            newView.setY(y);
+            retrieveActionPopupMenu(ctx,newView).show();
+            evtHandled=true;
         }
 		return evtHandled;
 	}
