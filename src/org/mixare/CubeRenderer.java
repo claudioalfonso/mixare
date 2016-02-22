@@ -16,6 +16,8 @@ import java.util.List;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL;
 import javax.microedition.khronos.opengles.GL10;
+import org.mapsforge.core.util.MercatorProjection;
+
 
 /**
  * Render a cube.
@@ -40,6 +42,14 @@ class CubeRenderer implements GLSurfaceView.Renderer{
     private Sensor mRotationVectorSensor;
 
     private SensorManager mSensorManager;
+    double startCoordX;
+    double startCoordY;
+    double startCoordZ;
+    double endCoordX;
+    double endCoordY;
+    double endCoordZ;
+
+
 
 
     public CubeRenderer() {
@@ -53,6 +63,42 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         //  mCube = new Cube();
         //  bCube = new Cube();
         cubes = new ArrayList<>();
+
+
+        double lat1 =51.47156;
+        double lat2 = 51.48220;
+        double lon1 = 6.94567;
+        double lon2 =6.94362;
+
+        Log.d(Config.TAG, "vorher");
+
+       //startCoordY =  MercatorProjection.latitudeToTileY(lat1,10000);
+        endCoordY = MercatorProjection.latitudeToPixelY(lat1, 10);
+        endCoordX = MercatorProjection.longitudeToPixelX(lon1,10);
+        endCoordZ = -3f;
+
+
+        Log.d(Config.TAG, "nachher" + endCoordX +" "+ endCoordY);
+       // double earthRadius = 6.371;
+        double earthRadius = 6378137.0;;
+
+        lat1 *= Math.PI / 180.0;
+        lat2 *= Math.PI / 180.0;
+        lon1 *= Math.PI / 180.0;
+        lon2 *= Math.PI / 180.0;
+
+        //startCoordX = earthRadius*Math.cos(lat1)*Math.cos(lon1);
+        //startCoordY = earthRadius*Math.cos(lat1)*Math.sin(lon1);
+      //  startCoordZ = earthRadius*Math.sin(lat1);
+
+       /* endCoordX = earthRadius*Math.cos(lat2)*Math.cos(lon2);
+        endCoordY = earthRadius*Math.cos(lat2)*Math.sin(lon2);
+        endCoordZ = earthRadius*Math.sin(lat2);
+        */
+
+        //Log.i("Info7", "startX"+ startCoordX+ "StartY"+ startCoordY+ "startZ"+ startCoordZ);
+        //Log.i("Info7", "endX"+ endCoordX+ "StartY"+ endCoordY+ "startZ"+ endCoordZ);
+
     }
 
     public  void onDrawFrame(GL10 gl) {
@@ -79,6 +125,13 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         */
         //gl.glTranslatef(1, -1, -4f);
         gl.glTranslatef(0, 0, -3f);
+
+       // gl.glTranslatef((float) startCoordX, (float) startCoordY, (float) startCoordZ);
+        //gl.glTranslatef((float) startCoordX, (float) startCoordZ, (float) startCoordY);
+
+
+
+
 
 
 
@@ -111,7 +164,11 @@ class CubeRenderer implements GLSurfaceView.Renderer{
                     //gl.glTranslatef(-pitch, 0, -8f);
                    // gl.glLoadIdentity();
 
-                    gl.glTranslatef(cube.getX(),cube.getY() , cube.getZ());
+                    //gl.glTranslatef(cube.getX(),cube.getY() , cube.getZ());
+                    gl.glTranslatef((float)endCoordX,(float)endCoordY ,(float) endCoordZ);
+                    //gl.glTranslatef((float)endCoordX, (float) endCoordZ ,(float)endCoordY);
+
+
 
                     gl.glRotatef(0, 1, 0, 0);
                     gl.glRotatef(0, 0, 1, 0);
@@ -160,13 +217,13 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
     public void redraw(List<RouteMarker> routeMarkerList){
 
-      /*  for(RouteMarker routeMarker : routeMarkerList){
+        for(RouteMarker routeMarker : routeMarkerList){
                 xx= routeMarker.getLocationVector().getX();
                 //  yy= routeMarker.getLocationVector().getY();
                 zz=  routeMarker.getLocationVector().getZ();
                 //  xx = xx+1;
-                yy = 0;
-                //  zz = 0;
+                yy = routeMarker.getLocationVector().getY();;
+                 // zz = -3;
                 synchronized (cubes) {
                     cubes.add(new Cube(xx, yy, zz));
 
@@ -177,9 +234,8 @@ class CubeRenderer implements GLSurfaceView.Renderer{
                     z= routeMarkerList.get(0).getLocationVector().getZ();
                     Log.i("Info1", "Z Wert des LocatioNVektors:" + zz);
                 }
-        } */
-
-        for(RouteMarker routeMarker : routeMarkerList) {
+        }
+        /*for(RouteMarker routeMarker : routeMarkerList) {
             xx = 0;
             yy = yy+3;
             zz = -4;
@@ -200,6 +256,7 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
 
         //drawNewCube(gl);
+        */
     }
 
 
@@ -216,7 +273,10 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
         //gl.glFrustumf(-ratio, ratio, -1, 1, 1, 6000);
-        GLU.gluPerspective(gl, 45f, ratio, 1, 1000);
+       // GLU.gluPerspective(gl, 45f, ratio, 1, 1000);
+        GLU.gluPerspective(gl, 45f, ratio, 1, 6000000);
+
+
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
