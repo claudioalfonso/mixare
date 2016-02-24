@@ -22,7 +22,6 @@ public class Route {
 
     public Route(TouchSurfaceView cubeView, List<Marker> markers) {
 
-        routeMarkerList = new ArrayList<>();
         coordinateList = new ArrayList<>();
         this.cubeView = cubeView;
         this.poiMarkerList = markers;
@@ -43,10 +42,7 @@ public class Route {
         curDestination.setLatitude(51.51017);
         curDestination.setLongitude(7.45083);
 
-
-
         coordinateList = new ArrayList();
-        routeMarkerList = new ArrayList();
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
             @Override
             public void processFinish(List<LatLong> latLong) {
@@ -64,46 +60,6 @@ public class Route {
         return coordinateList;
     }
 
-    public List<RouteMarker> convertIntoMarker(List<LatLong> coordinateList){
-
-        Log.i("Test1", "routeMarker"+routeMarkerList.size());
-
-        for( LatLong latLong: coordinateList){
-            RouteMarker routeMarker = new RouteMarker("1","title", latLong.latitude,latLong.longitude,0.0,null,0,2);
-            routeMarker.getLocationVector().calculateRelative(MixViewDataHolder.getInstance().getCurLocation(), routeMarker.getGeoLocation());
-            Log.i("Test2", "routeMarker"+routeMarkerList.size());
-            routeMarkerList.add(routeMarker);
-
-          /*  routeMarker = new MarkerBuilder().setId("1")
-                    .setTitle("title")
-                    .setLatitude(latLong.latitude)
-                    .setLongitude(latLong.longitude)
-                    .setAltitude(0.0)
-                    .setDisplayType(null)
-                    .setPageURL(null)
-                    .setColor()
-                    .build();
-                    */
-        }
-        return routeMarkerList;
-    }
-
-
-    public void getVektorsForMarkers() {
-
-        float vektor [] = new float[3];
-        for (RouteMarker routeMarker : routeMarkerList) {
-            vektor[0] = routeMarker.getLocationVector().getX();
-            vektor[1] = routeMarker.getLocationVector().getY();
-            vektor[2] = routeMarker.getLocationVector().getZ();
-            addRouteSegment(vektor);
-        }
-    }
-
-    public void addRouteSegment(float[] vektor) {
-
-
-    }
 
 
 }

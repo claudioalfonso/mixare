@@ -83,18 +83,8 @@ class TouchSurfaceView extends GLSurfaceView implements SensorEventListener {
                     mRotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, mRotationMatrix2);
             SensorManager.getOrientation(mRotationMatrix2, orientation);
 
-            orientation[0]= (float)Math.toDegrees(orientation[0]);
-            orientation[1]= (float)Math.toDegrees(orientation[1]);
-            orientation[2]= (float)Math.toDegrees(orientation[2]);
         }
 
-        float azimuth = orientation[0]; //angle around x-axis
-        float pitch = orientation[1];//angle around y-axis
-        float roll = orientation[2];//angle around z-axis
-
-        cubeRenderer.setAzimuth(azimuth);
-        cubeRenderer.setPitch(pitch);
-        cubeRenderer.setRoll(roll);
         cubeRenderer.setRotationMatrix(mRotationMatrix2);
 
         requestRender();

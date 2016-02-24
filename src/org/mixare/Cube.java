@@ -25,27 +25,61 @@ import javax.microedition.khronos.opengles.GL10;
  */
 class Cube
 {
-    public double getZ() {
+ /*   public float getZ() {
         return z;
+    } */
+
+    private float absoluteX;
+    private float absoluteY;
+
+    public float relativeX;
+    public float relativeY;
+
+
+    public float getRelativeX() {
+        return relativeX;
     }
 
-    public double getX() {
-        return x;
+    public float getRelativeY() {
+        return relativeY;
     }
 
-    public double getY() {
-        return y;
+
+
+    public void setRelativeX(float relativeX) {
+        this.relativeX = relativeX;
     }
 
-    public double x;
-    public double y;
-    public double z;
-    public Cube(double x, double y, double z)
+    public void setRelativeY(float relativeY) {
+        this.relativeY = relativeY;
+    }
+
+    public float getAbsoluteX() {
+        return absoluteX;
+    }
+
+    public void setAbsoluteX(float absoluteX) {
+        this.absoluteX = absoluteX;
+    }
+
+    public float getAbsoluteY() {
+        return absoluteY;
+    }
+
+    public void setAbsoluteY(float absoluteY) {
+        this.absoluteY = absoluteY;
+    }
+
+
+  //  public float z;
+    public Cube(float realtiveX, float relativeY, float absoluteX, float absoluteY)
     {
 
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.relativeX = realtiveX;
+        this.relativeY = relativeY;
+        this.absoluteX = absoluteX;
+        this.absoluteY = absoluteY;
+       // this.z = z;
 
         int one = 0x10000;
         int vertices[] = {
@@ -84,7 +118,7 @@ class Cube
         // native heap where the garbage collector cannot
         // move them.
         //
-        // Buffers with multi-byte datatypes (e.g., short, int, double)
+        // Buffers with multi-byte datatypes (e.g., short, int, float)
         // must have their byte order set to native order
 
         ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
