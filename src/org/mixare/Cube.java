@@ -25,22 +25,22 @@ import javax.microedition.khronos.opengles.GL10;
  */
 class Cube
 {
-    public float getZ() {
+    public double getZ() {
         return z;
     }
 
-    public float getX() {
+    public double getX() {
         return x;
     }
 
-    public float getY() {
+    public double getY() {
         return y;
     }
 
-    public float x;
-    public float y;
-    public float z;
-    public Cube(float x, float y, float z)
+    public double x;
+    public double y;
+    public double z;
+    public Cube(double x, double y, double z)
     {
 
         this.x = x;
@@ -84,7 +84,7 @@ class Cube
         // native heap where the garbage collector cannot
         // move them.
         //
-        // Buffers with multi-byte datatypes (e.g., short, int, float)
+        // Buffers with multi-byte datatypes (e.g., short, int, double)
         // must have their byte order set to native order
 
         ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);

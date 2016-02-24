@@ -4,10 +4,7 @@ import android.location.Location;
 import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
-import org.mixare.data.MarkerBuilder;
-import org.mixare.lib.HtmlUnescape;
 import org.mixare.lib.marker.Marker;
-import org.mixare.lib.render.MixVector;
 import org.mixare.marker.RouteMarker;
 
 import java.util.ArrayList;
@@ -20,13 +17,15 @@ public class Route {
 
     private List<RouteMarker> routeMarkerList;
     private List<LatLong> coordinateList;
+    private List<Marker> poiMarkerList;
     private TouchSurfaceView cubeView = null;
 
-    public Route(TouchSurfaceView cubeView) {
+    public Route(TouchSurfaceView cubeView, List<Marker> markers) {
 
         routeMarkerList = new ArrayList<>();
         coordinateList = new ArrayList<>();
         this.cubeView = cubeView;
+        this.poiMarkerList = markers;
     }
 
 
@@ -56,7 +55,8 @@ public class Route {
                     coordinateList.add(lat);
                 }
                 routeMarkerList = convertIntoMarker (coordinateList);
-                cubeView.cubeRenderer.redraw(routeMarkerList);
+                cubeView.cubeRenderer.updateRoute(routeMarkerList);
+                cubeView.cubeRenderer.updatePOIMarker(poiMarkerList);
                 cubeView.requestRender();
             }
 

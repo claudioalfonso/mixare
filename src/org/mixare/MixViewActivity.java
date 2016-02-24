@@ -935,7 +935,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				else {
 					cameraView.removeView(cubeView);
 				}
-				Route r = new Route(cubeView);
+				Route r = new Route(cubeView, getMarkerRenderer().getMarkers());
 				r.getRoute();
 				//latLongList = r.getRoute();
 				//routeMarkers = r.convertIntoMarker(latLongList);
