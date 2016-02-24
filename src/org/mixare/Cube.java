@@ -29,22 +29,56 @@ class Cube
         return z;
     } */
 
-    public float getX() {
-        return x;
+    private float absoluteX;
+    private float absoluteY;
+
+    public float relativeX;
+    public float relativeY;
+
+
+    public float getRelativeX() {
+        return relativeX;
     }
 
-    public float getY() {
-        return y;
+    public float getRelativeY() {
+        return relativeY;
     }
 
-    public float x;
-    public float y;
+
+
+    public void setRelativeX(float relativeX) {
+        this.relativeX = relativeX;
+    }
+
+    public void setRelativeY(float relativeY) {
+        this.relativeY = relativeY;
+    }
+
+    public float getAbsoluteX() {
+        return absoluteX;
+    }
+
+    public void setAbsoluteX(float absoluteX) {
+        this.absoluteX = absoluteX;
+    }
+
+    public float getAbsoluteY() {
+        return absoluteY;
+    }
+
+    public void setAbsoluteY(float absoluteY) {
+        this.absoluteY = absoluteY;
+    }
+
+
   //  public float z;
-    public Cube(float x, float y)
+    public Cube(float realtiveX, float relativeY, float absoluteX, float absoluteY)
     {
 
-        this.x = x;
-        this.y = y;
+        this.relativeX = realtiveX;
+        this.relativeY = relativeY;
+        this.absoluteX = absoluteX;
+        this.absoluteY = absoluteY;
        // this.z = z;
 
         int one = 0x10000;
