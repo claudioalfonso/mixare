@@ -34,29 +34,30 @@ public class Route {
         //Location curDestination = MixViewDataHolder.getInstance().getCurDestination();
 
         Location curLocation1 = new Location("CUR_LOC");
-        curLocation1.setLatitude(51.50544);
-        curLocation1.setLongitude(7.45175);
+        curLocation1.setLatitude(51.4618);
+        curLocation1.setLongitude(7.0166);
 
         Location curDestination = new Location("CUR_Dest");
         //curDestination=Config.getDefaultFix();
-        curDestination.setLatitude(51.51017);
-        curDestination.setLongitude(7.45083);
+        curDestination.setLatitude(51.4585);
+        curDestination.setLongitude(6.9996);
 
         coordinateList = new ArrayList();
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
             @Override
             public void processFinish(List<LatLong> latLong) {
+
                 for (LatLong lat : latLong) {
                     Log.i("Info1", "LatLongs" + lat.latitude);
                     coordinateList.add(lat);
                 }
-                routeMarkerList = convertIntoMarker (coordinateList);
-                cubeView.cubeRenderer.updateRoute(routeMarkerList);
+                cubeView.cubeRenderer.updateRoute(coordinateList);
                 cubeView.cubeRenderer.updatePOIMarker(poiMarkerList);
                 cubeView.requestRender();
             }
 
         }).execute(curLocation1, curDestination);
+
         return coordinateList;
     }
 

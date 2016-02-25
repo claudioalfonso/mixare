@@ -72,10 +72,10 @@ class Cube
 
 
   //  public float z;
-    public Cube(float realtiveX, float relativeY, float absoluteX, float absoluteY)
+    public Cube(float relativeX, float relativeY, float absoluteX, float absoluteY)
     {
 
-        this.relativeX = realtiveX;
+        this.relativeX = relativeX;
         this.relativeY = relativeY;
         this.absoluteX = absoluteX;
         this.absoluteY = absoluteY;
