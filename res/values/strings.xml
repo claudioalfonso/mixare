@@ -153,7 +153,7 @@
 	<string name="pref_rangeLevel" translatable="false">rangeLevel</string>
 	<string name="drawer_open" />
 	<string name="drawer_close" />
-	<string name="menu_item_test_augmentedview">RotationVektorDemo</string>
+	<string name="menu_item_3drendering">3D Rendering</string>
 	<string name="menu_item_route">Route To…</string>
 	<string name="dataSourcesStatusPlaceholder" tools:ignore="TypographyFractions">Data Sources: (5 min) 3/4</string>
 	<string name="sensorsStatusTextPlaceholder">Sensors: Problems with vector sensor</string>

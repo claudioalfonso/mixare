@@ -62,7 +62,6 @@ import org.mixare.map.MixMap;
 import org.mixare.marker.RouteMarker;
 import org.mixare.mgr.HttpTools;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -919,15 +918,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				alert1.setTitle(getString(R.string.license_title));
 				alert1.show();
 				break;
-			case R.string.menu_item_test_augmentedview:
-
-				List<LatLong> latLongList = new ArrayList();
-				final List<RouteMarker> routeMarkers = new ArrayList();
-
-				Location curLocation = MixViewDataHolder.getInstance().getCurLocation();
-				Log.d(Config.TAG, "info 1: aktuelle Postition: " + curLocation.getLongitude() + ", " + curLocation.getLatitude());
-				Log.i ("Info11",  "OrientatioN" +cameraView.getDisplay().getRotation());
-
+			case R.string.menu_item_3drendering:
+	//			Log.d(Config.TAG, "info 1: aktuelle Postition: " + curLocation.getLongitude() + ", " + curLocation.getLatitude());
+	//			Log.i ("Info11",  "OrientatioN" +cameraView.getDisplay().getRotation());
 
 				if(!cubeView.isAttachedToWindow()) {
 					cameraView.addView(cubeView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -935,10 +928,26 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				else {
 					cameraView.removeView(cubeView);
 				}
-				Route r = new Route(cubeView, getMarkerRenderer().getMarkers());
-				r.getRoute();
-				//latLongList = r.getRoute();
-				//routeMarkers = r.convertIntoMarker(latLongList);
+
+				Location startLocation = Config.getDefaultFix();
+				Location endLocation = Config.getDefaultFix();
+
+				startLocation = MixViewDataHolder.getInstance().getCurLocation();
+				endLocation = MixViewDataHolder.getInstance().getCurDestination();
+
+				/*
+				startLocation = new Location("TEST_LOC");
+				startLocation.setLatitude(51.4618);
+				startLocation.setLongitude(7.0166);
+
+				endLocation = new Location("TEST_DEST");
+				endLocation.setLatitude(51.4585);
+				endLocation.setLongitude(6.9996);
+				*/
+
+				Route r = new Route(cubeView);
+				r.getRoute(startLocation,endLocation);
+				cubeView.cubeRenderer.updatePOIMarker(getMarkerRenderer().getMarkers());
 
 				break;
 			/* test destination selection (from marker) */

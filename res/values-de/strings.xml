@@ -134,7 +134,7 @@
 	<string name="list_view_marker_in_section">Marker: %1$d</string>
 	<string name="plugin_message">Einige Plug-Ins haben sich verändert, möchtest Du die Liste der Plug-Ins ansehen?</string>
 	<string name="plugins_changed">Die Aktivierung von Plug-Ins hat sich geändert. Mixare muss die geänderten Plug-Ins neu starten. Möchtest Du das jetzt tun?</string>
-	<string name="menu_item_test_augmentedview">RotationVektorDemo</string>
+	<string name="menu_item_3drendering">3D-Darstellung</string>
 	<string name="menu_item_route">Route zu…</string>
 	<string name="dataSourcesStatusPlaceholder" tools:ignore="TypographyFractions">Datenquellen: (5 min) 3/4</string>
 	<string name="destinationStatusTextPlaceholder">destinationStatusPlaceholder</string>

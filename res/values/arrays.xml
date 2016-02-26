@@ -26,7 +26,7 @@
         <item>@string/menu_item_search</item>
         <item>@string/menu_item_datasources</item>
         <item>@string/menu_item_plugins</item>
-        <item>@string/menu_item_test_augmentedview</item>
+        <item>@string/menu_item_3drendering</item>
         <item>@string/menu_item_license</item>
         <item>@string/menu_item_info</item>
     </string-array>
