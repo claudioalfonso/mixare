@@ -36,8 +36,6 @@ public class Config {
     }
 
     public static Location getDefaultDestination(){
-        return getDefaultFix();
-        /*
         Location defaultDestination = new Location(DEFAULT_DESTINATION_NAME);
 
         defaultDestination.setLatitude(DEFAULT_DESTINATION_LAT);
@@ -45,7 +43,6 @@ public class Config {
         defaultDestination.setAltitude(DEFAULT_DESTINATION_HEIGHT);
 
         return defaultDestination;
-        */
     }
 
     public static Location getManualFix(){

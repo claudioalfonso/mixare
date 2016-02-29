@@ -923,11 +923,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	//			Log.i ("Info11",  "OrientatioN" +cameraView.getDisplay().getRotation());
 
 				if(cubeView.isAttachedToWindow()) {
-                    cubeView.cubeRenderer.logState("switch off");
                     cameraView.removeView(cubeView);
 				}
 				else {
-                    cubeView.cubeRenderer.logState("switch on ");
                     Location startLocation = Config.getDefaultFix();
                     Location endLocation = Config.getDefaultDestination();
 
@@ -948,7 +946,6 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
                     r.getRoute(startLocation, endLocation);
                     cubeView.cubeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers());
                     cameraView.addView(cubeView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                    cubeView.cubeRenderer.logState("finished  ");
 				}
 
 				break;
