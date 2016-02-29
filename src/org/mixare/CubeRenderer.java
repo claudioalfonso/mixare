@@ -3,6 +3,7 @@ package org.mixare;
 import android.location.Location;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
+import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.util.MercatorProjection;
@@ -22,20 +23,16 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
     private static final int MERCATOR_SCALE = 10000000;
 
-    private List<Cube> routeCubes= new ArrayList<>();
-    private List<Cube> poiCubes= new ArrayList<>();
+    private final List<Cube> routeCubes = new ArrayList<>();
+    private final List<Cube> poiCubes = new ArrayList<>();
 
     float startCoordX = 0;
     float startCoordY = 0;
 
-    float absoluteX = 0;
-    float absoluteY = 0;
-
-    float relativeX = 0;
-    float relativeY = 0;
-
     float currX = 0;
     float currY = 0;
+
+    final Object semaphore = true;
 
     Location curLocation;
 
@@ -54,8 +51,18 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         gl.glMultMatrixf(rotationMatrix, 0);
         gl.glTranslatef(0, 0, -3f);
 
-        renderCubes(gl, poiCubes);
-        renderCubes(gl, routeCubes);
+
+
+
+
+        synchronized (semaphore) {
+            renderCubes(gl, routeCubes);
+        }
+
+        synchronized (semaphore) {
+            renderCubes(gl, poiCubes);
+        }
+
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
@@ -65,74 +72,97 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         float previousX = 0;
         float previousY = 0;
 
+        float startCoordX = 0;
+        float startCoordY = 0;
+
         if (cubes != null) {
-            synchronized (cubes) {
-                gl.glRotatef(0, 1, 0, 0);
-                gl.glRotatef(0, 0, 1, 0);
-                gl.glRotatef(0, 0, 0, 1);
+            gl.glRotatef(0, 1, 0, 0);
+            gl.glRotatef(0, 0, 1, 0);
+            gl.glRotatef(0, 0, 0, 1);
 
-                for (Cube cube : cubes) {
-                    if (curLocation != null) {
-                        if (currX != startCoordX || currY != startCoordY) {
-                            cube.setRelativeX(cube.getAbsoluteX() - currX);
-                            cube.setRelativeY(currY - cube.getAbsoluteY());
-                        }
+            for (Cube cube : cubes) {
+                if (curLocation != null) {
+                    if (currX != startCoordX || currY != startCoordY) {
+                        cube.setRelativeX(cube.getAbsoluteX() - currX);
+                        cube.setRelativeY(currY - cube.getAbsoluteY());
                     }
-
-                    if (cubes.indexOf(cube) == 0) {
-
-                    } else if (cubes.indexOf(cube) == 1) {
-                        gl.glTranslatef(cube.getRelativeX(), cube.getRelativeY(), 0);
-                    } else {
-                    //   gl.glTranslatef((float) relativeEnd2CoordX - (float) relativeEndCoordX, (float) relativeEnd2CoordY - (float) relativeEndCoordY, 0);
-                        gl.glTranslatef(cube.getRelativeX() - previousX, cube.getRelativeY() - previousY, 0);
-                    }
-
-                    cube.draw(gl);
-                    previousX = cube.getRelativeX();
-                    previousY = cube.getRelativeY();
-
-                    // Log.i("Info3", "X Wert des LocatioNVektors:" + cube.getRelativeX());
-                    // Log.i("Info3", "Y Wert des LocatioNVektors:" + cube.getRelativeY());
                 }
-                //GLU.gluLookAt(gl, 0.0F, 2.0F, 0.0F,pitch,roll, 0.0F, 0.0F,1.0F,0.0F);
+
+                if (cubes.indexOf(cube) == 0) {
+
+                } else if (cubes.indexOf(cube) == 1) {
+                    gl.glTranslatef(cube.getRelativeX(), cube.getRelativeY(), 0);
+                } else {
+                //   gl.glTranslatef((float) relativeEnd2CoordX - (float) relativeEndCoordX, (float) relativeEnd2CoordY - (float) relativeEndCoordY, 0);
+                    gl.glTranslatef(cube.getRelativeX() - previousX, cube.getRelativeY() - previousY, 0);
+                }
+
+                cube.draw(gl);
+                previousX = cube.getRelativeX();
+                previousY = cube.getRelativeY();
+
+                // Log.i("Info3", "X Wert des LocatioNVektors:" + cube.getRelativeX());
+                // Log.i("Info3", "Y Wert des LocatioNVektors:" + cube.getRelativeY());
             }
+            //GLU.gluLookAt(gl, 0.0F, 2.0F, 0.0F,pitch,roll, 0.0F, 0.0F,1.0F,0.0F);
         }
     }
 
-    public void updateCubes(List<?> geoObjects, List<Cube> cubeList){
-        Cube newCube = null;
-        double lat=0;
-        double lon=0;
+    public void updateCubes(List<?> geoObjects){
+        synchronized (semaphore) {
 
-        updateCurLocation(null);
-        synchronized(cubeList){
+            float startCoordX = 0;
+            float startCoordY = 0;
+
+            Cube newCube = null;
+            final List<Cube> cubeList;
+            double lat = 0;
+            double lon = 0;
+
+            if (geoObjects.size() > 0 && geoObjects.get(0) instanceof Marker) {
+                cubeList = poiCubes;
+            } else if (geoObjects.size() > 0 && geoObjects.get(0) instanceof LatLong) {
+                cubeList = routeCubes;
+            } else {
+                cubeList = new ArrayList<>();
+            }
+
+            updateCurLocation(null);
+//            Log.d(Config.TAG, "cubeList.clear();");
             cubeList.clear();
             for (Object curObj : geoObjects) {
-                if (curObj instanceof Marker){
-                    lat=((Marker)curObj).getLatitude();
-                    lon=((Marker)curObj).getLongitude();
-                } else if (curObj instanceof LatLong){
-                    lat=((LatLong)curObj).latitude;
-                    lon=((LatLong)curObj).longitude;
+                if (curObj instanceof Marker) {
+                    lat = ((Marker) curObj).getLatitude();
+                    lon = ((Marker) curObj).getLongitude();
+                } else if (curObj instanceof LatLong) {
+                    lat = ((LatLong) curObj).latitude;
+                    lon = ((LatLong) curObj).longitude;
                 }
-                newCube = createCube(lat,lon, geoObjects.indexOf(curObj));
+                newCube = createCube(lat, lon, geoObjects.indexOf(curObj));
                 cubeList.add(newCube);
             }
         }
     }
 
     public void updatePOIMarker(List<Marker> pois) {
-        updateCubes(pois, poiCubes);
+//        Log.d(Config.TAG, "updatePOIMarker "+pois.size());
+        updateCubes(pois);
     }
 
     public void updateRoute(List<LatLong> coordinateList){
-        updateCubes(coordinateList, routeCubes);
+//        Log.d(Config.TAG, "updateRoute "+coordinateList.size());
+        updateCubes(coordinateList);
     }
 
     public Cube createCube(double lat, double lon, int index){
-        absoluteX =(float) MercatorProjection.longitudeToPixelX(lon, MERCATOR_SCALE);
-        absoluteY =(float) MercatorProjection.latitudeToPixelY(lat, MERCATOR_SCALE);
+        float absoluteX =(float) MercatorProjection.longitudeToPixelX(lon, MERCATOR_SCALE);
+        float absoluteY =(float) MercatorProjection.latitudeToPixelY(lat, MERCATOR_SCALE);
+
+        float relativeX = 0;
+        float relativeY = 0;
+
+        float startCoordX = 0;
+        float startCoordY = 0;
 
         if(index == 0){
             startCoordX = relativeX = absoluteX;
@@ -190,5 +220,13 @@ class CubeRenderer implements GLSurfaceView.Renderer{
 
     public void setRotationMatrix(float[] rotationMatrix) {
         this.rotationMatrix = rotationMatrix;
+    }
+
+    public void logState(String additional){
+        String state="";
+        state+=" startCoordX: "+startCoordX;
+        state+=" startCoordY: "+startCoordY;
+
+        Log.d(Config.TAG+" CR State", additional+": "+ state);
     }
 }

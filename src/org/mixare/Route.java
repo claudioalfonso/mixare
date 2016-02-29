@@ -37,6 +37,8 @@ public class Route {
                 }
                 cubeView.cubeRenderer.updateRoute(coordinateList);
                 cubeView.requestRender();
+                cubeView.cubeRenderer.logState("getRoute  ");
+
             }
         }).execute(startLocation, endLocation);
         return coordinateList;
