@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <datasources>
-
     <datasource id="0" >
         <name>Wikipedia</name>
 		<url>http://ws.geonames.org/findNearbyWikipediaJSON</url>
@@ -11,6 +10,15 @@
         <blur>0</blur>
     </datasource>
     <datasource id="1" >
+        <name>Panoramio</name>
+        <url>http://www.panoramio.com/map/get_panoramas.php</url>
+        <type>5</type>
+        <display>2</display>
+        <visible>true</visible>
+        <editable>false</editable>
+        <blur>0</blur>
+    </datasource>
+    <datasource id="2" >
         <name>Twitter</name>
         <url>http://search.twitter.com/search.json</url>
         <type>1</type>
@@ -19,31 +27,13 @@
         <editable>false</editable>
         <blur>0</blur>
     </datasource>
-    <datasource id="2" >
-        <name>OpenStreetmap</name>
-        <url>http://open.mapquestapi.com/xapi/api/0.6/node[railway=station]</url>
-        <type>2</type>
+    <datasource id="3" >
+        <name>roUDE</name>
+        <url>http://www-stud.uni-due.de/~sehawagn/roUDE/dynamic.php</url>
+        <type>3</type>
         <display>1</display>
         <visible>true</visible>
-        <editable>false</editable>
-        <blur>0</blur>
-    </datasource>
-    <datasource id="3" >
-        <name>Own URL</name>
-        <url>http://mixare.org/geotest.php</url>
-        <type>3</type>
-        <display>0</display>
-        <visible>true</visible>
-        <editable>false</editable>
-        <blur>0</blur>
-    </datasource>
-    <datasource id="4" >
-        <name>Panoramio</name>
-        <url>http://www.panoramio.com/map/get_panoramas.php</url>
-        <type>5</type>
-        <display>2</display>
-        <visible>true</visible>
-        <editable>false</editable>
+        <editable>true</editable>
         <blur>0</blur>
     </datasource>
 </datasources>
