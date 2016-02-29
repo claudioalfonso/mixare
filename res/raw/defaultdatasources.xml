@@ -5,7 +5,7 @@
 		<url>http://ws.geonames.org/findNearbyWikipediaJSON</url>
 		<type>0</type>
         <display>0</display>
-        <visible>true</visible>
+        <visible>false</visible>
         <editable>false</editable>
         <blur>0</blur>
     </datasource>
@@ -14,7 +14,7 @@
         <url>http://www.panoramio.com/map/get_panoramas.php</url>
         <type>5</type>
         <display>2</display>
-        <visible>true</visible>
+        <visible>false</visible>
         <editable>false</editable>
         <blur>0</blur>
     </datasource>
@@ -23,7 +23,7 @@
         <url>http://search.twitter.com/search.json</url>
         <type>1</type>
         <display>0</display>
-        <visible>true</visible>
+        <visible>false</visible>
         <editable>false</editable>
         <blur>0</blur>
     </datasource>
