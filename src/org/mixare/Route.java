@@ -25,7 +25,6 @@ public class Route {
         this.cubeView = cubeView;
     }
 
-
     public List<LatLong> getRoute(Location startLocation,Location endLocation) {
         coordinateList = new ArrayList();
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
@@ -36,7 +35,7 @@ public class Route {
                     coordinateList.add(lat);
                 }
                 cubeView.cubeRenderer.updateRoute(coordinateList);
-                cubeView.requestRender();
+                //cubeView.requestRender();
             }
         }).execute(startLocation, endLocation);
         return coordinateList;
