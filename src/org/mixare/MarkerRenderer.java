@@ -425,11 +425,6 @@ public class MarkerRenderer {
 		});
 	}
 
-	public List<Marker> getMarkers(){
-		return markers;
-	}
-
-
 }
 
 class UIEvent {

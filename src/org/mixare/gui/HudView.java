@@ -62,18 +62,18 @@ public class HudView extends RelativeLayout {
     }
 
     /**
-     * Calculate Range Level base 80.
-     * Mixare support ranges between 0-80km and default value of 20km,
+     * Calculate range base 80.
+     * Mixare support ranges between 0-80km and default value of 5km,
      * {@link SeekBar SeekBar} on the other hand, is 0-100 base.
-     * This method handles the Range level conversion between Mixare range and SeekBar progress.
-     * So the range resolution on the seek bar is fine in proximity and coarse in the distance
+     * This method handles the range conversion between Mixare range and SeekBar progress.
+     * The range resolution on the seek bar is fine in proximity and coarse in the distance.
      *
      * @return int Range base 80
      */
     public float calcRange(){
 
         int rangeBarProgress = rangeBar.getProgress();
-        float range = 5;
+        float range = 0;
 
         if (rangeBarProgress <= 26) {
             range = rangeBarProgress / 25f;
@@ -114,7 +114,7 @@ public class HudView extends RelativeLayout {
         rangeBar = (SeekBar) this.findViewById(R.id.rangeBar);
         rangeBar.setOnSeekBarChangeListener(onRangeBarChangeListener);
         SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_NAME, 0);
-        setRangeBarProgress(settings.getInt(getContext().getString(R.string.pref_rangeLevel), Config.DEFAULT_RANGE),true);
+        setRangeBarProgress(settings.getInt(getContext().getString(R.string.pref_rangeBarProgress), Config.DEFAULT_RANGE_PROGRESS),true);
     }
 
     public void setDataSourcesStatus(boolean working, boolean problem, String statusText){
@@ -161,9 +161,10 @@ public class HudView extends RelativeLayout {
 
         public void onStopTrackingTouch(SeekBar rangeBar) {
             setRangeBarProgress(rangeBar.getProgress(),true);
-            //repaint after range level changed.
+            //repaint after range changed.
             MixContext.getInstance().getActualMixViewActivity().repaint();
             MixContext.getInstance().getActualMixViewActivity().refreshDownload();
+            //Log.d(Config.TAG, "range="+calcRange()+", rangeBarProgress="+rangeBar.getProgress());
         }
     };
 
@@ -193,7 +194,7 @@ public class HudView extends RelativeLayout {
             SharedPreferences.Editor editor = settings.edit();
 
             // store the range of the range bar selected by the user
-            editor.putInt(getContext().getString(R.string.pref_rangeLevel), rangeBarProgress);
+            editor.putInt(getContext().getString(R.string.pref_rangeBarProgress), rangeBarProgress);
             editor.apply(); //or commit()?
         }
     }

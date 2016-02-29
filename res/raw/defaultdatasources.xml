@@ -31,7 +31,7 @@
         <name>roUDE</name>
         <url>http://www-stud.uni-due.de/~sehawagn/roUDE/dynamic.php</url>
         <type>3</type>
-        <display>1</display>
+        <display>0</display>
         <visible>true</visible>
         <editable>true</editable>
         <blur>0</blur>

@@ -74,7 +74,7 @@ public class MixViewDataHolder {
 		this.compassErrorDisplayed = 0;
 		this.sensorList = new ArrayList<>();
 
-        curDestination=Config.getDefaultFix();
+        curDestination=Config.getDefaultDestination();
 	}
 
 	public synchronized static MixViewDataHolder getInstance()

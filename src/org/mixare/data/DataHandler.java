@@ -72,7 +72,7 @@ public class DataHandler {
 				
 		for(Marker ma: markerList) {
 			Class<? extends Marker> mClass=ma.getClass();
-			map.put(mClass, (map.get(mClass)!=null)?map.get(mClass)+1:1);
+			map.put(mClass, (map.get(mClass) != null) ? map.get(mClass) + 1 : 1);
 			
 			boolean belowMax = (map.get(mClass) <= ma.getMaxObjects());
 			//boolean dataSourceSelected = mixContext.isDataSourceSelected(ma.getDatasource());
@@ -95,5 +95,9 @@ public class DataHandler {
 	
 	public Marker getMarker(int index) {
 		return markerList.get(index);
+	}
+
+	public List<Marker> getCopyOfMarkers(){
+		return new ArrayList<Marker>(markerList);//shallow copy of original marker list;
 	}
 }
