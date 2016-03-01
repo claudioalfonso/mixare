@@ -10,7 +10,7 @@ public class Config {
     public static final int DEFAULT_RANGE_PROGRESS = 37;
     public final static double DEFAULT_FIX_LAT = 51.46184;
     public final static double DEFAULT_FIX_LON = 7.01655;
-    public final static int DEFAULT_FIX_HEIGHT = 300;
+    public final static int DEFAULT_FIX_HEIGHT = 0;
     public final static String DEFAULT_FIX_NAME = "defaultFix";
     public final static double DEFAULT_DESTINATION_LAT = 51.46301;
     public final static double DEFAULT_DESTINATION_LON = 7.00396;

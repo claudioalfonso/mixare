@@ -260,7 +260,7 @@ public abstract class LocalMarker implements Marker {
 			paintScreen.setStrokeWidth(1f);
 			paintScreen.setFill(true);
 			paintScreen.paintObj(txtLab, signMarker.x - txtLab.getWidth()
-                    / 2, signMarker.y + maxHeight, currentAngle + 90, 1);
+					/ 2, signMarker.y + maxHeight, currentAngle + 90, 1);
 		}
 
 	}
@@ -301,6 +301,7 @@ public abstract class LocalMarker implements Marker {
 						eventHandled = true;
 						break;
 					case R.id.menuitem_set_as_location:
+						setAsLocation();
 						eventHandled = true;
 						break;
 					case R.id.menuitem_set_as_destination:
@@ -377,6 +378,13 @@ public abstract class LocalMarker implements Marker {
         destination.setLongitude(LocalMarker.this.getLongitude());
         MixViewDataHolder.getInstance().setCurDestination(destination);
     }
+
+	private void setAsLocation(){
+		Location location = Config.getManualFix();
+		location.setLatitude(LocalMarker.this.getLatitude());
+		location.setLongitude(LocalMarker.this.getLongitude());
+		MixViewDataHolder.getInstance().setCurLocation(location);
+	}
 
     public Intent prepareAction(Context ctx, Class clazz, int menuEntry){
         Intent intent = new Intent(ctx, clazz);
