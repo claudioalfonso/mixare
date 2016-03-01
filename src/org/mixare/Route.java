@@ -35,7 +35,7 @@ public class Route {
                     coordinateList.add(lat);
                 }
                 cubeView.cubeRenderer.updateRoute(coordinateList);
-                cubeView.requestRender();
+                //cubeView.requestRender();
             }
         }).execute(startLocation, endLocation);
         return coordinateList;

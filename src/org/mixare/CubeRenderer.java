@@ -3,11 +3,16 @@ package org.mixare;
 import android.location.Location;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
+import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.util.MercatorProjection;
 import org.mixare.lib.marker.Marker;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +33,6 @@ class CubeRenderer implements GLSurfaceView.Renderer{
     float currX = 0;
     float currY = 0;
 
-    final Object semaphore = true;
-
     Location curLocation;
 
     MixViewDataHolder mixViewDataHolder;
@@ -38,67 +41,112 @@ class CubeRenderer implements GLSurfaceView.Renderer{
         mixViewDataHolder = MixViewDataHolder.getInstance();
     }
 
+    float x;
+    float y;
+
+
     public  void onDrawFrame(GL10 gl) {
+
+        x =(float) MercatorProjection.longitudeToPixelX(7.44919, MERCATOR_SCALE);
+        y =(float) MercatorProjection.latitudeToPixelY(51.50595, MERCATOR_SCALE);
+
+        Rectangle tempRectangle = null;
+
         /* clear screen*/
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         /* set MatrixMode to model view*/
         gl.glMatrixMode(GL10.GL_MODELVIEW);
 
-        synchronized (semaphore) {
-            renderCubes(gl, routeCubes);
-        }
+        gl.glLoadIdentity();
+        gl.glMultMatrixf(rotationMatrix, 0);
+        gl.glTranslatef(0, 0, -3f);
 
-        synchronized (semaphore) {
-            renderCubes(gl, poiCubes);
-        }
+        // gl.glRotatef(0, 1, 0, 0);
+        // gl.glRotatef(0, 0, 1, 0);
+        // gl.glRotatef(0, 0, 0, 1);
 
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
+        // gl.glTranslatef(0,0,0);
+
+        // gl.glPushMatrix();
+
+        renderCubes(gl, poiCubes, false);
+
+        // renderRecangle(gl);
+
+        renderCubes(gl, routeCubes, true);
+
+        // gl.glPopMatrix();
+        // renderRectangles(gl,routeCubes);
+
+
+        //nach oben verschoben für rectangle! ggf rückgängig machen
+       // gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+       // gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
     }
 
-    public void renderCubes(GL10 gl, List<Cube> cubes){
+    public void renderCubes(GL10 gl, List<Cube> cubes, Boolean renderRect){
         float previousX = 0;
         float previousY = 0;
+        Cube tempCube = null;
+        Rectangle tempRectangle = null;
 
         gl.glLoadIdentity();
         gl.glMultMatrixf(rotationMatrix, 0);
         gl.glTranslatef(0, 0, -3f);
 
         if (cubes != null) {
-            gl.glRotatef(0, 1, 0, 0);
-            gl.glRotatef(0, 0, 1, 0);
-            gl.glRotatef(0, 0, 0, 1);
+            synchronized (cubes) {
+                gl.glRotatef(0, 1, 0, 0);
+                gl.glRotatef(0, 0, 1, 0);
+                gl.glRotatef(0, 0, 0, 1);
 
-            for (Cube cube : cubes) {
-                cube.setRelativeX(cube.getAbsoluteX() - currX);
-                cube.setRelativeY(currY - cube.getAbsoluteY());
+                for (Cube cube : cubes) {
+                    cube.setRelativeX(cube.getAbsoluteX() - currX);
+                    cube.setRelativeY(currY - cube.getAbsoluteY());
 
-                gl.glTranslatef(cube.getRelativeX() - previousX, cube.getRelativeY() - previousY, 0);
+                    gl.glTranslatef(cube.getRelativeX() - previousX, cube.getRelativeY() - previousY, 0);
 
-                cube.draw(gl);
+                    cube.draw(gl);
 
-                previousX = cube.getRelativeX();
-                previousY = cube.getRelativeY();
-            };
+                    if(tempCube!=null && renderRect) {
+                        tempRectangle = new Rectangle(tempCube.relativeX, tempCube.relativeY, cube.relativeX, cube.relativeY);
+                        tempRectangle.draw(gl);
+                    }
+                    previousX = cube.getRelativeX();
+                    previousY = cube.getRelativeY();
+                    tempCube = cube;
+                }
+            }
         }
     }
 
-    public void updateCubes(List<?> geoObjects){
-        synchronized (semaphore) {
-            Cube newCube = null;
-            final List<Cube> cubeList;
-            double lat = 0;
-            double lon = 0;
+    public void renderRecangle(GL10 gl){
+        Rectangle tempRectangle = null;
 
-            if (geoObjects.size() > 0 && geoObjects.get(0) instanceof Marker) {
-                cubeList = poiCubes;
-            } else if (geoObjects.size() > 0 && geoObjects.get(0) instanceof LatLong) {
-                cubeList = routeCubes;
-            } else {
-                cubeList = new ArrayList<>();
-            }
+        float x;
+        float y;
 
-            updateCurLocation(null);
+        float zielX;
+        float zielY;
+
+        x =(float) MercatorProjection.longitudeToPixelX(7.44919, MERCATOR_SCALE);
+        y =(float) MercatorProjection.latitudeToPixelY(51.50595, MERCATOR_SCALE);
+
+
+        zielX = (float) MercatorProjection.longitudeToPixelX(7.45098, MERCATOR_SCALE);
+        zielY = (float) MercatorProjection.latitudeToPixelY(51.50658, MERCATOR_SCALE);
+
+        tempRectangle= new Rectangle(x,y,zielX,zielY);
+        tempRectangle.draw(gl);
+    }
+
+    public void updateCubes(List<?> geoObjects, List<Cube> cubeList){
+        Cube newCube = null;
+        double lat = 0;
+        double lon = 0;
+
+        updateCurLocation(null);
+        synchronized(cubeList){
             cubeList.clear();
             for (Object curObj : geoObjects) {
                 if (curObj instanceof Marker) {
@@ -115,11 +163,11 @@ class CubeRenderer implements GLSurfaceView.Renderer{
     }
 
     public void updatePOIMarker(List<Marker> pois) {
-        updateCubes(pois);
+        updateCubes(pois, poiCubes);
     }
 
     public void updateRoute(List<LatLong> coordinateList){
-        updateCubes(coordinateList);
+        updateCubes(coordinateList, routeCubes);
     }
 
     public Cube createCube(double lat, double lon, int index){
