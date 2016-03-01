@@ -105,8 +105,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	//private GLSurfaceView mGLSurfaceView;
 	private SensorManager mSensorManager;
 	//private RotationVektorRenderer mRenderer;
-	private TouchSurfaceView cubeView;
-	private CubeRenderer mRenderer;
+	private RouteView cubeView;
+	private RouteRenderer mRenderer;
 	private Sensor mOrienation;
 
 
@@ -664,7 +664,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		//mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-		cubeView = new TouchSurfaceView(this, mSensorManager);
+		cubeView = new RouteView(this, mSensorManager);
 
 /*
 		mGLSurfaceView.requestFocus();
@@ -937,12 +937,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 
 				startLocation = new Location("TEST_LOC");
-				startLocation.setLatitude(51.50595);
-				startLocation.setLongitude(7.44919);
+				startLocation.setLatitude(51.50658);
+				startLocation.setLongitude(7.45098);
 
 				endLocation = new Location("TEST_DEST");
-				endLocation.setLatitude(51.50658);
-				endLocation.setLongitude(7.45098);
+				endLocation.setLatitude(51.50595);
+				endLocation.setLongitude(7.44919);
 
 
 				Route r = new Route(cubeView);

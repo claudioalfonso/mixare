@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created on 19.01.2016 by MelanieW.
  */
-public class RouteData extends Connector {
+public class RouteRequestor extends Connector {
 
     private static final String LOCOSLAB_API_URL_BASE ="https://cloud.locoslab.com/carta/route?mode=walking";
     private static final String LOCOSLAB_API_PARAM_ORIGIN="origin";

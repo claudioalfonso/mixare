@@ -8,8 +8,8 @@ public class Config {
     /** string to name & access the preference file in the internal storage */
     public static final String PREFS_NAME = "MyPrefsFileForMenuItems";
     public static final int DEFAULT_RANGE = 65;
-    public final static double DEFAULT_FIX_LAT =51.46184;
-    public final static double DEFAULT_FIX_LON =7.01655;
+    public final static double DEFAULT_FIX_LAT =51.50658;
+    public final static double DEFAULT_FIX_LON =7.45098;
     public final static int DEFAULT_FIX_HEIGHT =300;
     public final static String DEFAULT_FIX_NAME ="defaultFix";
     public static final String MANUAL_FIX_NAME = "manualSet";

@@ -9,14 +9,10 @@ import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 
-import org.mixare.marker.RouteMarker;
 
-import java.util.List;
+class RouteView extends GLSurfaceView implements SensorEventListener {
 
-
-class TouchSurfaceView extends GLSurfaceView implements SensorEventListener {
-
-    public CubeRenderer cubeRenderer;
+    public RouteRenderer routeRenderer;
     public SensorManager sensorManager;
 
     private Sensor mRotationVectorSensor;
@@ -27,7 +23,7 @@ class TouchSurfaceView extends GLSurfaceView implements SensorEventListener {
     private final float[] orientation = new float[3];
 
 
-    public TouchSurfaceView(Context context, SensorManager sensorManager) {
+    public RouteView(Context context, SensorManager sensorManager) {
         super(context);
 
         this.sensorManager=sensorManager;
@@ -42,8 +38,8 @@ class TouchSurfaceView extends GLSurfaceView implements SensorEventListener {
 
 
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-        cubeRenderer = new CubeRenderer();
-        setRenderer(cubeRenderer);
+        routeRenderer = new RouteRenderer();
+        setRenderer(routeRenderer);
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
 
@@ -85,7 +81,7 @@ class TouchSurfaceView extends GLSurfaceView implements SensorEventListener {
 
         }
 
-        cubeRenderer.setRotationMatrix(mRotationMatrix2);
+        routeRenderer.setRotationMatrix(mRotationMatrix2);
 
         requestRender();
     }
