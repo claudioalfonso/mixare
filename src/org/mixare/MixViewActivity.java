@@ -937,12 +937,12 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 
 				startLocation = new Location("TEST_LOC");
-				startLocation.setLatitude(51.50658);
-				startLocation.setLongitude(7.45098);
+				startLocation.setLatitude(51.46122);
+				startLocation.setLongitude(7.01743);
 
 				endLocation = new Location("TEST_DEST");
-				endLocation.setLatitude(51.50595);
-				endLocation.setLongitude(7.44919);
+				endLocation.setLatitude(51.46328);
+				endLocation.setLongitude(7.00790);
 
 
 				Route r = new Route(cubeView);

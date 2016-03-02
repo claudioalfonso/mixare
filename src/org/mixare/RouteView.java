@@ -47,7 +47,7 @@ class RouteView extends GLSurfaceView implements SensorEventListener {
         setFocusableInTouchMode(true);
     }
 
-    public void start() {
+   /* public void start() {
         // enable our sensor when the activity is resumed, ask for
         // 10 ms updates.
         sensorManager.registerListener(this, mRotationVectorSensor, 10000);
@@ -56,33 +56,23 @@ class RouteView extends GLSurfaceView implements SensorEventListener {
     public void stop() {
         // make sure to turn our sensor off when the activity is paused
         sensorManager.unregisterListener(this);
-    }
+    } */
 
     @Override
     public void onSensorChanged(SensorEvent event) {
 
 
-
-
-    /*    float azimuth = event.values[0]; //angle around z-axis
-        float pitch = event.values[1];//angle around x-axis
-        float roll = event.values[2];//angle around y-axis */
-
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             Log.i("Test1", "SensorType" + Sensor.TYPE_ROTATION_VECTOR);
-            // convert the rotation-vector to a 4x4 matrix. the matrix
-            // is interpreted by Open GL as the inverse of the
-            // rotation-vector, which is what we want.
+            //Rotationvector as 4x4 matrix. This is interpreted as the inverse of rotation-vector
             SensorManager.getRotationMatrixFromVector(
                     mRotationMatrix, event.values);
             sensorManager.remapCoordinateSystem(
                     mRotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, mRotationMatrix2);
             SensorManager.getOrientation(mRotationMatrix2, orientation);
-
         }
 
         routeRenderer.setRotationMatrix(mRotationMatrix2);
-
         requestRender();
     }
 

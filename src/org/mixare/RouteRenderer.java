@@ -42,18 +42,21 @@ class RouteRenderer implements GLSurfaceView.Renderer{
 
     public  void onDrawFrame(GL10 gl) {
 
+        updateCurLocation(curLocation = mixViewDataHolder.getCurLocation());
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
+
         gl.glMultMatrixf(rotationMatrix, 0);
         gl.glTranslatef(0, 0, -3f);
 
-        //gl.glPushMatrix();
-       // renderCubes(gl, poiCubes);
-        //gl.glPopMatrix();
-        updateCurLocation(curLocation=mixViewDataHolder.getCurLocation());
+       // gl.glPushMatrix();
+
+        renderRouteSegements(gl, poiWaypoints);
         renderRouteSegements(gl, routeWaypoints);
+        //gl.glPopMatrix();
+
     }
 
     public void renderRouteSegements(GL10 gl, List<Waypoint> waypoints){
@@ -97,8 +100,10 @@ class RouteRenderer implements GLSurfaceView.Renderer{
                     previousY = waypoint.getRelativeY();
                     tempWaypoint = waypoint;
                 }
+
             }
         }
+
     }
 
 

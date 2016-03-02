@@ -18,22 +18,6 @@ public class RouteSegement {
     private FloatBuffer rectVerticesBuffer;
     private ShortBuffer rectTrianglesBuffer;
 
-    public float getStartY() {
-        return startY;
-    }
-
-    public float getStartX() {
-        return startX;
-    }
-
-    public float getEndY() {
-        return endY;
-    }
-
-    public float getEndX() {
-        return endX;
-    }
-
     private float startX;
     private float startY;
     private float endX;
