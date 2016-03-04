@@ -14,7 +14,7 @@ public class Config {
     public final static String DEFAULT_FIX_NAME = "defaultFix";
     public final static double DEFAULT_DESTINATION_LAT = 51.46301;
     public final static double DEFAULT_DESTINATION_LON = 7.00396;
-    public final static int DEFAULT_DESTINATION_HEIGHT = 300;
+    public final static int DEFAULT_DESTINATION_HEIGHT = 0;
     public final static String DEFAULT_DESTINATION_NAME = "defaultDest";
     public static final String MANUAL_FIX_NAME = "manualSet";
     public static final int INTENT_REQUEST_CODE_CENTERMAP = 76;

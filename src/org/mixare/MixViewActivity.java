@@ -664,7 +664,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		//mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-		cubeView = new TouchSurfaceView(this, mSensorManager);
+		cubeView = new RouteView(this, mSensorManager);
 
 /*
 		mGLSurfaceView.requestFocus();
@@ -944,7 +944,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
                     Route r = new Route(cubeView);
                     r.getRoute(startLocation, endLocation);
-                    cubeView.cubeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers());
+                    cubeView.routeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers());
                     cameraView.addView(cubeView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 				}
 

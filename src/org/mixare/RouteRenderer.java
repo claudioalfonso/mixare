@@ -15,7 +15,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * Render geographic objects (markers or routes) as cubes.
+ * Render geographic objects (markers or routes)
  */
 class RouteRenderer implements GLSurfaceView.Renderer{
     private  float[] rotationMatrix = new float[16];
@@ -46,20 +46,23 @@ class RouteRenderer implements GLSurfaceView.Renderer{
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
+
+
+       // gl.glPushMatrix();
+
+        renderRouteSegements(gl, poiWaypoints, true);
+        renderRouteSegements(gl, routeWaypoints, false);
+        //gl.glPopMatrix();
+
+    }
+
+    public void renderRouteSegements(GL10 gl, List<Waypoint> waypoints, Boolean pointsItself){
+
         gl.glLoadIdentity();
 
         gl.glMultMatrixf(rotationMatrix, 0);
         gl.glTranslatef(0, 0, -3f);
 
-       // gl.glPushMatrix();
-
-        renderRouteSegements(gl, poiWaypoints);
-        renderRouteSegements(gl, routeWaypoints);
-        //gl.glPopMatrix();
-
-    }
-
-    public void renderRouteSegements(GL10 gl, List<Waypoint> waypoints){
         float previousX = 0;
         float previousY = 0;
         Waypoint tempWaypoint = null;
@@ -87,13 +90,18 @@ class RouteRenderer implements GLSurfaceView.Renderer{
 
                     } else if (waypoints.indexOf(waypoint) == 1) {
                         gl.glTranslatef(waypoint.getRelativeX(), waypoint.getRelativeY(), 0);
-                       // waypoint.draw(gl);
-
+                        if(pointsItself) {
+                            waypoint.draw(gl);
+                        }
                     } else {
                         gl.glTranslatef(waypoint.getRelativeX() - previousX, waypoint.getRelativeY() - previousY, 0);
-                       // waypoint.draw(gl);
+                        if(pointsItself) {
+                            waypoint.draw(gl);
+                        }
                         tempRouteSegement = new RouteSegement(tempWaypoint.relativeX, tempWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
-                        tempRouteSegement.draw(gl);
+                        if(!pointsItself) {
+                            tempRouteSegement.draw(gl);
+                        }
                     }
 
                     previousX = waypoint.getRelativeX();
