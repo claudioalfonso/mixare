@@ -4,7 +4,6 @@ import android.location.Location;
 import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
-import org.mixare.lib.marker.Marker;
 import org.mixare.marker.RouteMarker;
 
 import java.util.ArrayList;
@@ -17,9 +16,9 @@ public class Route {
 
     private List<RouteMarker> routeMarkerList;
     private List<LatLong> coordinateList;
-    private TouchSurfaceView cubeView = null;
+    private RouteView cubeView = null;
 
-    public Route(TouchSurfaceView cubeView) {
+    public Route(RouteView cubeView) {
 
         coordinateList = new ArrayList<>();
         this.cubeView = cubeView;
@@ -34,7 +33,7 @@ public class Route {
                     Log.i("Info1", "LatLongs" + lat.latitude);
                     coordinateList.add(lat);
                 }
-                cubeView.cubeRenderer.updateRoute(coordinateList);
+                cubeView.routeRenderer.updateRoute(coordinateList);
                 //cubeView.requestRender();
             }
         }).execute(startLocation, endLocation);

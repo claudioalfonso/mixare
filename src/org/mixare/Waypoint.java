@@ -14,6 +14,8 @@ package org.mixare;/*
  * limitations under the License.
  */
 
+import org.mapsforge.core.util.MercatorProjection;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -23,7 +25,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * A vertex shaded cube.
  */
-class Cube
+class Waypoint
 {
  /*   public float getZ() {
         return z;
@@ -34,6 +36,11 @@ class Cube
 
     public float relativeX;
     public float relativeY;
+
+    private static final int MERCATOR_SCALE = 10000000;
+
+    private boolean isStart = false;
+
 
 
     public float getRelativeX() {
@@ -72,8 +79,25 @@ class Cube
 
 
   //  public float z;
-    public Cube(float relativeX, float relativeY, float absoluteX, float absoluteY)
+    public Waypoint(double lat, double lon, int index, RouteRenderer routeRenderer)
     {
+
+        absoluteX =(float) MercatorProjection.longitudeToPixelX(lon, MERCATOR_SCALE);
+        absoluteY =(float) MercatorProjection.latitudeToPixelY(lat, MERCATOR_SCALE);
+
+        if(index == 0){
+            //sollte das so sein?-daher der große wert...
+            routeRenderer.setStartCoordX(absoluteX);
+            routeRenderer.setStartCoordY(absoluteY);
+           // startCoordY =  absoluteY;
+            isStart = true;
+            relativeX = 0;
+            relativeY = 0;
+        }
+        else {
+            relativeX = absoluteX - routeRenderer.getStartCoordX();
+            relativeY = routeRenderer.getStartCoordY() - absoluteY;
+        }
 
         this.relativeX = relativeX;
         this.relativeY = relativeY;

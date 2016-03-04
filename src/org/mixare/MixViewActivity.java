@@ -105,8 +105,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	//private GLSurfaceView mGLSurfaceView;
 	private SensorManager mSensorManager;
 	//private RotationVektorRenderer mRenderer;
-	private TouchSurfaceView cubeView;
-	private CubeRenderer mRenderer;
+	private RouteView cubeView;
+	private RouteRenderer mRenderer;
 	private Sensor mOrienation;
 
 
