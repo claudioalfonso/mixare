@@ -48,6 +48,7 @@ import org.mixare.MixMenu;
 import org.mixare.MixViewActivity;
 import org.mixare.MixViewDataHolder;
 import org.mixare.R;
+import org.mixare.MyRoute;
 import org.mixare.RouteDataAsyncTask;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.marker.Marker;
@@ -335,10 +336,11 @@ public class MixMap extends MixMenu {
 
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
             @Override
-            public void processFinish(List<LatLong> latLong) {
-                for(LatLong lat : latLong) {
+            public void processFinish(MyRoute route) {
+              /*  for(LatLong lat : latLong) {
                     coordinateList.add(lat);
-                }
+                }*/
+                coordinateList = route.getCoordinateList();
                 mapView.getLayerManager().getLayers().add(polyline);
             }
 

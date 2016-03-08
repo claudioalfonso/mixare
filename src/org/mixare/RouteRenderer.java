@@ -3,6 +3,7 @@ package org.mixare;
 import android.location.Location;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
+import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.util.MercatorProjection;
@@ -31,6 +32,16 @@ class RouteRenderer implements GLSurfaceView.Renderer{
     float currX = 0;
     float currY = 0;
 
+    public MyRoute getActualRoute() {
+        return actualRoute;
+    }
+
+    public void setActualRoute(MyRoute actualRoute) {
+        this.actualRoute = actualRoute;
+    }
+
+    private MyRoute actualRoute = null;
+
     Location curLocation;
 
     MixViewDataHolder mixViewDataHolder;
@@ -52,6 +63,20 @@ class RouteRenderer implements GLSurfaceView.Renderer{
 
         renderRouteSegements(gl, poiWaypoints, true);
         renderRouteSegements(gl, routeWaypoints, false);
+
+        if(!routeWaypoints.isEmpty() &&currX != 0 && currY!= 0){
+            if (hasLowDistance()== false){
+                Location targetLoc = new Location("Target");
+                targetLoc.setLatitude(getActualRoute().getTargetCoordinate().getLatitude());
+                targetLoc.setLongitude(getActualRoute().getTargetCoordinate().getLongitude());
+                RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
+                    @Override
+                    public void processFinish(MyRoute route) {
+                        updateRoute(route);
+                    }
+                }).execute(curLocation,targetLoc);
+            }
+        }
         //gl.glPopMatrix();
 
     }
@@ -59,7 +84,6 @@ class RouteRenderer implements GLSurfaceView.Renderer{
     public void renderRouteSegements(GL10 gl, List<Waypoint> waypoints, Boolean pointsItself){
 
         gl.glLoadIdentity();
-
         gl.glMultMatrixf(rotationMatrix, 0);
         gl.glTranslatef(0, 0, -3f);
 
@@ -79,10 +103,8 @@ class RouteRenderer implements GLSurfaceView.Renderer{
                 for (Waypoint waypoint : waypoints) {
                     
                     if (curLocation != null) {
-                        if (currX != startCoordX || currY != startCoordY) {
                             waypoint.setRelativeX(waypoint.getAbsoluteX() - currX);
                             waypoint.setRelativeY(currY - waypoint.getAbsoluteY());
-                        }
                     }
 
 
@@ -98,8 +120,8 @@ class RouteRenderer implements GLSurfaceView.Renderer{
                         if(pointsItself) {
                             waypoint.draw(gl);
                         }
-                        tempRouteSegement = new RouteSegement(tempWaypoint.relativeX, tempWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
                         if(!pointsItself) {
+                            tempRouteSegement = new RouteSegement(tempWaypoint.relativeX, tempWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
                             tempRouteSegement.draw(gl);
                         }
                     }
@@ -138,14 +160,43 @@ class RouteRenderer implements GLSurfaceView.Renderer{
         }
     }
 
+    public Waypoint getNearestWaypoint(List<Waypoint> waypoints){
+        Waypoint waypoint = null;
+        float distance= 100000000;
+        synchronized (waypoints) {
+            for (Waypoint w : waypoints) {
+                if (w.distanceToCurrentPosition() < distance) {
+                    distance = w.distanceToCurrentPosition();
+                    waypoint = w;
+                }
+            }
+        }
+        return waypoint;
+    }
+
+    public boolean hasLowDistance(){
+        Waypoint waypoint = getNearestWaypoint(routeWaypoints);
+        Log.d("Waypoint", "Nearest Waypoint, distance" + waypoint.distanceToCurrentPosition());
+        if(waypoint.distanceToCurrentPosition()<50) {
+            return true;
+
+        }
+        else return false;
+
+    }
+
     public void updatePOIMarker(List<Marker> pois) {
         updateWaypoints(pois, poiWaypoints);
     }
 
-    public void updateRoute(List<LatLong> coordinateList){
+    /*public void updateRoute(List<LatLong> coordinateList){
         updateWaypoints(coordinateList, routeWaypoints);
+    }*/
+    public void updateRoute(MyRoute myRoute){
+        Log.i("Info3", "Steps" + myRoute.getCoordinateList().size());
+        setActualRoute(myRoute);
+        updateWaypoints(myRoute.getCoordinateList(), routeWaypoints);
     }
-    
 
     public void updateCurLocation(Location newLocation){
         curLocation = newLocation;

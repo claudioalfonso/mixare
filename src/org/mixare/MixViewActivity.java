@@ -932,7 +932,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
                     startLocation = MixViewDataHolder.getInstance().getCurLocation();
                     endLocation = MixViewDataHolder.getInstance().getCurDestination();
 
-                    /*
+
                     startLocation = new Location("TEST_LOC");
 					startLocation.setLatitude(51.50595);
 					startLocation.setLongitude(7.44919);
@@ -940,10 +940,10 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
                     endLocation = new Location("TEST_DEST");
 					endLocation.setLatitude(51.50658);
 					endLocation.setLongitude(7.45098);
-					*/
 
-                    Route r = new Route(cubeView);
-                    r.getRoute(startLocation, endLocation);
+
+                    RouteManager r = new RouteManager(cubeView);
+					r.getRoute(startLocation, endLocation);
                     cubeView.routeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers());
                     cameraView.addView(cubeView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 				}

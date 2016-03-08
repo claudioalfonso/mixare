@@ -11,10 +11,11 @@ import java.util.List;
 /**
  * Created by MelanieW on 03.02.2016.
  */
-public class RouteDataAsyncTask extends AsyncTask<Location,Void,List<LatLong>> {
+public class RouteDataAsyncTask extends AsyncTask<Location,Void,MyRoute> {
 
     List<LatLong> coordinateList = new ArrayList<>();
     List<LatLong> latLong = new ArrayList<>();
+    MyRoute myRoute;
 
         public AsyncResponse delegate = null;
 
@@ -23,18 +24,17 @@ public class RouteDataAsyncTask extends AsyncTask<Location,Void,List<LatLong>> {
         }
 
         @Override
-        protected List<LatLong> doInBackground(Location... params) {
+        protected MyRoute doInBackground(Location... params) {
             RouteRequestor rs = new RouteRequestor();
-            latLong = rs.init(params[0],params[1]);
-            return latLong;
+            myRoute = rs.init(params[0],params[1]);
+           // latLong = rs.init(params[0],params[1]);
+           // return latLong;
+            return myRoute;
         }
 
         @Override
-        protected void onPostExecute(List<LatLong> latLongs) {
-            super.onPostExecute(latLongs);
-            for (LatLong latlong : latLongs) {
-                coordinateList.add(latlong);
-            }
-            delegate.processFinish(coordinateList);
+        protected void onPostExecute(MyRoute myRoute) {
+            super.onPostExecute(myRoute);
+            delegate.processFinish(myRoute);
         }
 }
