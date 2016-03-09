@@ -16,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -45,8 +46,8 @@ public class PluginLoaderActivity extends Activity {
 				if (extras.containsKey("AppName")) {
 					getInstalledPluginsByName(extras.getString("AppName"));
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ex) {
+				Log.e(Config.TAG, this.getClass().getName(), ex);
 			}
 		}
 

@@ -401,8 +401,8 @@ public abstract class LocalMarker implements Marker {
             try {
                 ctx.getWebContentManager().loadWebPage(webpage, ctx.getActualMixViewActivity());
                 return true;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ex) {
+				Log.e(Config.TAG, this.getClass().getName(), ex);
             }
         }
         return false;
@@ -554,9 +554,9 @@ public abstract class LocalMarker implements Marker {
                     url = null;
                 }
                 URL = url;
-            } catch (UnsupportedEncodingException e) {
+            } catch (UnsupportedEncodingException ex) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+				Log.e(Config.TAG, this.getClass().getName(), ex);
             }
             this.underline = true;
         } else {

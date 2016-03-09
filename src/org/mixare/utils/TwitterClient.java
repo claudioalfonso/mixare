@@ -95,10 +95,10 @@ public class TwitterClient
 			jsonArrayAsString += "]}";//close array
 			return jsonArrayAsString;
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			Log.e(Config.TAG, "Error querying twitter data :"+e);
-			e.printStackTrace();
+			Log.e(Config.TAG, "Error querying twitter data :");
+			Log.e(Config.TAG, "", ex);
 		}
 		return null;
 	}

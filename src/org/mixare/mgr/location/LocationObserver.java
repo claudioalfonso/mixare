@@ -69,7 +69,7 @@ class LocationObserver implements LocationListener {
 							+ location.getAccuracy());
 			myController.setPosition(location);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
 	}
 

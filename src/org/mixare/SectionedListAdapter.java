@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -60,7 +61,7 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                     try {
                         tag = convertView.getTag(R.string.list_view_section);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        Log.e(Config.TAG, "SectionedListAdapter", ex);
                     }
                 }
 //					Log.d(Config.TAG, "getView: " + position + " tag: " + tag + " section");
@@ -91,7 +92,7 @@ class SectionedListAdapter extends ArrayAdapter<Item> {
                     try {
                         tag = convertView.getTag(R.string.list_view_entry);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        Log.e(Config.TAG, this.getClass().getName(), ex);
                     }
                 }
 //					Log.d("test", "getView: " + position + " tag: " + tag + " entry");

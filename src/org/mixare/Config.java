@@ -8,11 +8,11 @@ public class Config {
     /** string to name & access the preference file in the internal storage */
     public static final String PREFS_NAME = "MyPrefsFileForMenuItems";
     public static final int DEFAULT_RANGE_PROGRESS = 37;
-    public final static double DEFAULT_FIX_LAT = 51.49957;
-    public final static double DEFAULT_FIX_LON = 7.43985;
+    public final static double DEFAULT_FIX_LAT = 51.46184; //Campus Schützenbahn, Eingang SA
+    public final static double DEFAULT_FIX_LON = 7.01655;
     public final static int DEFAULT_FIX_HEIGHT = 0;
     public final static String DEFAULT_FIX_NAME = "defaultFix";
-    public final static double DEFAULT_DESTINATION_LAT = 51.46301;
+    public final static double DEFAULT_DESTINATION_LAT = 51.46301; //Mensa
     public final static double DEFAULT_DESTINATION_LON = 7.00396;
     public final static int DEFAULT_DESTINATION_HEIGHT = 0;
     public final static String DEFAULT_DESTINATION_NAME = "defaultDest";

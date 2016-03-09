@@ -63,7 +63,7 @@ class RouteView extends GLSurfaceView implements SensorEventListener {
 
 
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-            Log.i("Test1", "SensorType" + Sensor.TYPE_ROTATION_VECTOR);
+            //Log.i(Config.TAG."Test1", "SensorType" + Sensor.TYPE_ROTATION_VECTOR);
             //Rotationvector as 4x4 matrix. This is interpreted as the inverse of rotation-vector
             SensorManager.getRotationMatrixFromVector(
                     mRotationMatrix, event.values);
