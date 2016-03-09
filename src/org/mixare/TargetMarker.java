@@ -19,15 +19,16 @@ public class TargetMarker {
     }
     public TargetMarker(){
 
+        int one = 0x10000;
         int vertices[] = {
-                -1, -1, -1,
-                1, -1, -1,
-                1, 1, -1,
-                -1, 1, -1,
-                -1, -1, 1,
-                1, -1, 1,
-                1, 1, 1,
-                -1, 1, 1,
+                -one, -one, -one,
+                one, -one, -one,
+                one,  one, -one,
+                -one,  one, -one,
+                -one, -one,  one,
+                one, -one,  one,
+                one,  one,  one,
+                -one,  one,  one,
         };
 
         /*int colors[] = {

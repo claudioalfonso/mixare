@@ -38,7 +38,6 @@ public class RouteRequestor extends Connector {
 
         try {
             Direction resultDirection = this.executeObject(Connector.METHOD_GET, currentRouteUrl, Direction.class, direction);
-            Log.i("Info4", "Steps" + resultDirection.getRoutes().get(resultDirection.getRoutes().size()-1).getSteps().size());
             return new MyRoute(resultDirection.getRoutes().get(0));
 
 

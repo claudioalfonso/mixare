@@ -34,7 +34,6 @@ public class MyRoute extends com.locoslab.api.data.carta.route.direction.Route {
 
         for (Step s: getSteps()){
             for(Coordinate c : s.getCoordinates()){
-                Log.i("Info5", "Koorindaten" + s.getCoordinates().size());
                 coordinateList.add(new LatLong(c.getLatitude(), c.getLongitude()));
             }
         }

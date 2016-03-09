@@ -130,8 +130,6 @@ class RouteRenderer implements GLSurfaceView.Renderer{
                             }
                             tempRouteSegement = new RouteSegement(tempWaypoint.relativeX, tempWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
                             tempRouteSegement.draw(gl);
-                            targetMarker = new TargetMarker();
-                            targetMarker.draw(gl);
                         }
                     }
 
