@@ -607,20 +607,18 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * Checks cameraSurface, if it does not exist, it creates one.
 	 */
 	private void maintainCamera() {
-
 		cameraView = (FrameLayout) findViewById(R.id.content_frame);
-
-
-
 			if (cameraSurface == null) {
-				cameraSurface = new CameraSurface(this);
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+					cameraSurface = new Camera2Surface(this);
+				} else {
+					cameraSurface = new CameraSurface(this);
+				}
 				cameraView.addView(cameraSurface);
 			} else {
 				cameraView.removeView(cameraSurface);
 				cameraView.addView(cameraSurface);
-
 			}
-			//setContentView(cameraSurface);
 		}
 
 	/**
@@ -1056,7 +1054,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			MixContext.getInstance().updateSmoothRotation(
 					getMixViewData().getSmoothR());
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.e(Config.TAG, "MixViewActivity onSensorChanged()",ex);
 		}
 	}
 

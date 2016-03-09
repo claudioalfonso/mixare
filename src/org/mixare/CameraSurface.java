@@ -25,7 +25,6 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 
 			holder = getHolder();
 			holder.addCallback(this);
-			holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
