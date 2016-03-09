@@ -33,6 +33,7 @@ import org.mixare.lib.render.Camera;
 import org.mixare.lib.render.MixVector;
 
 import android.location.Location;
+import android.util.Log;
 
 /**
  * A plugin marker that should be extended by marker plugins.
@@ -73,8 +74,8 @@ public abstract class PluginMarker{
 		if (link != null && link.length() > 0) {
 			try {
 				URL = URLDecoder.decode(link,MixUtils.CHARSET_NAME_UTF_8);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+			} catch (UnsupportedEncodingException ex) {
+				Log.e("mixarelib", this.getClass().getName(), ex);
 			}
 			this.underline = true;
 		}

@@ -84,7 +84,7 @@ class Camera2Surface extends CameraSurface {
             camera.close();
             camera = null;
         }
-        holder.removeCallback(this);
+        this.holder.removeCallback(this);
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
@@ -169,7 +169,7 @@ class Camera2Surface extends CameraSurface {
                 }
             }, null);
         } catch (CameraAccessException ex) {
-            Log.e(Config.TAG, "CameraSurface openCamera()", ex);
+            Log.e(Config.TAG, this.getClass().getName(), ex);
         }
     }
 
@@ -186,7 +186,7 @@ class Camera2Surface extends CameraSurface {
                         cameraCaptureSession.setRepeatingRequest(builder.build(),null,null);
                         Camera2Surface.this.activeSession = cameraCaptureSession;
                     } catch (CameraAccessException ex){
-                        Log.e(Config.TAG, "openCamera createPreviewSession createCaptureSession onConfigured setRepeatingRequest",ex);
+                        Log.e(Config.TAG, this.getClass().getName(), ex);
                     }
                 }
 
@@ -196,7 +196,7 @@ class Camera2Surface extends CameraSurface {
                 }
             }, null);
         } catch (CameraAccessException ex) {
-            Log.e(Config.TAG, "createPreviewSession overall", ex);
+            Log.e(Config.TAG, this.getClass().getName(), ex);
         }
     }
 }

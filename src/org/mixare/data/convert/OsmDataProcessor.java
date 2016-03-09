@@ -124,8 +124,8 @@ public class OsmDataProcessor extends DataHandler implements DataProcessor {
 					.newDocumentBuilder();
 			// Document doc = builder.parse(is);d
 			doc = builder.parse(new InputSource(new StringReader(rawData)));
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
 		return doc;
 	}

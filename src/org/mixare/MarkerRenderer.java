@@ -158,8 +158,7 @@ public class MarkerRenderer {
 			cam.setViewAngle(Camera.DEFAULT_VIEW_ANGLE);
 
 		} catch (Exception ex) {
-			// ex.printStackTrace();
-			Log.e(Config.TAG, ex.getMessage());
+			Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
 		frozen = false;
 		isInit = true;

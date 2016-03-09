@@ -97,7 +97,7 @@ public class ArenaProcessor extends PluginDataProcessor {
 			InputStream input = connection.getInputStream();
 			return BitmapFactory.decodeStream(input);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(Config.TAG, this.getClass().getName(), ex);
 			return null;
 		}		
 	}

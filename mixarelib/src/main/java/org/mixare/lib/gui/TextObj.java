@@ -25,6 +25,7 @@ import java.util.Arrays;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  *  This class stores the properties of the displayed text and uses the
@@ -64,7 +65,7 @@ public class TextObj implements ScreenObj, Parcelable{
 		try {
 			prepTxt(txtInit, fontSizeInit, maxWidth, dw);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.e("mixarelib", this.getClass().getName(), ex);
 			prepTxt("TEXT PARSE ERROR", 12, 200, dw);
 		}
 	}

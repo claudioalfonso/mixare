@@ -42,8 +42,8 @@ public class RouteRequestor extends Connector {
             return new MyRoute(resultDirection.getRoutes().get(0));
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Log.e(Config.TAG, this.getClass().getName(), ex);
             return null;
         }
     }

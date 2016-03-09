@@ -93,7 +93,7 @@ public class Compatibility {
 					result = (Integer) retObj;
 				}
 		} catch (Exception ex) {
-			//ex.printStackTrace();
+			//Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
 		return result;
 	}

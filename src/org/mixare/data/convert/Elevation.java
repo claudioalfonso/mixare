@@ -20,6 +20,7 @@ package org.mixare.data.convert;
 
 import java.util.concurrent.ExecutionException;
 
+import org.mixare.Config;
 import org.mixare.mgr.HttpTools;
 
 import android.content.Context;
@@ -81,9 +82,9 @@ public class Elevation {
 		String content = "";
 		try {
 			content = downloader.execute(requestUrl).get();
-		} catch (Exception e) {
+		} catch (Exception ex) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
 		if (closeLooper) {
 			Looper.myLooper().quit();
@@ -113,9 +114,9 @@ public class Elevation {
 		String content = "";
 		try {
 			content = downloader.execute(requestUrl).get();
-		} catch (Exception e) {
+		} catch (Exception ex) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
         if (closeLooper) {
             Looper.myLooper().quit();

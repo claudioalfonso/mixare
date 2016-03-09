@@ -183,8 +183,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 						return true;
 					} catch (Exception ex) {
 						// doError(ex);
-						ex.printStackTrace();
-						//return super.onTouchEvent(me);
+                        Log.e(Config.TAG, this.getClass().getName(), ex);
+                        //return super.onTouchEvent(me);
 					}
 					return true;
 				}
@@ -1074,7 +1074,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			return true;
 		} catch (Exception ex) {
 			// doError(ex);
-			ex.printStackTrace();
+            Log.e(Config.TAG, this.getClass().getName(), ex);
 			return super.onTouchEvent(me);
 		}
 	}
@@ -1116,7 +1116,8 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+            Log.e(Config.TAG, "MixViewActivity", ex);
+
 			return super.onKeyDown(keyCode, event);
 		}
 	}
@@ -1154,9 +1155,9 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 			setErrorDialog(error);
 
 			try {
-				ex1.printStackTrace();
+                Log.e(Config.TAG, "MixViewActivity doError 1", ex1);
 			} catch (Exception ex2) {
-				ex2.printStackTrace();
+                Log.e(Config.TAG, "MixViewActivity doError 2", ex2);
 			}
 		}
 

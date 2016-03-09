@@ -64,7 +64,7 @@ public class TextObj implements ScreenObj, Parcelable{
 		try {
 			prepTxt(txtInit, fontSizeInit, maxWidth, dw);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.e(Config.TAG, this.getClass().getName(), ex);
 			prepTxt("TEXT PARSE ERROR", 12, 200, dw);
 		}
 	}

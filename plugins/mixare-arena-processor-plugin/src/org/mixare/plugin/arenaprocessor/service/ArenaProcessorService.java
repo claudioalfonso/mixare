@@ -82,7 +82,7 @@ public class ArenaProcessorService extends Service{
 			try {
 				return processor.get(processorName).load(rawData, taskId, color);
 			} catch (JSONException e) {
-				e.printStackTrace();
+				Log.e(Config.TAG, this.getClass().getName(), ex);
 				return new ArrayList<InitialMarkerData>();
 			}
 		}

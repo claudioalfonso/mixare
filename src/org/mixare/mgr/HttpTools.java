@@ -103,13 +103,13 @@ public final class HttpTools {
 			while ((line = reader.readLine()) != null) {
 				sb.append(line + "\n");
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ex) {
+			Log.e(Config.TAG, "", ex);
 		} finally {
 			try {
 				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException ex) {
+				Log.e(Config.TAG, "", ex);
 			}
 		}
 		return sb.toString();

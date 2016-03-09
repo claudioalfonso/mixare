@@ -26,7 +26,7 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 			holder = getHolder();
 			holder.addCallback(this);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+            Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
 	}
 
@@ -79,7 +79,7 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 				camera = null;
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+            Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
 	}
 
@@ -154,7 +154,7 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 			camera.setParameters(parameters);
 			camera.startPreview();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+            Log.e(Config.TAG, this.getClass().getName(), ex);
 		}
 	}
 }
