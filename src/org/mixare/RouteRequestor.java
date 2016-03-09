@@ -30,33 +30,22 @@ public class RouteRequestor extends Connector {
     private String currentRouteUrl = "";
     private Direction direction = null;
 
-    public List<LatLong> init(Location startLocation, Location endLocation){
+    public MyRoute init(Location startLocation, Location endLocation){
 
         if (startLocation!=null && endLocation!= null){
             currentRouteUrl= buildRouteUrl(startLocation, endLocation);
         }
 
-        List<LatLong> latLongs = new ArrayList<>();
-
         try {
             Direction resultDirection = this.executeObject(Connector.METHOD_GET, currentRouteUrl, Direction.class, direction);
+            Log.i("Info4", "Steps" + resultDirection.getRoutes().get(resultDirection.getRoutes().size()-1).getSteps().size());
+            return new MyRoute(resultDirection.getRoutes().get(0));
 
-            for (Route route : resultDirection.getRoutes()) {
 
-                latLongs.add(new LatLong(route.getSourceCoordinate().getLatitude(), route.getSourceCoordinate().getLongitude()));
-                for (Step s: route.getSteps()){
-                    for(Coordinate c : s.getCoordinates()){
-                       latLongs.add(new LatLong(c.getLatitude(), c.getLongitude()));
-                    }
-                }
-                latLongs.add(new LatLong(route.getTargetCoordinate().getLatitude(), route.getTargetCoordinate().getLongitude()));
-            }
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-
-
-    return latLongs;
     }
 
     public String buildRouteUrl(Location origin, Location destination){

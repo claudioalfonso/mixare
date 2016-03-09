@@ -14,6 +14,9 @@ package org.mixare;/*
  * limitations under the License.
  */
 
+import android.location.Location;
+import android.util.Log;
+
 import org.mapsforge.core.util.MercatorProjection;
 
 import java.nio.ByteBuffer;
@@ -36,6 +39,9 @@ class Waypoint
 
     public float relativeX;
     public float relativeY;
+
+    private float directionX;
+    private float directionY;
 
     private static final int MERCATOR_SCALE = 10000000;
 
@@ -78,6 +84,7 @@ class Waypoint
     }
 
 
+    public  Waypoint(){}
   //  public float z;
     public Waypoint(double lat, double lon, int index, RouteRenderer routeRenderer)
     {
@@ -99,11 +106,6 @@ class Waypoint
             relativeY = routeRenderer.getStartCoordY() - absoluteY;
         }
 
-        this.relativeX = relativeX;
-        this.relativeY = relativeY;
-        this.absoluteX = absoluteX;
-        this.absoluteY = absoluteY;
-       // this.z = z;
 
         int one = 0x10000;
         int vertices[] = {
@@ -160,6 +162,13 @@ class Waypoint
         mIndexBuffer = ByteBuffer.allocateDirect(indices.length);
         mIndexBuffer.put(indices);
         mIndexBuffer.position(0);
+    }
+
+    public float distanceToCurrentPosition(){
+        Log.d("Results", "DistanceBetweenWaypoints" + (int) Math.sqrt(Math.pow(relativeY,2) + Math.pow(relativeX,2)));
+        return (float)Math.sqrt(Math.pow(relativeY,2) + Math.pow(relativeX,2));
+
+
     }
 
     public void draw(GL10 gl)
