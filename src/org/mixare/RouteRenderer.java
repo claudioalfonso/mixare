@@ -91,6 +91,7 @@ class RouteRenderer implements GLSurfaceView.Renderer{
         float previousY = 0;
         Waypoint tempWaypoint = null;
         RouteSegement tempRouteSegement = null;
+        TargetMarker targetMarker = null;
 
 
         if (waypoints != null) {
@@ -117,12 +118,20 @@ class RouteRenderer implements GLSurfaceView.Renderer{
                         }
                     } else {
                         gl.glTranslatef(waypoint.getRelativeX() - previousX, waypoint.getRelativeY() - previousY, 0);
+
                         if(pointsItself) {
                             waypoint.draw(gl);
                         }
                         if(!pointsItself) {
+                            if(waypoints.indexOf(waypoint)==waypoints.size()-1){
+                                //targetMarker = new TargetMarker(waypoint.relativeX,waypoint.relativeY);
+                                targetMarker = new TargetMarker();
+                                targetMarker.draw(gl);
+                            }
                             tempRouteSegement = new RouteSegement(tempWaypoint.relativeX, tempWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
                             tempRouteSegement.draw(gl);
+                            targetMarker = new TargetMarker();
+                            targetMarker.draw(gl);
                         }
                     }
 

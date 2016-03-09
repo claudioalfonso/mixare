@@ -40,8 +40,6 @@ class Waypoint
     public float relativeX;
     public float relativeY;
 
-    private float directionX;
-    private float directionY;
 
     private static final int MERCATOR_SCALE = 10000000;
 
@@ -119,7 +117,7 @@ class Waypoint
                 -one,  one,  one,
         };
 
-        int colors[] = {
+        /*int colors[] = {
                 0,    0,    0,  one,
                 one,    0,    0,  one,
                 one,  one,    0,  one,
@@ -128,7 +126,7 @@ class Waypoint
                 one,    0,  one,  one,
                 one,  one,  one,  one,
                 0,  one,  one,  one,
-        };
+        };*/
 
         byte indices[] = {
                 0, 4, 5,    0, 5, 1,
@@ -153,11 +151,13 @@ class Waypoint
         mVertexBuffer.put(vertices);
         mVertexBuffer.position(0);
 
-        ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);
+        /*ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);
         cbb.order(ByteOrder.nativeOrder());
         mColorBuffer = cbb.asIntBuffer();
         mColorBuffer.put(colors);
         mColorBuffer.position(0);
+        */
+
 
         mIndexBuffer = ByteBuffer.allocateDirect(indices.length);
         mIndexBuffer.put(indices);
@@ -175,15 +175,19 @@ class Waypoint
     {
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
+       // gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 
         gl.glFrontFace(gl.GL_CW);
         gl.glVertexPointer(3, gl.GL_FIXED, 0, mVertexBuffer);
-        gl.glColorPointer(4, gl.GL_FIXED, 0, mColorBuffer);
+       // gl.glColorPointer(4, gl.GL_FIXED, 0, mColorBuffer);
+        gl.glEnable(GL10.GL_BLEND);
+        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA) ;
+        gl.glColor4f(0.0f, 1.0f, 0.0f, 0.8f);
+
         gl.glDrawElements(gl.GL_TRIANGLES, 36, gl.GL_UNSIGNED_BYTE, mIndexBuffer);
 
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+      //  gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
     }
 
     private IntBuffer mVertexBuffer;
