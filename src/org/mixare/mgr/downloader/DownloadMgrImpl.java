@@ -221,6 +221,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 	 */
 	public void switchOn() {
 		if (DownloadManagerState.OffLine.equals(getState()) || stop==true){
+			executor = Executors.newSingleThreadExecutor();
 		    executor.execute(this);
 		}else{
 			Log.i(Config.TAG, "DownloadManager already started");
