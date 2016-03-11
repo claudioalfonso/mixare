@@ -1,4 +1,4 @@
-package org.mixare;
+package org.mixare.gui.opengl;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

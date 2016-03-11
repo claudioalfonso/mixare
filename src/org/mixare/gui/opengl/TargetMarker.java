@@ -1,4 +1,4 @@
-package org.mixare;
+package org.mixare.gui.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

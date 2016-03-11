@@ -1,8 +1,4 @@
-package org.mixare;
-
-import org.mapsforge.core.model.LatLong;
-
-import java.util.List;
+package org.mixare.route;
 
 /**
  * Created by MelanieW on 03.02.2016.

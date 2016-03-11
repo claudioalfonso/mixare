@@ -1,4 +1,4 @@
-package org.mixare;
+package org.mixare.gui.opengl;
 
 import android.location.Location;
 import android.opengl.GLSurfaceView;
@@ -7,6 +7,10 @@ import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.util.MercatorProjection;
+import org.mixare.route.AsyncResponse;
+import org.mixare.MixViewDataHolder;
+import org.mixare.route.MyRoute;
+import org.mixare.route.RouteDataAsyncTask;
 import org.mixare.lib.marker.Marker;
 
 import java.util.ArrayList;
@@ -18,7 +22,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Render geographic objects (markers or routes)
  */
-class RouteRenderer implements GLSurfaceView.Renderer{
+public class RouteRenderer implements GLSurfaceView.Renderer{
     private  float[] rotationMatrix = new float[16];
 
     private static final int MERCATOR_SCALE = 10000000;

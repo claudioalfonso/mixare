@@ -56,11 +56,14 @@ import org.mapsforge.core.model.LatLong;
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
+import org.mixare.gui.opengl.OpenGLView;
+import org.mixare.gui.opengl.RouteRenderer;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.render.Matrix;
 import org.mixare.map.MapActivity;
 import org.mixare.marker.RouteMarker;
 import org.mixare.mgr.HttpTools;
+import org.mixare.route.RouteManager;
 
 import java.util.Date;
 import java.util.List;
@@ -76,7 +79,7 @@ import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
  * camera screen.
  * It also handles the main sensor events, touch events and location events.
  */
-public class MixViewActivity extends MenuDrawerActivity implements SensorEventListener, OnTouchListener {
+public class MixViewActivity extends DrawerMenuActivity implements SensorEventListener, OnTouchListener {
 
 	private CameraSurface cameraSurface;
     private FrameLayout cameraView;
@@ -105,7 +108,7 @@ public class MixViewActivity extends MenuDrawerActivity implements SensorEventLi
 	//private GLSurfaceView mGLSurfaceView;
 	private SensorManager mSensorManager;
 	//private RotationVektorRenderer mRenderer;
-	private RouteView cubeView;
+	private OpenGLView cubeView;
 	private RouteRenderer mRenderer;
 	private Sensor mOrienation;
 
@@ -662,7 +665,7 @@ public class MixViewActivity extends MenuDrawerActivity implements SensorEventLi
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		//mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mOrienation = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-		cubeView = new RouteView(this, mSensorManager);
+		cubeView = new OpenGLView(this, mSensorManager);
 
 /*
 		mGLSurfaceView.requestFocus();

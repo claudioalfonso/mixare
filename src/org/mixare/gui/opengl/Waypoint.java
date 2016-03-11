@@ -1,4 +1,4 @@
-package org.mixare;/*
+package org.mixare.gui.opengl;/*
  * Copyright (C) 2007 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@ package org.mixare;/*
  * limitations under the License.
  */
 
-import android.location.Location;
 import android.util.Log;
 
 import org.mapsforge.core.util.MercatorProjection;

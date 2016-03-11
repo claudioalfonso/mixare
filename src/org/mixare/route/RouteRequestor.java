@@ -1,20 +1,15 @@
-package org.mixare;
+package org.mixare.route;
 
 import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
 
 import com.locoslab.api.data.carta.route.direction.Direction;
-import com.locoslab.api.data.carta.route.direction.Route;
-import com.locoslab.api.data.carta.route.direction.Step;
-import com.locoslab.api.data.maps.model.Coordinate;
 import com.locoslab.api.net.Connector;
 
-import org.mapsforge.core.model.LatLong;
+import org.mixare.Config;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created on 19.01.2016 by MelanieW.

@@ -25,7 +25,7 @@ import org.mixare.map.MapActivity;
 /**
  * Created by MelanieW on 30.12.2015.
  */
-public class MenuDrawerActivity extends SherlockActivity {
+public class DrawerMenuActivity extends SherlockActivity {
 
     DrawerLayout drawerLayout;
     ListView drawerList;
@@ -64,7 +64,7 @@ public class MenuDrawerActivity extends SherlockActivity {
             drawerLayout = (DrawerLayout) findViewById(R.id.drawermenu_screen_drawerlayout);
             drawerList = (ListView) findViewById(R.id.drawermenu_list);
 
-            menuListAdapter = new MenuListAdapter(MenuDrawerActivity.this, menuItemTitles, menuItemIcons);
+            menuListAdapter = new MenuListAdapter(DrawerMenuActivity.this, menuItemTitles, menuItemIcons);
             drawerList.setAdapter(menuListAdapter);
             drawerList.setOnItemClickListener(new DrawerItemClickListener());
             drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -129,24 +129,24 @@ public class MenuDrawerActivity extends SherlockActivity {
         switch (menuItemId) {
 		    /* Data sources */
             case R.string.menu_item_datasources:
-                Intent intent = new Intent(MenuDrawerActivity.this, DataSourceList.class);
+                Intent intent = new Intent(DrawerMenuActivity.this, DataSourceList.class);
                 startActivityForResult(intent, Config.INTENT_REQUEST_CODE_DATASOURCES);
                 break;
 			/* Plugin View */
             case R.string.menu_item_plugins:
-                Intent intent2 = new Intent(MenuDrawerActivity.this, PluginListActivity.class);
+                Intent intent2 = new Intent(DrawerMenuActivity.this, PluginListActivity.class);
                 startActivityForResult(intent2, Config.INTENT_REQUEST_CODE_PLUGINS);
                 break;
 		    /* Marker List View */
             case R.string.menu_item_route: //fall-through intended
             case R.string.menu_item_list:
-                Intent intent3 = new Intent(MenuDrawerActivity.this, MarkerListActivity.class);
+                Intent intent3 = new Intent(DrawerMenuActivity.this, MarkerListActivity.class);
                 intent3.setAction(Intent.ACTION_VIEW);
                 startActivityForResult(intent3, Config.INTENT_REQUEST_CODE_MARKERLIST);
                 break;
 		    /* Map View */
             case R.string.menu_item_map:
-                Intent intent4 = new Intent(MenuDrawerActivity.this, MapActivity.class);
+                Intent intent4 = new Intent(DrawerMenuActivity.this, MapActivity.class);
                 startActivityForResult(intent4, Config.INTENT_REQUEST_CODE_MAP);
                 break;
 		    /* Search */

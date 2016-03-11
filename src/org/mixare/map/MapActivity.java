@@ -42,14 +42,14 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mapsforge.map.layer.overlay.Polyline;
-import org.mixare.AsyncResponse;
+import org.mixare.route.AsyncResponse;
 import org.mixare.Config;
-import org.mixare.MenuDrawerActivity;
+import org.mixare.DrawerMenuActivity;
 import org.mixare.MixViewActivity;
 import org.mixare.MixViewDataHolder;
 import org.mixare.R;
-import org.mixare.MyRoute;
-import org.mixare.RouteDataAsyncTask;
+import org.mixare.route.MyRoute;
+import org.mixare.route.RouteDataAsyncTask;
 import org.mixare.lib.MixUtils;
 import org.mixare.lib.marker.Marker;
 import org.mixare.marker.LocalMarker;
@@ -57,7 +57,7 @@ import org.mixare.marker.LocalMarker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends MenuDrawerActivity {
+public class MapActivity extends DrawerMenuActivity {
     public final static byte DEFAULT_ZOOM_LEVEL =12;
     private MapView mapView;
 	private TileCache tileCache;

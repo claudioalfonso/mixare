@@ -1,22 +1,17 @@
-package org.mixare;
+package org.mixare.route;
 
 import android.location.Location;
-import android.util.Log;
 
-import org.mapsforge.core.model.LatLong;
-import org.mixare.marker.RouteMarker;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.mixare.gui.opengl.OpenGLView;
 
 /**
  * Created by MelanieW on 09.02.2016.
  */
 public class RouteManager {
 
-    private RouteView cubeView = null;
+    private OpenGLView cubeView = null;
 
-    public RouteManager(RouteView cubeView) {
+    public RouteManager(OpenGLView cubeView) {
 
 
         this.cubeView = cubeView;

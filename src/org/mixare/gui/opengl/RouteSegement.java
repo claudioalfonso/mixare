@@ -1,12 +1,9 @@
-package org.mixare;
-
-import android.util.Log;
+package org.mixare.gui.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-import java.util.Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 
