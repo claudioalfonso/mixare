@@ -7,7 +7,33 @@
     <FrameLayout
         android:id="@+id/drawermenu_content_framelayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:baselineAligned="true">
+            <FrameLayout
+            android:id="@+id/drawermenu_content_topcontrols"
+            android:layout_width="@dimen/abs__action_bar_default_height"
+            android:layout_height="match_parent"
+                android:layout_gravity="left">
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/drawermenu_content_camerascreen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2">
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/drawermenu_content_bottomcontrols"
+                android:layout_width="@dimen/abs__action_bar_default_height"
+                android:layout_height="match_parent"
+                android:layout_gravity="right">
+            </FrameLayout>
+        </LinearLayout>
+
+    </FrameLayout>
 
     <ListView
         android:id="@+id/drawermenu_list"

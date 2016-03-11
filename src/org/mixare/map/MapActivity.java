@@ -113,6 +113,7 @@ public class MapActivity extends DrawerMenuActivity {
 
         // Add mapView to View
         //setContentView(mapView);
+        contentFrame.removeAllViews();
         contentFrame.addView(this.mapView);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

@@ -593,7 +593,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	 * Checks cameraSurface, if it does not exist, it creates one.
 	 */
 	private void maintainCamera() {
-		cameraView = (FrameLayout) findViewById(R.id.drawermenu_content_framelayout);
+		cameraView = (FrameLayout) findViewById(R.id.drawermenu_content_camerascreen);
 			if (cameraSurface == null) {
 				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 					cameraSurface = new Camera2Surface(this);
