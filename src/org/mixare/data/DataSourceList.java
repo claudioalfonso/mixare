@@ -46,8 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class DataSourceList extends SherlockListActivity {
-	
-	public static final String SHARED_PREFS = "DataSourcesPrefs";
+
 	private static DataSourceAdapter dataSourceAdapter;
 
 	private static final int MENU_CREATE_ID = Menu.FIRST;

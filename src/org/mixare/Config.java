@@ -7,7 +7,12 @@ public class Config {
     public static final String TAG = "Mixare";
     /** string to name & access the preference file in the internal storage */
     public static final String PREFS_NAME = "MyPrefsFileForMenuItems";
+    public static final String PREF_USED_PLUGINS = "usedPlugins";
+    public static final String PREF_DATASOURCES = "DataSourcesPrefs";
+    public static final String PREF_DATASOURCES_XMLKEY = "xmlDataSources";
+
     public static final int DEFAULT_RANGE_PROGRESS = 37;
+
     public final static double DEFAULT_FIX_LAT = 51.46184; //Campus Schützenbahn, Eingang SA
     public final static double DEFAULT_FIX_LON = 7.01655;
     public final static int DEFAULT_FIX_HEIGHT = 0;
@@ -17,13 +22,30 @@ public class Config {
     public final static int DEFAULT_DESTINATION_HEIGHT = 0;
     public final static String DEFAULT_DESTINATION_NAME = "defaultDest";
     public static final String MANUAL_FIX_NAME = "manualSet";
+
+    public static final int INTENT_REQUEST_CODE_MIXVIEW = 0;
     public static final int INTENT_REQUEST_CODE_CENTERMAP = 76;
     public static final int INTENT_REQUEST_CODE_DATASOURCES = 40;
     public static final int INTENT_REQUEST_CODE_PLUGINS = 35;
     public static final int INTENT_REQUEST_CODE_MARKERLIST = 42;
     public static final int INTENT_REQUEST_CODE_MAP = 20;
-    public static boolean drawTextBlock = true;
+    public static final int INTENT_REQUEST_CODE_PLUGIN_STATUS = 1;
+    public static final int INTENT_RESULT_PLUGIN_STATUS_CHANGED = 1;
+    public static final int INTENT_RESULT_PLUGIN_STATUS_NOT_CHANGED = 0;
+    public static final int INTENT_RESULT_ACTIVITY = 0;
 
+    public static final String INTENT_EXTRA_REFRESH_SCREEN ="RefreshScreen";
+    public static final String INTENT_EXTRA_SEARCH_QUERY ="search";
+    public static final String INTENT_EXTRA_MENUENTRY = "menuentry";
+    public static final String INTENT_EXTRA_LATITUDE = "latitude";
+    public static final String INTENT_EXTRA_LONGITUDE = "longitude";
+    public static final String INTENT_EXTRA_DO_CENTER = "do_center";
+    public static final String INTENT_EXTRA_CLOSED_ACTIVITY = "closed";
+
+
+    public static final int SPLASHTIME = 1000; // 1 second
+
+    public static boolean drawTextBlock = true;
     public static boolean useHUD=true;
 
     public static Location getDefaultFix(){

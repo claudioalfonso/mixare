@@ -29,9 +29,7 @@ import android.view.WindowManager;
  */
 public class PluginLoaderActivity extends Activity {
 
-	private static final int SPLASHTIME = 2000; // 2 seconds
 	public static final int SCANNER_REQUEST_CODE = 0;
-	private static final String CLOSE_ACTIVITY_CALL = "closed";
 	protected Handler exitHandler = null;
 	protected Runnable exitRunnable = null;
 	
@@ -77,7 +75,7 @@ public class PluginLoaderActivity extends Activity {
 		};
 		// Run the exitRunnable in in _splashTime ms
 		exitHandler = new Handler();
-		exitHandler.postDelayed(exitRunnable, SPLASHTIME);
+		exitHandler.postDelayed(exitRunnable, Config.SPLASHTIME);
 	}
 
 	@Override
@@ -95,13 +93,13 @@ public class PluginLoaderActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(data != null && data.getExtras() != null && data.getExtras().getString(CLOSE_ACTIVITY_CALL) != null){
+		if(data != null && data.getExtras() != null && data.getExtras().getString(Config.INTENT_EXTRA_CLOSED_ACTIVITY) != null){
 			//back button was pressed, close mixare now.
 			finish();
 			return;
 		}
 		
-		if (requestCode == 0) {
+		if (requestCode == Config.INTENT_REQUEST_CODE_MIXVIEW) {
 			finish();
 			return;
 		}
@@ -118,7 +116,7 @@ public class PluginLoaderActivity extends Activity {
 			loadPlugins();
 		}
 		if (arePendingActivitiesFinished()) {
-			startActivityForResult(new Intent(this, MixViewActivity.class),0);
+			startActivityForResult(new Intent(this, MixViewActivity.class),Config.INTENT_REQUEST_CODE_MIXVIEW);
 			finish();
 		}
 	}
@@ -182,7 +180,7 @@ public class PluginLoaderActivity extends Activity {
 						resolveInfo.serviceInfo,
 						lable,
 						resolveInfo.loadIcon(packageManager), pluginType);
-					MainActivity.getPlugins().add(plugin);
+					BootstrapActivity.getPlugins().add(plugin);
 				}
 			}
 		}

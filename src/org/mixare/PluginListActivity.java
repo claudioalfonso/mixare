@@ -47,7 +47,6 @@ public class PluginListActivity extends SherlockActivity {
 	private SectionAdapter sectionAdapter;
 	private ListView listView;
 	private static final int MENU_SELECT_PLUGIN_ID = Menu.FIRST;
-	private final String usedPluginsPrefs = "usedPlugins";
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -108,14 +107,14 @@ public class PluginListActivity extends SherlockActivity {
 	 * they are enabled or not.
 	 */
 	protected void savePluginState() {
-		// save the Plugins into the list in the MainActivity
+		// save the Plugins into the list in the BootstrapActivity
 		// calculate the count of sections before the Plugins and get the real
 		// index of the Plugin
 		int sectionsBefore = 0;
-		for (int i = 0; i < MainActivity.getPlugins().size(); i++) {
+		for (int i = 0; i < BootstrapActivity.getPlugins().size(); i++) {
 			Item item = sectionAdapter.getItem(i);
 			if (!item.isSection()) {
-				MainActivity.getPlugins().set(i - sectionsBefore,
+				BootstrapActivity.getPlugins().set(i - sectionsBefore,
 						((EntryItem) item).getPlugin());
 			} else {
 				sectionsBefore++;
@@ -124,9 +123,9 @@ public class PluginListActivity extends SherlockActivity {
 
 		// save the Plugin to the SharedPreferences
 		SharedPreferences.Editor shareEditor = getSharedPreferences(
-				usedPluginsPrefs, MODE_PRIVATE).edit();
+				Config.PREF_USED_PLUGINS, MODE_PRIVATE).edit();
 
-		for (Plugin plugin : MainActivity.getPlugins()) {
+		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 			// is the Plugin activated
 			boolean activated = plugin.getPluginStatus().equals(
 					PluginStatus.Activated) ? true : false;
@@ -151,14 +150,14 @@ public class PluginListActivity extends SherlockActivity {
 			if (!sectionAdapter.getItem(i).isSection()) {
 				if (!((EntryItem) sectionAdapter.getItem(i))
 						.getPlugin()
-						.equals(MainActivity.getPlugins().get(i - sectionCount))) {
-					return 1;
+						.equals(BootstrapActivity.getPlugins().get(i - sectionCount))) {
+					return Config.INTENT_RESULT_PLUGIN_STATUS_CHANGED;
 				}
 			} else {
 				sectionCount++;
 			}
 		}
-		return 0;
+		return Config.INTENT_RESULT_PLUGIN_STATUS_NOT_CHANGED;
 	}
 
 	/**
@@ -170,7 +169,7 @@ public class PluginListActivity extends SherlockActivity {
 		List<Item> list = new ArrayList<Item>();
 		String lastSection = "";
 
-		for (Plugin plugin : MainActivity.getPlugins()) {
+		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 
 			String pluginType = "";
 			switch (plugin.getPluginType()) {

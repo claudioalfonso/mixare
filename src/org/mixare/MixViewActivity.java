@@ -56,7 +56,6 @@ import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
 import org.mixare.gui.opengl.OpenGLAugmentationView;
-import org.mixare.gui.opengl.RouteRenderer;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.render.Matrix;
 import org.mixare.map.MapActivity;
@@ -296,8 +295,8 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 		// check if the returned is request to refresh screen (setting might be
 		// changed)
 
-		if (requestCode == 35) {
-			if (resultCode == 1) {
+		if (requestCode == Config.INTENT_REQUEST_CODE_PLUGINS) {
+			if (resultCode == Config.INTENT_RESULT_PLUGIN_STATUS_CHANGED) {
 				final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
 				dialog.setTitle(R.string.launch_plugins);
@@ -328,7 +327,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 			}
 		}
 		try {
-			if (data.getBooleanExtra("RefreshScreen", false)) {
+			if (data.getBooleanExtra(Config.INTENT_EXTRA_REFRESH_SCREEN, false)) {
 				Log.d(Config.TAG + " WorkFlow",
 						"MixViewActivity - Received Refresh Screen Request .. about to refresh");
 				repaint();
@@ -1090,8 +1089,8 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 					return true;
 				} else {
 					Intent close = new Intent();
-					close.putExtra("closed", "MixViewActivity");
-					setResult(0, close);
+					close.putExtra(Config.INTENT_EXTRA_CLOSED_ACTIVITY, this.getLocalClassName());
+					setResult(Config.INTENT_RESULT_ACTIVITY, close);
 					finish();
 					return super.onKeyDown(keyCode, event);
 				}
@@ -1115,7 +1114,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 				&& getMixViewData().getCompassErrorDisplayed() == 0) {
 			for (int i = 0; i < 2; i++) {
 				markerRenderer.getContext().getNotificationManager().
-				addNotification("Compass data unreliable. Please recalibrate compass.");
+				addNotification(getString(R.string.compass_unreliable));
 			}
 			getMixViewData().setCompassErrorDisplayed(
 					getMixViewData().getCompassErrorDisplayed() + 1);

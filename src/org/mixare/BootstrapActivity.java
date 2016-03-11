@@ -26,15 +26,14 @@ import android.os.Bundle;
  * 
  * @author A.Egal
  */
-public class MainActivity extends Activity {
+public class BootstrapActivity extends Activity {
 
 	private Context ctx;
-	private final String usedPluginsPrefs = "usedPlugins";
 	private static List<Plugin> plugins;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 1) {
+		if (requestCode == Config.INTENT_REQUEST_CODE_PLUGIN_STATUS) {
 			startActivity(new Intent(ctx, PluginLoaderActivity.class));
 			finish();
 		}
@@ -48,7 +47,7 @@ public class MainActivity extends Activity {
 		// TODO: change message if Plugins only have been deinstalled
 		if (areNewPluginsAvailable() || arePluginsDeinstalled()) {
 			SharedPreferences.Editor prefEditor = getSharedPreferences(
-					usedPluginsPrefs, MODE_PRIVATE).edit();
+					Config.PREF_USED_PLUGINS, MODE_PRIVATE).edit();
 			prefEditor.clear();
 			prefEditor.commit();
 			showDialog();
@@ -64,13 +63,13 @@ public class MainActivity extends Activity {
 	 * @return True if a plugin got deinstalled
 	 */
 	public boolean arePluginsDeinstalled() {
-		SharedPreferences prefs = getSharedPreferences(usedPluginsPrefs,
+		SharedPreferences prefs = getSharedPreferences(Config.PREF_USED_PLUGINS,
 				MODE_PRIVATE);
 		for (Entry<String, ?> entry : prefs.getAll().entrySet()) {
 			String[] array = entry.getKey().split(":");
 			if (array.length == 2) {
 				boolean found = false;
-				for (Plugin plugin : MainActivity.getPlugins()) {
+				for (Plugin plugin : BootstrapActivity.getPlugins()) {
 					String pluginType = plugin.getPluginType().name();
 					String pluginServiceName = plugin.getServiceInfo().name;
 
@@ -100,7 +99,7 @@ public class MainActivity extends Activity {
 		dialog.setMessage(R.string.plugin_message);
 		dialog.setCancelable(false);
 
-		// Allways activate new plugins
+		// Always activate new plugins
 
 		// final CheckBox checkBox = new CheckBox(ctx);
 		// checkBox.setText(R.string.remember_this_decision);
@@ -110,7 +109,7 @@ public class MainActivity extends Activity {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface d, int whichButton) {
 						startActivityForResult(new Intent(ctx,
-								PluginListActivity.class), 1);
+								PluginListActivity.class), Config.INTENT_REQUEST_CODE_PLUGIN_STATUS);
 						d.dismiss();
 					}
 				});
@@ -134,7 +133,7 @@ public class MainActivity extends Activity {
 	 * Disables all new found Plugins
 	 */
 	private void disableNewFoundPlugins() {
-		for (Plugin plugin : MainActivity.getPlugins()) {
+		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 			if (plugin.getPluginStatus().equals(PluginStatus.New)) {
 				plugin.setPluginStatus(PluginStatus.Deactivated);
 			}
@@ -147,9 +146,9 @@ public class MainActivity extends Activity {
 	 */
 	protected void savePluginState() {
 		SharedPreferences sharedPreferences = getSharedPreferences(
-				usedPluginsPrefs, MODE_PRIVATE);
+				Config.PREF_USED_PLUGINS, MODE_PRIVATE);
 		SharedPreferences.Editor shareEditor = sharedPreferences.edit();
-		for (Plugin plugin : MainActivity.getPlugins()) {
+		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 			boolean activated = plugin.getPluginStatus().equals(
 					PluginStatus.Activated) ? true : false;
 			shareEditor.putBoolean(
@@ -170,7 +169,7 @@ public class MainActivity extends Activity {
 
 		savePluginState();
 
-		for (Plugin plugin : MainActivity.getPlugins()) {
+		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 			if (plugin.getPluginStatus().equals(PluginStatus.New)) {
 				return true;
 			}
@@ -184,7 +183,7 @@ public class MainActivity extends Activity {
 	 */
 	private void getInstalledPlugins() {
 		SharedPreferences sharedPreferences = getSharedPreferences(
-				usedPluginsPrefs, MODE_PRIVATE);
+				Config.PREF_USED_PLUGINS, MODE_PRIVATE);
 		PluginType[] allPluginTypes = PluginType.values();
 		for (PluginType pluginType : allPluginTypes) {
 			PackageManager packageManager = getPackageManager();
@@ -220,7 +219,7 @@ public class MainActivity extends Activity {
 	 *            The Plugin to add
 	 */
 	public void addPlugin(Plugin plugin) {
-		MainActivity.plugins.add(plugin);
+		BootstrapActivity.plugins.add(plugin);
 	}
 
 	/**

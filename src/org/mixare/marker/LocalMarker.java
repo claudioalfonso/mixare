@@ -63,11 +63,7 @@ import android.widget.PopupMenu;
 
 public abstract class LocalMarker implements Marker {
 
-    private static final String INTENT_EXTRA_MENUENTRY = "menuentry";
-    private static final String INTENT_EXTRA_LONGITUDE = "longitude";
-    private static final String INTENT_EXTRA_LATITUDE = "latitude";
-    private static final String INTENT_EXTRA_DO_CENTER = "do_center";
-    private String ID;
+	private String ID;
 	protected String title;
 	protected boolean underline = false;
 	private String URL;
@@ -345,7 +341,7 @@ public abstract class LocalMarker implements Marker {
 
     private Intent getMapAction(Context ctx){
         Intent mapAction=prepareAction(ctx, MapActivity.class, R.string.marker_action_start_routing);
-        mapAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
+        mapAction.putExtra(Config.INTENT_EXTRA_DO_CENTER, true);
         return mapAction;
     }
 
@@ -384,9 +380,9 @@ public abstract class LocalMarker implements Marker {
 
     public Intent prepareAction(Context ctx, Class clazz, int menuEntry){
         Intent intent = new Intent(ctx, clazz);
-        intent.putExtra(INTENT_EXTRA_LATITUDE, this.getLatitude());
-        intent.putExtra(INTENT_EXTRA_LONGITUDE, this.getLongitude());
-        intent.putExtra(INTENT_EXTRA_MENUENTRY, menuEntry);
+        intent.putExtra(Config.INTENT_EXTRA_LATITUDE, this.getLatitude());
+        intent.putExtra(Config.INTENT_EXTRA_LONGITUDE, this.getLongitude());
+        intent.putExtra(Config.INTENT_EXTRA_MENUENTRY, menuEntry);
         return intent;
     }
 

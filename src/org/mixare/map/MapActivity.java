@@ -116,13 +116,13 @@ public class MapActivity extends DrawerMenuActivity {
 
         // Retrieve the search query
         Intent intent = this.getIntent();
-        searchKeyword = intent.getStringExtra("search");
+        searchKeyword = intent.getStringExtra(Config.INTENT_EXTRA_SEARCH_QUERY);
 
         // Set center of the Map to your position or a Position out of the
         // IntentExtras
-        if (intent.getBooleanExtra("center", false)) {
-            setCenterZoom(intent.getDoubleExtra("latitude", Config.DEFAULT_FIX_LAT),
-                    intent.getDoubleExtra("longitude", Config.DEFAULT_FIX_LON), DEFAULT_ZOOM_LEVEL);
+        if (intent.getBooleanExtra(Config.INTENT_EXTRA_DO_CENTER, false)) {
+            setCenterZoom(intent.getDoubleExtra(Config.INTENT_EXTRA_LATITUDE, Config.DEFAULT_FIX_LAT),
+                    intent.getDoubleExtra(Config.INTENT_EXTRA_LONGITUDE, Config.DEFAULT_FIX_LON), DEFAULT_ZOOM_LEVEL);
         } else {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();

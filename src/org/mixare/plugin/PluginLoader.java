@@ -19,13 +19,9 @@
 package org.mixare.plugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import org.mixare.MainActivity;
+import org.mixare.BootstrapActivity;
 import org.mixare.lib.marker.Marker;
 import org.mixare.lib.service.IMarkerService;
 import org.mixare.plugin.connection.ActivityConnection;
@@ -36,8 +32,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.os.RemoteException;
 import android.util.Log;
@@ -80,7 +74,7 @@ public class PluginLoader {
 	 */
 	public void loadPlugin(PluginType pluginType) {
 		List<Plugin> plugins = new ArrayList<Plugin>();
-		for (Plugin plugin : MainActivity.getPlugins()) {
+		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 			if (plugin.getPluginType().equals(pluginType) && plugin.getPluginStatus().equals(PluginStatus.Activated)) {
 				plugins.add(plugin);
 			}
@@ -112,7 +106,7 @@ public class PluginLoader {
 	 */
 	public void unBindServices() {
 		try {
-			for (Plugin plugin : MainActivity.getPlugins()) {
+			for (Plugin plugin : BootstrapActivity.getPlugins()) {
 				if (plugin.getPluginConnection() instanceof ServiceConnection) {
 					try {
 						activity.unbindService((ServiceConnection) plugin.getPluginConnection());
@@ -125,7 +119,7 @@ public class PluginLoader {
 			}
 		} catch (Exception e) {
 			try {
-				Log.e("test", String.valueOf(MainActivity.getPlugins().size()));
+				Log.e("test", String.valueOf(BootstrapActivity.getPlugins().size()));
 			} catch (Exception e2) {
 				Log.e("test", "sadf");
 			}
@@ -138,7 +132,7 @@ public class PluginLoader {
 	public void startPlugin(PluginType pluginType, String pluginName){
 		if(pluginType.getLoader() == Loader.Activity){
 			ActivityConnection activityConnection = null;
-			for (Plugin plugin : MainActivity.getPlugins()) {
+			for (Plugin plugin : BootstrapActivity.getPlugins()) {
 				if (plugin.getServiceInfo().name.equals(pluginName)) {
 					activityConnection = (ActivityConnection) plugin.getPluginConnection();
 					break;
@@ -155,7 +149,7 @@ public class PluginLoader {
 	}
 	
 	protected void addFoundPlugin(String pluginName, PluginConnection pluginConnection){
-		for (Plugin plugin : MainActivity.getPlugins()) {
+		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 			if (plugin.getServiceInfo().name.equals(pluginName)) {
 				plugin.setPluginConnection(pluginConnection);
 				break;
@@ -170,7 +164,7 @@ public class PluginLoader {
 		
 		try {
 			MarkerServiceConnection msc = null;
-			for (Plugin plugin : MainActivity.getPlugins()) {
+			for (Plugin plugin : BootstrapActivity.getPlugins()) {
 				if (plugin.getPluginType().equals(PluginType.MARKER)) {
 					msc = (MarkerServiceConnection) plugin.getPluginConnection();
 					break;
