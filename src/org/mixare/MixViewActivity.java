@@ -58,7 +58,7 @@ import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.render.Matrix;
-import org.mixare.map.MixMap;
+import org.mixare.map.MapActivity;
 import org.mixare.marker.RouteMarker;
 import org.mixare.mgr.HttpTools;
 
@@ -76,7 +76,7 @@ import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
  * camera screen.
  * It also handles the main sensor events, touch events and location events.
  */
-public class MixViewActivity extends MixMenu implements SensorEventListener, OnTouchListener {
+public class MixViewActivity extends MenuDrawerActivity implements SensorEventListener, OnTouchListener {
 
 	private CameraSurface cameraSurface;
     private FrameLayout cameraView;
@@ -607,7 +607,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 	 * Checks cameraSurface, if it does not exist, it creates one.
 	 */
 	private void maintainCamera() {
-		cameraView = (FrameLayout) findViewById(R.id.content_frame);
+		cameraView = (FrameLayout) findViewById(R.id.drawermenu_content_framelayout);
 			if (cameraSurface == null) {
 				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 					cameraSurface = new Camera2Surface(this);
@@ -862,7 +862,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 				break;
 		/* Map View */
 			case R.string.menu_item_map:
-				Intent intent2 = new Intent(MixViewActivity.this, MixMap.class);
+				Intent intent2 = new Intent(MixViewActivity.this, MapActivity.class);
 				startActivityForResult(intent2, Config.INTENT_REQUEST_CODE_MAP);
 				break;
 		/* RangeBar */
@@ -960,7 +960,7 @@ public class MixViewActivity extends MixMenu implements SensorEventListener, OnT
 
 
 	public void switchToMixMap(){
-		Intent mixMapIntent = new Intent(this, MixMap.class);
+		Intent mixMapIntent = new Intent(this, MapActivity.class);
 		startActivity(mixMapIntent);
 	}
 

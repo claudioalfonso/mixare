@@ -26,9 +26,6 @@ import java.util.List;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class Camera2Surface extends CameraSurface {
 
-    private static final int DEFAULT_CAM_WIDTH = 480;
-    private static final int DEFAULT_CAM_HEIGHT = 320;
-
     Size[] sizes = null;
 
     MixViewActivity mixViewActivity;
@@ -37,7 +34,6 @@ class Camera2Surface extends CameraSurface {
     CameraManager cameraManager;
     private String cameraId;
     private CameraCaptureSession activeSession;
-
 
     Camera2Surface(Context context) {
         super(context);
@@ -137,7 +133,7 @@ class Camera2Surface extends CameraSurface {
             bestw = DEFAULT_CAM_WIDTH;
             besth = DEFAULT_CAM_HEIGHT;
         }
-
+ //       holder.
         holder.setFixedSize(bestw,besth);
     }
 

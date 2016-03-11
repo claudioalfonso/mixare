@@ -34,7 +34,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.mixare.map.MixMap;
+import org.mixare.map.MapActivity;
 
 public class MarkerListActivity extends SherlockActivity {
     private static final int MENU_MAPVIEW_ID = 0;
@@ -131,8 +131,8 @@ public class MarkerListActivity extends SherlockActivity {
                 finish();
 			break;
 		case MENU_MAPVIEW_ID:
-			// Start MixMap to choose which Map to start
-			Intent map = new Intent(MarkerListActivity.this, MixMap.class);
+			// Start MapActivity to choose which Map to start
+			Intent map = new Intent(MarkerListActivity.this, MapActivity.class);
 			startActivity(map);
 			break;
 		case MENU_SEARCH_ID:

@@ -251,7 +251,7 @@ public class DataSourceList extends SherlockListActivity {
 
 			if (convertView == null) {
 				LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = mInflater.inflate(R.layout.datasourcelist, parent, false);
+				convertView = mInflater.inflate(R.layout.datasource_list, parent, false);
 				
 				holder = new ViewHolder();
 				holder.text = (TextView) convertView

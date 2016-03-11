@@ -21,12 +21,8 @@ package org.mixare.marker;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import org.mixare.Config;
-import org.mixare.MarkerListFragment;
 import org.mixare.MixContext;
 import org.mixare.MixState;
 import org.mixare.MixViewDataHolder;
@@ -45,7 +41,7 @@ import org.mixare.lib.marker.draw.PrimitiveProperty;
 import org.mixare.lib.reality.PhysicalPlace;
 import org.mixare.lib.render.Camera;
 import org.mixare.lib.render.MixVector;
-import org.mixare.map.MixMap;
+import org.mixare.map.MapActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -348,7 +344,7 @@ public abstract class LocalMarker implements Marker {
     }
 
     private Intent getMapAction(Context ctx){
-        Intent mapAction=prepareAction(ctx, MixMap.class, R.string.marker_action_start_routing);
+        Intent mapAction=prepareAction(ctx, MapActivity.class, R.string.marker_action_start_routing);
         mapAction.putExtra(INTENT_EXTRA_DO_CENTER, true);
         return mapAction;
     }

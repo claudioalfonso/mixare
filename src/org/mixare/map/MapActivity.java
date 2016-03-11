@@ -44,7 +44,7 @@ import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mapsforge.map.layer.overlay.Polyline;
 import org.mixare.AsyncResponse;
 import org.mixare.Config;
-import org.mixare.MixMenu;
+import org.mixare.MenuDrawerActivity;
 import org.mixare.MixViewActivity;
 import org.mixare.MixViewDataHolder;
 import org.mixare.R;
@@ -57,7 +57,7 @@ import org.mixare.marker.LocalMarker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MixMap extends MixMenu {
+public class MapActivity extends MenuDrawerActivity {
     public final static byte DEFAULT_ZOOM_LEVEL =12;
     private MapView mapView;
 	private TileCache tileCache;
@@ -86,7 +86,7 @@ public class MixMap extends MixMenu {
         }
 
         AndroidGraphicFactory.createInstance(this.getApplication());
-        map_view = (FrameLayout)findViewById(R.id.content_frame);
+        map_view = (FrameLayout)findViewById(R.id.drawermenu_content_framelayout);
 
         this.mapView = new MapView(this);
         //setContentView(this.mapView);
@@ -208,7 +208,7 @@ public class MixMap extends MixMenu {
             Log.d(Config.TAG,"Map onTap"+tapLatLong);
             if(marker instanceof LocalMarker){
                 LocalMarker localMarker = (LocalMarker) marker;
-                localMarker.retrieveActionPopupMenu(MixMap.this,mapView).show();
+                localMarker.retrieveActionPopupMenu(MapActivity.this,mapView).show();
             }
             return true;
         }

@@ -20,12 +20,12 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.mixare.data.DataSourceList;
-import org.mixare.map.MixMap;
+import org.mixare.map.MapActivity;
 
 /**
  * Created by MelanieW on 30.12.2015.
  */
-public class MixMenu extends SherlockActivity {
+public class MenuDrawerActivity extends SherlockActivity {
 
     DrawerLayout drawerLayout;
     ListView drawerList;
@@ -47,7 +47,7 @@ public class MixMenu extends SherlockActivity {
             //killOnError();
             //requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-            setContentView(R.layout.menu);
+            setContentView(R.layout.drawermenu_screen);
 
             // Get the Title
             mTitle = drawerTitle = getTitle();
@@ -61,10 +61,10 @@ public class MixMenu extends SherlockActivity {
 
 
 
-            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawerList = (ListView) findViewById(R.id.listview_drawer);
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawermenu_screen_drawerlayout);
+            drawerList = (ListView) findViewById(R.id.drawermenu_list);
 
-            menuListAdapter = new MenuListAdapter(MixMenu.this, menuItemTitles, menuItemIcons);
+            menuListAdapter = new MenuListAdapter(MenuDrawerActivity.this, menuItemTitles, menuItemIcons);
             drawerList.setAdapter(menuListAdapter);
             drawerList.setOnItemClickListener(new DrawerItemClickListener());
             drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -129,24 +129,24 @@ public class MixMenu extends SherlockActivity {
         switch (menuItemId) {
 		    /* Data sources */
             case R.string.menu_item_datasources:
-                Intent intent = new Intent(MixMenu.this, DataSourceList.class);
+                Intent intent = new Intent(MenuDrawerActivity.this, DataSourceList.class);
                 startActivityForResult(intent, Config.INTENT_REQUEST_CODE_DATASOURCES);
                 break;
 			/* Plugin View */
             case R.string.menu_item_plugins:
-                Intent intent2 = new Intent(MixMenu.this, PluginListActivity.class);
+                Intent intent2 = new Intent(MenuDrawerActivity.this, PluginListActivity.class);
                 startActivityForResult(intent2, Config.INTENT_REQUEST_CODE_PLUGINS);
                 break;
 		    /* Marker List View */
             case R.string.menu_item_route: //fall-through intended
             case R.string.menu_item_list:
-                Intent intent3 = new Intent(MixMenu.this, MarkerListActivity.class);
+                Intent intent3 = new Intent(MenuDrawerActivity.this, MarkerListActivity.class);
                 intent3.setAction(Intent.ACTION_VIEW);
                 startActivityForResult(intent3, Config.INTENT_REQUEST_CODE_MARKERLIST);
                 break;
 		    /* Map View */
             case R.string.menu_item_map:
-                Intent intent4 = new Intent(MixMenu.this, MixMap.class);
+                Intent intent4 = new Intent(MenuDrawerActivity.this, MapActivity.class);
                 startActivityForResult(intent4, Config.INTENT_REQUEST_CODE_MAP);
                 break;
 		    /* Search */

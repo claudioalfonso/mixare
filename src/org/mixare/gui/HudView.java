@@ -92,7 +92,7 @@ public class HudView extends RelativeLayout {
     }
 
     public void init() {
-        addView(inflate(getContext(), R.layout.hud_view, null));
+        addView(inflate(getContext(), R.layout.hud_layer, null));
 
         radar = new Radar();
         radarPaintScreen = new PaintScreen();

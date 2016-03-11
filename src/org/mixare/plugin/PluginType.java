@@ -29,7 +29,7 @@ import org.mixare.plugin.connection.MarkerServiceConnection;
  *
  */
 public enum PluginType{
-	/** A bootstrap plugin that will be loaded first I.E. a splashscreen */
+	/** A bootstrap plugin that will be loaded first I.E. a splash_screen */
 	BOOTSTRAP_PHASE_1(){
 
 		public String getActionName() {

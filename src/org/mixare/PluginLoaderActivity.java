@@ -22,7 +22,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 /**
- * This is the plugin loading activity for mixare. This activity will load a splashscreen and then initializes the PluginLoader
+ * This is the plugin loading activity for mixare. This activity will load a splash_screen and then initializes the PluginLoader
  * It will then launch the visible bootstrap plugins and waits for their results. After all bootstrap plugins are loaded
  * then mixare will be launched.
  * @author A.Egal
@@ -68,8 +68,8 @@ public class PluginLoaderActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.splashscreen);
-		// Runnable exiting the splash screen and launching the menu
+		setContentView(R.layout.splash_screen);
+		// Runnable exiting the splash screen and launching the drawermenu_screen
 		exitRunnable = new Runnable() {
 			public void run() {
 				startMixare();
@@ -84,7 +84,7 @@ public class PluginLoaderActivity extends Activity {
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			if(exitHandler != null){
-				//only call this when the default splashscreen is used
+				//only call this when the default splash_screen is used
 				exitHandler.removeCallbacks(exitRunnable);
 			}
 			startMixare();

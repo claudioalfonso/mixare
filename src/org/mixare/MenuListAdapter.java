@@ -49,13 +49,13 @@ public class MenuListAdapter extends BaseAdapter {
 
             inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View itemView = inflater.inflate(R.layout.drawer_list_item, parent,
+            View itemView = inflater.inflate(R.layout.drawermenu_list_item, parent,
                     false);
 
-            // Locate the TextViews in drawer_list_item.xml
+            // Locate the TextViews in drawermenu_list_itemitem.xml
             txtTitle = (TextView) itemView.findViewById(R.id.title);
 
-            // Locate the ImageView in drawer_list_item.xml
+            // Locate the ImageView in drawermenu_list_itemitem.xml
             imgIcon = (ImageView) itemView.findViewById(R.id.icon);
 
             // Set the results into TextViews

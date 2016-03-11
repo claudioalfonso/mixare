@@ -14,6 +14,10 @@ import java.util.List;
  *
  */
 class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
+
+	protected static final int DEFAULT_CAM_WIDTH = 480;
+    protected static final int DEFAULT_CAM_HEIGHT = 320;
+
 	MixViewActivity app;
 	SurfaceHolder holder;
 	Camera camera;
@@ -143,12 +147,12 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 				// In this case, we use the default values: 480x320
 				if ((bestw == 0) || (besth == 0)) {
 					Log.d(Config.TAG, "Using default camera parameters!");
-					bestw = 480;
-					besth = 320;
+					bestw = DEFAULT_CAM_WIDTH;
+					besth = DEFAULT_CAM_HEIGHT;
 				}
 				parameters.setPreviewSize(bestw, besth);
 			} catch (Exception ex) {
-				parameters.setPreviewSize(480, 320);
+				parameters.setPreviewSize(DEFAULT_CAM_WIDTH, DEFAULT_CAM_HEIGHT);
 			}
 
 			camera.setParameters(parameters);
