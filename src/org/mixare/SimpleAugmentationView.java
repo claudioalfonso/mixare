@@ -6,10 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-class AugmentedView extends View {
+class SimpleAugmentationView extends View {
 	MixViewActivity mixViewActivity;
 
-	public AugmentedView(Context context) {
+	public SimpleAugmentationView(Context context) {
 		super(context);
 
 		try {

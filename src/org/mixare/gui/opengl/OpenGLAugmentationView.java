@@ -11,7 +11,7 @@ import android.opengl.GLSurfaceView;
 import org.mixare.gui.opengl.RouteRenderer;
 
 
-public class OpenGLView extends GLSurfaceView implements SensorEventListener {
+public class OpenGLAugmentationView extends GLSurfaceView implements SensorEventListener {
 
     public RouteRenderer routeRenderer;
     public SensorManager sensorManager;
@@ -24,7 +24,7 @@ public class OpenGLView extends GLSurfaceView implements SensorEventListener {
     private final float[] orientation = new float[3];
 
 
-    public OpenGLView(Context context, SensorManager sensorManager) {
+    public OpenGLAugmentationView(Context context, SensorManager sensorManager) {
         super(context);
 
         this.sensorManager=sensorManager;
