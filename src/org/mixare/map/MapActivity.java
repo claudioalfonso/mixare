@@ -58,11 +58,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapActivity extends DrawerMenuActivity {
-    public final static byte DEFAULT_ZOOM_LEVEL =12;
+    public final static byte ZOOM_LEVEL_DEFAULT = 12;
+    public final static byte ZOOM_LEVEL_CLOSE = 18;
+
     private MapView mapView;
 	private TileCache tileCache;
     protected TileDownloadLayer downloadLayer;
-    private FrameLayout map_view;
+    private FrameLayout contentFrame;
     List<LatLong> routeResult = new ArrayList<>();
     Polyline polyline;
     List<LatLong> coordinateList;
@@ -86,7 +88,7 @@ public class MapActivity extends DrawerMenuActivity {
         }
 
         AndroidGraphicFactory.createInstance(this.getApplication());
-        map_view = (FrameLayout)findViewById(R.id.drawermenu_content_framelayout);
+        contentFrame = (FrameLayout)findViewById(R.id.drawermenu_content_framelayout);
 
         this.mapView = new MapView(this);
         //setContentView(this.mapView);
@@ -111,7 +113,7 @@ public class MapActivity extends DrawerMenuActivity {
 
         // Add mapView to View
         //setContentView(mapView);
-        map_view.addView(this.mapView);
+        contentFrame.addView(this.mapView);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Retrieve the search query
@@ -122,7 +124,7 @@ public class MapActivity extends DrawerMenuActivity {
         // IntentExtras
         if (intent.getBooleanExtra(Config.INTENT_EXTRA_DO_CENTER, false)) {
             setCenterZoom(intent.getDoubleExtra(Config.INTENT_EXTRA_LATITUDE, Config.DEFAULT_FIX_LAT),
-                    intent.getDoubleExtra(Config.INTENT_EXTRA_LONGITUDE, Config.DEFAULT_FIX_LON), DEFAULT_ZOOM_LEVEL);
+                    intent.getDoubleExtra(Config.INTENT_EXTRA_LONGITUDE, Config.DEFAULT_FIX_LON), ZOOM_LEVEL_CLOSE);
         } else {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();
@@ -205,7 +207,6 @@ public class MapActivity extends DrawerMenuActivity {
 
         @Override
         public boolean onTap(LatLong tapLatLong, Point layerXY, Point tapXY){
-            Log.d(Config.TAG,"Map onTap"+tapLatLong);
             if(marker instanceof LocalMarker){
                 LocalMarker localMarker = (LocalMarker) marker;
                 localMarker.retrieveActionPopupMenu(MapActivity.this,mapView).show();
@@ -227,8 +228,6 @@ public class MapActivity extends DrawerMenuActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        setCenterZoom(Config.DEFAULT_FIX_LAT, Config.DEFAULT_FIX_LON, DEFAULT_ZOOM_LEVEL);
         createOverlay();
     }
 
@@ -270,7 +269,7 @@ public class MapActivity extends DrawerMenuActivity {
      *            The zoomLevel level
      */
     private void setZoomLevel(int zoomLevel) {
-        this.mapView.getModel().mapViewPosition.setZoomLevel((byte) zoomLevel);
+        this.mapView.setZoomLevel((byte) zoomLevel);
     }
 
     /**
@@ -300,6 +299,7 @@ public class MapActivity extends DrawerMenuActivity {
         mapZoomLevel = MixUtils
                 .earthEquatorToZoomLevel((mapZoomLevel < 2f) ? 2f
                         : mapZoomLevel);
+
         setZoomLevel((int) mapZoomLevel);
 
     }
@@ -333,14 +333,13 @@ public class MapActivity extends DrawerMenuActivity {
         polyline = new Polyline(paint, AndroidGraphicFactory.INSTANCE);
         coordinateList = polyline.getLatLongs();
 
-
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
             @Override
             public void processFinish(MyRoute route) {
               /*  for(LatLong lat : latLong) {
                     coordinateList.add(lat);
                 }*/
-                coordinateList = route.getCoordinateList();
+                coordinateList.addAll(route.getCoordinateList());
                 mapView.getLayerManager().getLayers().add(polyline);
             }
 
