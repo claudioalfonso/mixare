@@ -324,7 +324,6 @@ public class MapActivity extends DrawerMenuActivity {
     }
 
     public void paintRoute(Location routeStart, Location routeEnd) {
-
         Paint paint = AndroidGraphicFactory.INSTANCE.createPaint();
         paint.setColor(Color.BLUE);
         paint.setStrokeWidth(6);
@@ -336,9 +335,6 @@ public class MapActivity extends DrawerMenuActivity {
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
             @Override
             public void processFinish(MyRoute route) {
-              /*  for(LatLong lat : latLong) {
-                    coordinateList.add(lat);
-                }*/
                 coordinateList.addAll(route.getCoordinateList());
                 mapView.getLayerManager().getLayers().add(polyline);
             }
