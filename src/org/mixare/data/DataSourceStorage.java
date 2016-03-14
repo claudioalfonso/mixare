@@ -64,7 +64,7 @@ public class DataSourceStorage {
 	 */
 	private DataSourceStorage(Context ctx) {
 		DataSourceStorage.ctx = ctx;
-		settings = ctx.getSharedPreferences(Config.PREF_DATASOURCES, 0);
+		settings = ctx.getSharedPreferences(Config.PREFS_DATASOURCES, 0);
 		fillListFromXml();
 	}
 
@@ -219,7 +219,7 @@ public class DataSourceStorage {
 				.openRawResource(R.raw.defaultdatasources));
 
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putString(Config.PREF_DATASOURCES_XMLKEY, defaultXml);
+		editor.putString(Config.PREFS_DATASOURCES_XMLKEY, defaultXml);
 		editor.commit();
 		
 		fillListFromXml();
@@ -243,7 +243,7 @@ public class DataSourceStorage {
 		String defaultXml = inputStreamToString(ctx.getResources()
 				.openRawResource(R.raw.defaultdatasources));
 
-		return settings.getString(Config.PREF_DATASOURCES_XMLKEY, defaultXml);
+		return settings.getString(Config.PREFS_DATASOURCES_XMLKEY, defaultXml);
 	}
 	
 	/**
@@ -424,7 +424,7 @@ public class DataSourceStorage {
 			
 			// Save it to the SharedPreferences
 			SharedPreferences.Editor editor = settings.edit();
-			editor.putString(Config.PREF_DATASOURCES_XMLKEY, xml);
+			editor.putString(Config.PREFS_DATASOURCES_XMLKEY, xml);
 			editor.commit();
 		} catch (Exception e) {
 			// TODO: handle exception

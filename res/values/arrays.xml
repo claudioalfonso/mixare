@@ -24,11 +24,8 @@
 		<item>@string/menu_item_list</item>
         <item>@string/menu_item_range</item>
         <item>@string/menu_item_search</item>
-        <item>@string/menu_item_datasources</item>
-        <item>@string/menu_item_plugins</item>
         <item>@string/menu_item_3drendering</item>
-        <item>@string/menu_item_license</item>
-        <item>@string/menu_item_info</item>
+        <item>@string/menu_item_settings</item>
     </string-array>
     <array name="menu_item_icons">
         <item>@android:drawable/ic_menu_directions</item>
@@ -37,9 +34,6 @@
         <item>@android:drawable/ic_menu_zoom</item>
         <item>@android:drawable/ic_menu_search</item>
         <item>@drawable/icon_datasource</item>
-        <item>@drawable/icon_datasource</item>
-        <item>@drawable/icon_datasource</item>
-        <item>@android:drawable/ic_menu_share</item>
-        <item>@android:drawable/ic_menu_info_details</item>
+        <item>@android:drawable/ic_menu_preferences</item>
     </array>
 </resources>

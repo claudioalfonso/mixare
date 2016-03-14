@@ -126,7 +126,10 @@
             android:label="@string/datasource_list" />
         
         <activity android:name=".PluginListActivity" 
-            android:label="@string/plugin_list">
+            android:label="@string/plugin_list" />
+
+        <activity android:name=".settings.SettingsActivity"
+            android:label="@string/menu_item_settings">
         </activity>
         
     </application>

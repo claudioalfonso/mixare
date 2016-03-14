@@ -14,7 +14,7 @@
     <string name="empty_list">Désolé, \nIl n\'a pas d\'information de position \nde disponible avec ce rayon.\nS\'il vous plaît essayez de rechercher dans un plus large éventail.</string>
 	<string name="option_not_available">Désolé, Nous y travaillons... \nCette option sera disponible bientôt!</string>
 	
-	<string name="license">Copyright (C) 2010- Peer internet solutions 
+	<string name="license_text">Copyright (C) 2010- Peer internet solutions
 		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the 
 		GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
 		or at your option) any later version. 
@@ -25,14 +25,14 @@
 		If not, see &lt;http://www.gnu.org/licenses/&gt;
 	</string>
 	
-	<string name="menu_item_datasources">Données</string>
-	<string name="menu_item_plugins">Plugins</string>
+	<string name="pref_item_datasources_title">Données</string>
+	<string name="pref_item_plugins_title">Plugins</string>
 	<string name="menu_item_list">Vue liste</string>
 	<string name="menu_item_map">Vue carte</string>
 	<string name="menu_item_range">Niveau de zoom</string>
 	<string name="menu_item_search">Recherche</string>
 	<string name="menu_item_info">Info</string>
-	<string name="menu_item_license">License</string>
+	<string name="pref_item_license_title">License</string>
 	
 	
 	<string name="connection_error_dialog">Désolé, une erreur de connexion est survenue! \nS\'il vous plaît vérifier si vous êtes connecté à Internet.</string>
@@ -47,7 +47,7 @@
 	
 	<string name="no_website_available">Désolé, il n\'y a pas d\'autre \ninformation de disponible.</string>
 	
-	<string name="license_title">License</string>
+	<string name="pref_item_license_dialogtitle">License</string>
 	<string name="close_button">Fermer</string>
 	<string name="general_info_title">Information générale</string>
 	

@@ -6,10 +6,10 @@ public class Config {
     /** TAG for logging */
     public static final String TAG = "Mixare";
     /** string to name & access the preference file in the internal storage */
-    public static final String PREFS_NAME = "MyPrefsFileForMenuItems";
-    public static final String PREF_USED_PLUGINS = "usedPlugins";
-    public static final String PREF_DATASOURCES = "DataSourcesPrefs";
-    public static final String PREF_DATASOURCES_XMLKEY = "xmlDataSources";
+    public static final String PREFS_GENERAL = "mixarePrefsGeneral";
+    public static final String PREFS_PLUGINS = "mixarePrefsPlugins";
+    public static final String PREFS_DATASOURCES = "mixarePrefsDatasources";
+    public static final String PREFS_DATASOURCES_XMLKEY = "xmlDataSources";
 
     public static final int DEFAULT_RANGE_PROGRESS = 37;
 
@@ -29,7 +29,9 @@ public class Config {
     public static final int INTENT_REQUEST_CODE_PLUGINS = 35;
     public static final int INTENT_REQUEST_CODE_MARKERLIST = 42;
     public static final int INTENT_REQUEST_CODE_MAP = 20;
+    public static final int INTENT_REQUEST_CODE_SETTINGS = 135;
     public static final int INTENT_REQUEST_CODE_PLUGIN_STATUS = 1;
+
     public static final int INTENT_RESULT_PLUGIN_STATUS_CHANGED = 1;
     public static final int INTENT_RESULT_PLUGIN_STATUS_NOT_CHANGED = 0;
     public static final int INTENT_RESULT_ACTIVITY = 0;

@@ -21,7 +21,7 @@
     <string name="empty_list">عفواً, ليس هناك معلومات في القطر الذي حددته, حاول توسيع القطر</string>
 	<string name="option_not_available">للأسف, هذا الخيار غير متاح الأن</string>
 
-	<string name="license">Copyright (&#160;) 2010- Peer internet solutions 
+	<string name="license_text">Copyright (&#160;) 2010- Peer internet solutions
 		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the 
 		GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
 		or at your option) any later version. 
@@ -32,14 +32,14 @@
 		If not, see &lt;http://www.gnu.org/licenses/&gt;
 	</string>
 
-	<string name="menu_item_datasources">المصادر</string>
-	<string name="menu_item_plugins">Plugins</string>
+	<string name="pref_item_datasources_title">المصادر</string>
+	<string name="pref_item_plugins_title">Plugins</string>
 	<string name="menu_item_list">اللائحه</string>
 	<string name="menu_item_map">الخريطة</string>
 	<string name="menu_item_range">القطر</string>
 	<string name="menu_item_search">بحث</string>
 	<string name="menu_item_info">معلومات</string>
-	<string name="menu_item_license">الترخيص</string>
+	<string name="pref_item_license_title">الترخيص</string>
 
 	<string name="cancel">إلغاء</string>
 
@@ -57,7 +57,7 @@
 
 	<string name="no_website_available">عفواً, لا توجد معلومات متوفره حالياً.</string>
 
-	<string name="license_title">الرخصة</string>
+	<string name="pref_item_license_dialogtitle">الرخصة</string>
 	<string name="close_button">إلغاء</string>
 	<string name="general_info_title">معلومات عامة</string>
 

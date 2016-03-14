@@ -164,7 +164,7 @@ class Waypoint
     }
 
     public float distanceToCurrentPosition(){
-        Log.d("Results", "DistanceBetweenWaypoints" + (int) Math.sqrt(Math.pow(relativeY,2) + Math.pow(relativeX,2)));
+  //      Log.d("Results", "DistanceBetweenWaypoints" + (int) Math.sqrt(Math.pow(relativeY,2) + Math.pow(relativeX,2)));
         return (float)Math.sqrt(Math.pow(relativeY,2) + Math.pow(relativeX,2));
 
 

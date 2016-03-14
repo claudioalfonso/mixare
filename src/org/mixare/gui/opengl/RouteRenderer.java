@@ -187,7 +187,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     public boolean hasLowDistance(){
         Waypoint waypoint = getNearestWaypoint(routeWaypoints);
-        Log.d("Waypoint", "Nearest Waypoint, distance" + waypoint.distanceToCurrentPosition());
+//        Log.d("Waypoint", "Nearest Waypoint, distance" + waypoint.distanceToCurrentPosition());
         if(waypoint.distanceToCurrentPosition()<50) {
             return true;
 
@@ -204,7 +204,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         updateWaypoints(coordinateList, routeWaypoints);
     }*/
     public void updateRoute(MyRoute myRoute){
-        Log.i("Info3", "Steps" + myRoute.getCoordinateList().size());
+ //       Log.i("Info3", "Steps" + myRoute.getCoordinateList().size());
         setActualRoute(myRoute);
         updateWaypoints(myRoute.getCoordinateList(), routeWaypoints);
     }

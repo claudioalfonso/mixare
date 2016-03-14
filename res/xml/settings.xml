@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_cat_data_title">
+        <PreferenceScreen
+            android:key="@string/pref_item_datasources_key"
+            android:title="@string/pref_item_datasources_title"
+            android:summary="@string/pref_item_datasources_summary" >
+            <intent
+                android:targetClass="org.mixare.data.DataSourceList"
+                android:targetPackage="org.mixare"
+                />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:key="@string/pref_item_plugins_key"
+            android:title="@string/pref_item_plugins_title"
+            android:summary="@string/pref_item_plugins_summary" >
+            <intent
+                android:targetClass="org.mixare.PluginListActivity"
+                android:targetPackage="org.mixare"
+                />
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Rendering">
+        <CheckBoxPreference android:title="Render HUD" />
+        <CheckBoxPreference android:title="Render text blocks" />
+        <CheckBoxPreference android:title="Enable routing" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="other">
+        <CheckBoxPreference
+            android:key="@string/pref_item_firstaccess"
+            android:title="First access" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_cat_info_title">
+        <org.mixare.gui.LicensePreference
+            android:key="@string/pref_item_license_key"
+            android:title="@string/pref_item_license_title"
+            android:summary="@string/pref_item_license_summary"
+            android:dialogTitle="@string/pref_item_license_dialogtitle"
+            android:dialogMessage="@string/license_text"
+            android:negativeButtonText="@string/close_button"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -19,7 +19,7 @@
 	<string name="option_not_available">Es tut uns leid, wir arbeiten daran…
 		\nDiese Option wird Ihnen schon bald \nzur Verfügung stehen!</string>
 	
-	<string name="license"><![CDATA[Copyright © 2010-2013 Peer internet solutions
+	<string name="license_text"><![CDATA[Copyright © 2010-2013 Peer internet solutions
 		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the
 		GNU General Public License as published by the Free Software Foundation, either version 3 of the License,
 		or at your option) any later version.
@@ -30,14 +30,14 @@
 		If not, see <http://www.gnu.org/licenses/>
 	]]></string>
 	
-	<string name="menu_item_datasources">Datenquellen</string>
-	<string name="menu_item_plugins">Plug-Ins</string>
+	<string name="pref_item_datasources_title">Datenquellen</string>
+	<string name="pref_item_plugins_title">Plug-Ins</string>
 	<string name="menu_item_list">Marker-Liste</string>
 	<string name="menu_item_map">Karte</string>
 	<string name="menu_item_range">Reichweite</string>
 	<string name="menu_item_search">Suche</string>
 	<string name="menu_item_info">Info</string>
-	<string name="menu_item_license">Lizenz</string>
+	<string name="pref_item_license_title">Lizenz</string>
 	
 	<string name="connection_error_dialog">Es tut uns leid, Verbindungsfehler ist aufgetreten! \nBitte kontrollieren Sie ob eine Verbindung zum Internet besteht.</string>
 	<string name="connection_error_dialog_button1">Erneut Versuchen</string>
@@ -51,7 +51,7 @@
 	
 	<string name="no_website_available">Es tut uns leid, es stehen keine weiteren \nInformationen zur Verfügung.</string>
 	
-	<string name="license_title">Lizenz</string>
+	<string name="pref_item_license_dialogtitle">Lizenz</string>
 	<string name="close_button">Schließen</string>
 	<string name="general_info_title">Allgemeine Informationen</string>
 	
@@ -150,5 +150,12 @@
 	<string name="more_actions">Mehr Aktionen</string>
 	<string name="marker_action_show_image">Bild anzeigen</string>
 	<string name="marker_action_show_website_externally">Website extern anzeigen</string>
+	<string name="pref_cat_data_title">Daten</string>
+	<string name="pref_cat_info_title">Informationen</string>
+	<string name="compass_unreliable">Kompass unzuverlässig, bitte rekalibrieren.</string>
+	<string name="pref_item_plugins_summary">Plug-Ins auswählen, die aktiv sein sollen</string>
+	<string name="pref_item_license_summary">Lizenztext anzeigen</string>
+	<string name="pref_item_datasources_summary">Datenquellen auswählen, die abgerufen und angezeigt werden sollen</string>
+	<string name="menu_item_settings">Einstellungen</string>
 
 </resources>

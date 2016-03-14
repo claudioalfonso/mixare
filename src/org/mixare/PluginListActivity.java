@@ -123,7 +123,7 @@ public class PluginListActivity extends SherlockActivity {
 
 		// save the Plugin to the SharedPreferences
 		SharedPreferences.Editor shareEditor = getSharedPreferences(
-				Config.PREF_USED_PLUGINS, MODE_PRIVATE).edit();
+				Config.PREFS_PLUGINS, MODE_PRIVATE).edit();
 
 		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 			// is the Plugin activated

@@ -21,7 +21,7 @@
     <string name="empty_list">Purtroppo non sono disponibili informazioni\nin quest\'area. Provare ad aumentare il raggio.</string>
 	<string name="option_not_available">Questa opzione sará disponibile in\nuna versione futura dell\'applicazione!</string>
 	
-	<string name="license">Copyright &#169; 2010- Peer internet solutions 
+	<string name="license_text">Copyright &#169; 2010- Peer internet solutions
 		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the 
 		GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
 		or at your option) any later version. 
@@ -32,14 +32,14 @@
 		If not, see &lt;http://www.gnu.org/licenses/&gt;
 	</string>
 	
-	<string name="menu_item_datasources">Scelta delle fonti</string>
-	<string name="menu_item_plugins">Plugins</string>
+	<string name="pref_item_datasources_title">Scelta delle fonti</string>
+	<string name="pref_item_plugins_title">Plugins</string>
 	<string name="menu_item_list">Lista dei risultati</string>
 	<string name="menu_item_map">Mappa</string>
 	<string name="menu_item_range">Raggio visualizzato</string>
 	<string name="menu_item_search">Ricerca</string>
 	<string name="menu_item_info">Info</string>
-	<string name="menu_item_license">Licenza</string>
+	<string name="pref_item_license_title">Licenza</string>
 
 	<string name="cancel">Annulla</string>
 
@@ -57,7 +57,7 @@
 
 	<string name="no_website_available">Ci dispiace, non sono disponibili ulteriori informazioni</string>
 
-	<string name="license_title">Licenza</string>
+	<string name="pref_item_license_dialogtitle">Licenza</string>
 	<string name="close_button">Chiudi</string>
 	<string name="general_info_title">Informazioni generali</string>
 	

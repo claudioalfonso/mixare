@@ -59,7 +59,14 @@ class Camera2Surface extends CameraSurface {
                     cameraId = curCameraId;
                     StreamConfigurationMap configs = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                     sizes = configs.getOutputSizes(SurfaceHolder.class);
-                    break;
+//                    sizes = configs.getHighSpeedVideoSizes();
+                    for (Size curSize : sizes) {
+                        long minFrameDuration = configs.getOutputMinFrameDuration(SurfaceHolder.class, curSize);
+                        Log.d(Config.TAG+" camSize","cameraId="+cameraId+", w="+curSize.getWidth()+", h="+curSize.getHeight()+", minFrameDuration="+minFrameDuration);
+
+                    }
+
+ //                   break;
                 }
             }
         } catch (CameraAccessException ex) {
@@ -68,7 +75,6 @@ class Camera2Surface extends CameraSurface {
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        openCamera();
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -133,8 +139,15 @@ class Camera2Surface extends CameraSurface {
             bestw = DEFAULT_CAM_WIDTH;
             besth = DEFAULT_CAM_HEIGHT;
         }
- //       holder.
-        holder.setFixedSize(bestw,besth);
+
+        Log.d(Config.TAG + " cameraSurfaceThi"," before, w="+this.getWidth()+ ", h="+this.getHeight());
+
+
+        //      holder
+        holder.setFixedSize(bestw, besth);
+        Log.d(Config.TAG + " cameraSurfaceThi", "after, w=" + this.getWidth() + ", h=" + this.getHeight());
+        openCamera();
+
     }
 
     private void openCamera() {
@@ -156,12 +169,12 @@ class Camera2Surface extends CameraSurface {
 
                 @Override
                 public void onDisconnected(@NonNull CameraDevice cameraDevice) {
-
+                    Log.e(Config.TAG, this.getClass().getName()+" onDisconnected");
                 }
 
                 @Override
                 public void onError(@NonNull CameraDevice cameraDevice, int i) {
-
+                    Log.e(Config.TAG, this.getClass().getName()+" onError");
                 }
             }, null);
         } catch (CameraAccessException ex) {

@@ -150,7 +150,9 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 					bestw = DEFAULT_CAM_WIDTH;
 					besth = DEFAULT_CAM_HEIGHT;
 				}
-				parameters.setPreviewSize(bestw, besth);
+                parameters.setPreviewSize(800, besth);
+
+                parameters.setPreviewSize(bestw, besth);
 			} catch (Exception ex) {
 				parameters.setPreviewSize(DEFAULT_CAM_WIDTH, DEFAULT_CAM_HEIGHT);
 			}

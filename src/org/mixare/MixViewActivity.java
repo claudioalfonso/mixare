@@ -55,14 +55,15 @@ import android.widget.TextView;
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
+import org.mixare.gui.LicensePreference;
 import org.mixare.gui.opengl.OpenGLAugmentationView;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.render.Matrix;
 import org.mixare.map.MapActivity;
 import org.mixare.mgr.HttpTools;
 import org.mixare.route.RouteManager;
+import org.mixare.settings.SettingsActivity;
 
-import java.util.Date;
 import java.util.Random;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
@@ -187,13 +188,13 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 			}
 
 			/*
-			 * Get the preference file PREFS_NAME stored in the internal memory
+			 * Get the preference file PREFS_GENERAL stored in the internal memory
 			 * of the phone
 			 */
-			SharedPreferences settings = getSharedPreferences(Config.PREFS_NAME, 0);
+			SharedPreferences settings = getSharedPreferences(Config.PREFS_GENERAL, 0);
 
 			/* check if the application is launched for the first time */
-			if (!settings.getBoolean("firstAccess", false)) {
+			if (!settings.getBoolean(getString(R.string.pref_item_firstaccess), false)) {
 				firstAccess(settings);
 			}
 		} catch (Exception ex) {
@@ -594,18 +595,26 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	 */
 	private void maintainCamera() {
 		cameraView = (FrameLayout) findViewById(R.id.drawermenu_content_camerascreen);
-			if (cameraSurface == null) {
+        if (cameraSurface == null) {
 				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-					cameraSurface = new Camera2Surface(this);
-				} else {
+	//				cameraSurface = new Camera2Surface(this);
+                    cameraSurface = new CameraSurface(this);
+
+                } else {
 					cameraSurface = new CameraSurface(this);
 				}
-				cameraView.addView(cameraSurface);
+
+            cameraView.addView(cameraSurface);
 			} else {
 				cameraView.removeView(cameraSurface);
 				cameraView.addView(cameraSurface);
 			}
-		}
+             Log.d(Config.TAG + " cameraSurface","w="+cameraSurface.getWidth()+ ", h="+cameraSurface.getHeight());
+        Log.d(Config.TAG + " camView","w="+cameraView.getWidth()+ ", h="+cameraView.getHeight());
+       cameraView.getLayoutParams().width=800;
+   //     cameraView.getLayoutParams().height=480;
+
+    }
 
 	/**
 	 * Checks simpleAugmentationView, if it does not exist, it creates one.
@@ -768,23 +777,15 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	 */
 	private void firstAccess(SharedPreferences settings) {
 		SharedPreferences.Editor editor = settings.edit();
-		AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-		builder1.setMessage(getString(R.string.license));
-		builder1.setNegativeButton(getString(R.string.close_button),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.dismiss();
-					}
-				});
-		AlertDialog alert1 = builder1.create();
-		alert1.setTitle(getString(R.string.license_title));
-		alert1.show();
-		editor.putBoolean("firstAccess", true);
+
+		AlertDialog licenseDialog = new LicensePreference(this).getDialog();
+        licenseDialog.show();
+		editor.putBoolean(getString(R.string.pref_item_firstaccess), true);
 
 		// value for maximum POI for each selected OSM URL to be active by
 		// default is 5
-		editor.putInt("osmMaxObject", 5);
-		editor.commit();
+		editor.putInt(getString(R.string.pref_item_osmmaxobject), 5);
+		editor.apply();
 
 		// add the default datasources to the preferences file
 		DataSourceStorage.getInstance().fillDefaultDataSources();
@@ -808,27 +809,6 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	public void selectItem(int position) {
 		int menuItemId=getResources().obtainTypedArray(R.array.menu_item_titles).getResourceId(position,-1);
 		switch (menuItemId) {
-		/* Data sources */
-			case R.string.menu_item_datasources:
-				if (!getMarkerRenderer().getIsLauncherStarted()) {
-					Intent intent = new Intent(MixViewActivity.this, DataSourceList.class);
-					startActivityForResult(intent, Config.INTENT_REQUEST_CODE_DATASOURCES);
-				} else {
-					markerRenderer.getContext().getNotificationManager()
-							.addNotification(getString(R.string.no_website_available));
-				}
-				break;
-			/* Plugin View */
-			case R.string.menu_item_plugins:
-				if (!getMarkerRenderer().getIsLauncherStarted()) {
-					Intent intent = new Intent(MixViewActivity.this,
-							PluginListActivity.class);
-					startActivityForResult(intent, Config.INTENT_REQUEST_CODE_PLUGINS);
-				} else {
-					markerRenderer.getContext().getNotificationManager()
-							.addNotification(getString(R.string.no_website_available));
-				}
-				break;
 		/* List markerRenderer */
 			case R.string.menu_item_list:
 			/*
@@ -859,48 +839,6 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 		/* Search */
 			case R.string.menu_item_search:
 				onSearchRequested();
-				break;
-		/* GPS Information */
-			case R.string.menu_item_info:
-				Location currentGPSInfo = MixContext.getInstance()
-						.getLocationFinder().getCurrentLocation();
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(getString(R.string.general_info_text) + "\n\n"
-						+ getString(R.string.longitude)
-						+ currentGPSInfo.getLongitude() + "\n"
-						+ getString(R.string.latitude)
-						+ currentGPSInfo.getLatitude() + "\n"
-						+ getString(R.string.altitude)
-						+ currentGPSInfo.getAltitude() + "m\n"
-						+ getString(R.string.speed) + currentGPSInfo.getSpeed()
-						+ "km/h\n" + getString(R.string.accuracy)
-						+ currentGPSInfo.getAccuracy() + "m\n"
-						+ getString(R.string.gps_last_fix)
-						+ new Date(currentGPSInfo.getTime()).toString() + "\n");
-				builder.setNegativeButton(getString(R.string.close_button),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.dismiss();
-							}
-						});
-				AlertDialog alert = builder.create();
-				alert.setTitle(getString(R.string.general_info_title));
-				alert.show();
-				break;
-		/* license agreement */
-			case R.string.menu_item_license:
-				AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-				builder1.setMessage(getString(R.string.license));
-			/* Retry */
-				builder1.setNegativeButton(getString(R.string.close_button),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.dismiss();
-							}
-						});
-				AlertDialog alert1 = builder1.create();
-				alert1.setTitle(getString(R.string.license_title));
-				alert1.show();
 				break;
 			case R.string.menu_item_3drendering:
 	//			Log.d(Config.TAG, "info 1: aktuelle Postition: " + curLocation.getLongitude() + ", " + curLocation.getLatitude());
@@ -937,17 +875,16 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 			case R.string.menu_item_route:
                 new MarkerListFragment().show(getFragmentManager(), "TAG");
 				break;
+
+			case R.string.menu_item_settings:
+				Intent intent5 = new Intent(MixViewActivity.this, SettingsActivity.class);
+				startActivityForResult(intent5, Config.INTENT_REQUEST_CODE_SETTINGS);
+                break;
             /* some random error (for testing?!)*/
 			default:
 				doError(null, new Random().nextInt(3));
 				break;
 		}
-	}
-
-
-	public void switchToMixMap(){
-		Intent mixMapIntent = new Intent(this, MapActivity.class);
-		startActivity(mixMapIntent);
 	}
 
 	public void onSensorChanged(SensorEvent evt) {
@@ -1055,7 +992,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 			float yPress = me.getY();
 			if (me.getAction() == MotionEvent.ACTION_UP) {
 				getMarkerRenderer().clickEvent(xPress, yPress);
-			}// TODO add gesture events (low)
+			}
 
 			return true;
 		} catch (Exception ex) {
@@ -1203,7 +1140,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
      */
     public static MarkerRenderer getMarkerRendererStatically() {
         if(markerRenderer==null){
-            Log.d(Config.TAG,"markerRenderer was null (called statically)");
+            Log.e(Config.TAG,"markerRenderer was null (called statically)");
         }
         return markerRenderer;
     }

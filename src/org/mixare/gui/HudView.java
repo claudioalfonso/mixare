@@ -113,7 +113,7 @@ public class HudView extends RelativeLayout {
     private void initRangeBar(){
         rangeBar = (SeekBar) this.findViewById(R.id.rangeBar);
         rangeBar.setOnSeekBarChangeListener(onRangeBarChangeListener);
-        SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_NAME, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_GENERAL, 0);
         setRangeBarProgress(settings.getInt(getContext().getString(R.string.pref_rangeBarProgress), Config.DEFAULT_RANGE_PROGRESS),true);
     }
 
@@ -190,7 +190,7 @@ public class HudView extends RelativeLayout {
         MixViewDataHolder.getInstance().setRange(range); // save the calculated range in km to be accessed by other processes
         if(finalValue){
             MixContext.getInstance().getActualMixViewActivity().getMarkerRenderer().setRadius(range); // set radius of the renderer in KM, TODO remove and access global range from MixViewDataHolder
-            SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_NAME, 0);
+            SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_GENERAL, 0);
             SharedPreferences.Editor editor = settings.edit();
 
             // store the range of the range bar selected by the user

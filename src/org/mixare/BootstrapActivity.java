@@ -47,7 +47,7 @@ public class BootstrapActivity extends Activity {
 		// TODO: change message if Plugins only have been deinstalled
 		if (areNewPluginsAvailable() || arePluginsDeinstalled()) {
 			SharedPreferences.Editor prefEditor = getSharedPreferences(
-					Config.PREF_USED_PLUGINS, MODE_PRIVATE).edit();
+					Config.PREFS_PLUGINS, MODE_PRIVATE).edit();
 			prefEditor.clear();
 			prefEditor.commit();
 			showDialog();
@@ -63,7 +63,7 @@ public class BootstrapActivity extends Activity {
 	 * @return True if a plugin got deinstalled
 	 */
 	public boolean arePluginsDeinstalled() {
-		SharedPreferences prefs = getSharedPreferences(Config.PREF_USED_PLUGINS,
+		SharedPreferences prefs = getSharedPreferences(Config.PREFS_PLUGINS,
 				MODE_PRIVATE);
 		for (Entry<String, ?> entry : prefs.getAll().entrySet()) {
 			String[] array = entry.getKey().split(":");
@@ -146,7 +146,7 @@ public class BootstrapActivity extends Activity {
 	 */
 	protected void savePluginState() {
 		SharedPreferences sharedPreferences = getSharedPreferences(
-				Config.PREF_USED_PLUGINS, MODE_PRIVATE);
+				Config.PREFS_PLUGINS, MODE_PRIVATE);
 		SharedPreferences.Editor shareEditor = sharedPreferences.edit();
 		for (Plugin plugin : BootstrapActivity.getPlugins()) {
 			boolean activated = plugin.getPluginStatus().equals(
@@ -183,7 +183,7 @@ public class BootstrapActivity extends Activity {
 	 */
 	private void getInstalledPlugins() {
 		SharedPreferences sharedPreferences = getSharedPreferences(
-				Config.PREF_USED_PLUGINS, MODE_PRIVATE);
+				Config.PREFS_PLUGINS, MODE_PRIVATE);
 		PluginType[] allPluginTypes = PluginType.values();
 		for (PluginType pluginType : allPluginTypes) {
 			PackageManager packageManager = getPackageManager();

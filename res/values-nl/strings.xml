@@ -21,7 +21,7 @@
     <string name="empty_list">Sorry, \nEr is geen locatie informatie \nbeschikbaar binnen deze radius.\nProbeer het opnieuw met een grotere radius.</string>
 	<string name="option_not_available">Sorry, We zijn er nog mee bezig... \nDe optie zal binnenkort beschikbaar zijn!</string>
 
-	<string name="license">Copyright (C) 2010- Peer internet solutions 
+	<string name="license_text">Copyright (C) 2010- Peer internet solutions
 		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the 
 		GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
 		or at your option) any later version. 
@@ -38,14 +38,14 @@
 	<string name="yes">Ja</string>
 	<string name="no">Nee</string>
 	
-	<string name="menu_item_datasources">Databron</string>
-	<string name="menu_item_plugins">Plugins</string>
+	<string name="pref_item_datasources_title">Databron</string>
+	<string name="pref_item_plugins_title">Plugins</string>
 	<string name="menu_item_list">Lijst view</string>
 	<string name="menu_item_map">Map view</string>
 	<string name="menu_item_range">Zoom level</string>
 	<string name="menu_item_search">Zoeken</string>
 	<string name="menu_item_info">Info</string>
-	<string name="menu_item_license">Licentie</string>
+	<string name="pref_item_license_title">Licentie</string>
 
 	<string name="cancel">Onderbreek</string>
 
@@ -64,7 +64,7 @@
 
 	<string name="no_website_available">Sorry, Er is geen informatie \nbeschikbaar.</string>
 
-	<string name="license_title">Licentie</string>
+	<string name="pref_item_license_dialogtitle">Licentie</string>
 	<string name="close_button">Afsluiten</string>
 	<string name="general_info_title">Algemene Informatie</string>
 

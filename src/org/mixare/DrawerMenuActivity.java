@@ -21,6 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.mixare.data.DataSourceList;
 import org.mixare.map.MapActivity;
+import org.mixare.settings.SettingsActivity;
 
 /**
  * Created by MelanieW on 30.12.2015.
@@ -127,16 +128,6 @@ public class DrawerMenuActivity extends SherlockActivity {
         int menuItemId=getResources().obtainTypedArray(R.array.menu_item_titles).getResourceId(position,-1);
 
         switch (menuItemId) {
-		    /* Data sources */
-            case R.string.menu_item_datasources:
-                Intent intent = new Intent(DrawerMenuActivity.this, DataSourceList.class);
-                startActivityForResult(intent, Config.INTENT_REQUEST_CODE_DATASOURCES);
-                break;
-			/* Plugin View */
-            case R.string.menu_item_plugins:
-                Intent intent2 = new Intent(DrawerMenuActivity.this, PluginListActivity.class);
-                startActivityForResult(intent2, Config.INTENT_REQUEST_CODE_PLUGINS);
-                break;
 		    /* Marker List View */
             case R.string.menu_item_route: //fall-through intended
             case R.string.menu_item_list:
@@ -153,17 +144,10 @@ public class DrawerMenuActivity extends SherlockActivity {
             case R.string.menu_item_search:
                 onSearchRequested();
                 break;
-		    /* license agreements */
-            case R.string.menu_item_license:
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                builder1.setMessage(getString(R.string.license));
-			    /* Retry */
-                builder1.setNegativeButton(getString(R.string.close_button),new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) { dialog.dismiss(); }
-                        });
-                AlertDialog alert1 = builder1.create();
-                alert1.setTitle(getString(R.string.license_title));
-                alert1.show();
+            case R.string.menu_item_settings:
+                Intent intent5 = new Intent(DrawerMenuActivity.this, SettingsActivity.class);
+               // new Intent(DrawerMenuActivity.this, );
+                startActivityForResult(intent5, Config.INTENT_REQUEST_CODE_SETTINGS);
                 break;
             default:
                 break;
