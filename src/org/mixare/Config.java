@@ -6,7 +6,6 @@ public class Config {
     /** TAG for logging */
     public static final String TAG = "Mixare";
     /** string to name & access the preference file in the internal storage */
-    public static final String PREFS_GENERAL = "mixarePrefsGeneral";
     public static final String PREFS_PLUGINS = "mixarePrefsPlugins";
     public static final String PREFS_DATASOURCES = "mixarePrefsDatasources";
     public static final String PREFS_DATASOURCES_XMLKEY = "xmlDataSources";
@@ -44,11 +43,9 @@ public class Config {
     public static final String INTENT_EXTRA_DO_CENTER = "do_center";
     public static final String INTENT_EXTRA_CLOSED_ACTIVITY = "closed";
 
-
     public static final int SPLASHTIME = 1000; // 1 second
 
-    public static boolean drawTextBlock = true;
-    public static boolean useHUD=true;
+    public static boolean drawMarkerTextBlocks = true;
 
     public static Location getDefaultFix(){
         Location defaultFix = new Location(DEFAULT_FIX_NAME);

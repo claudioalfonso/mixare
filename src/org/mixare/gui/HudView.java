@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -40,6 +41,9 @@ public class HudView extends RelativeLayout {
 
     private Radar radar = null;
     private PaintScreen radarPaintScreen;
+
+    SharedPreferences settings;
+
 
     Paint rangeBarLabelPaint = new Paint();
 
@@ -107,13 +111,15 @@ public class HudView extends RelativeLayout {
         dataSourcesStatusIcon =(ImageView) this.findViewById(R.id.dataSourcesStatusIcon);
         sensorsStatusIcon =(ImageView) this.findViewById(R.id.sensorsStatusIcon);
         destinationStatusText = (TextView) this.findViewById(R.id.destinationStatusText);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         initRangeBar();
     }
 
     private void initRangeBar(){
         rangeBar = (SeekBar) this.findViewById(R.id.rangeBar);
         rangeBar.setOnSeekBarChangeListener(onRangeBarChangeListener);
-        SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_GENERAL, 0);
         setRangeBarProgress(settings.getInt(getContext().getString(R.string.pref_rangeBarProgress), Config.DEFAULT_RANGE_PROGRESS),true);
     }
 
@@ -190,7 +196,6 @@ public class HudView extends RelativeLayout {
         MixViewDataHolder.getInstance().setRange(range); // save the calculated range in km to be accessed by other processes
         if(finalValue){
             MixContext.getInstance().getActualMixViewActivity().getMarkerRenderer().setRadius(range); // set radius of the renderer in KM, TODO remove and access global range from MixViewDataHolder
-            SharedPreferences settings = getContext().getSharedPreferences(Config.PREFS_GENERAL, 0);
             SharedPreferences.Editor editor = settings.edit();
 
             // store the range of the range bar selected by the user

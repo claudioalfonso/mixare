@@ -136,7 +136,7 @@ public class PluginListActivity extends SherlockActivity {
 			shareEditor.putBoolean(name, activated);
 		}
 
-		shareEditor.commit();
+		shareEditor.apply();
 	}
 
 	/**
@@ -174,19 +174,19 @@ public class PluginListActivity extends SherlockActivity {
 			String pluginType = "";
 			switch (plugin.getPluginType()) {
 			case BOOTSTRAP_PHASE_1:
-				pluginType = getString(R.string.bootstrap1);
+				pluginType = getString(R.string.plugin_type_splashscreen);
 				break;
 			case BOOTSTRAP_PHASE_2:
-				pluginType = getString(R.string.bootstrap2);
+				pluginType = getString(R.string.plugin_type_bootstrap);
 				break;
 			case MARKER:
-				pluginType = getString(R.string.marker);
+				pluginType = getString(R.string.plugin_type_marker);
 				break;
 			case DATAHANDLER:
-				pluginType = getString(R.string.datahandler);
+				pluginType = getString(R.string.plugin_type_datahandler);
 				break;
 			case DATASELECTOR:
-				pluginType = getString(R.string.dataselector);
+				pluginType = getString(R.string.plugin_type_dataselector);
 				break;
 			default:
 				break;

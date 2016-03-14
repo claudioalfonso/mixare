@@ -38,6 +38,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -63,8 +64,6 @@ import org.mixare.map.MapActivity;
 import org.mixare.mgr.HttpTools;
 import org.mixare.route.RouteManager;
 import org.mixare.settings.SettingsActivity;
-
-import java.util.Random;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
@@ -102,6 +101,8 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 
 	private SensorManager sensorManager;
 	private Sensor orientationSensor;
+
+    private SharedPreferences settings;
 
 	/**
 	 * Main application Launcher.
@@ -152,8 +153,9 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 				}
 			}
 
-			maintainViews();
-			maintainOpenGLView();
+            settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+            maintainViews();
 
 			simpleAugmentationView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -187,15 +189,9 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 				isInited = true;
 			}
 
-			/*
-			 * Get the preference file PREFS_GENERAL stored in the internal memory
-			 * of the phone
-			 */
-			SharedPreferences settings = getSharedPreferences(Config.PREFS_GENERAL, 0);
-
 			/* check if the application is launched for the first time */
-			if (!settings.getBoolean(getString(R.string.pref_item_firstaccess), false)) {
-				firstAccess(settings);
+			if (settings.getBoolean(getString(R.string.pref_item_firstacess_key), true)) {
+				firstAccess();
 			}
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);
@@ -361,6 +357,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 			//routeRenderer.start();
 			openGLAugmentationView.onResume();
 		}
+        sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
 		sensorManager.registerListener(openGLAugmentationView, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
 		try {
@@ -573,9 +570,12 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	private void maintainViews() {
 		maintainCamera();
 		maintainAugmentedView();
-		if (Config.useHUD) {
+		if (settings.getBoolean(getString(R.string.pref_item_usehud_key), true)) {
 			maintainHudView();
 		}
+        if (settings.getBoolean(getString(R.string.pref_item_routing_key), true)){
+            maintainOpenGLView();
+        }
 	}
 
 	/* ********* Operators ***********/
@@ -610,7 +610,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 				cameraView.addView(cameraSurface);
 			}
              Log.d(Config.TAG + " cameraSurface","w="+cameraSurface.getWidth()+ ", h="+cameraSurface.getHeight());
-        Log.d(Config.TAG + " camView","w="+cameraView.getWidth()+ ", h="+cameraView.getHeight());
+        Log.d(Config.TAG + " camView", "w=" + cameraView.getWidth() + ", h=" + cameraView.getHeight());
        cameraView.getLayoutParams().width=800;
    //     cameraView.getLayoutParams().height=480;
 
@@ -651,26 +651,32 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
         addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
-
 	private void maintainOpenGLView() {
+        if(openGLAugmentationView==null) {
+            sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+            //orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+            orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+            openGLAugmentationView = new OpenGLAugmentationView(this, sensorManager);
 
-		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		//orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-		orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-		openGLAugmentationView = new OpenGLAugmentationView(this, sensorManager);
+            /*
+            openGLView.requestFocus();
+            openGLView.setFocusableInTouchMode(true);
+            openGLView.setZOrderOnTop(true);
+            openGLView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+            openGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+            openGLView.setRenderer(routeRenderer);
+            openGLView.getHolder().setFormat(PixelFormat.RGBA_8888);
+            openGLView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+            */
 
-/*
-		openGLView.requestFocus();
-		openGLView.setFocusableInTouchMode(true);
-		openGLView.setZOrderOnTop(true);
-		openGLView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-		openGLView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-		openGLView.setRenderer(routeRenderer);
-		openGLView.getHolder().setFormat(PixelFormat.RGBA_8888);
-		openGLView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-		*/
-
-	}
+            //			Log.d(Config.TAG, "info 1: aktuelle Postition: " + curLocation.getLongitude() + ", " + curLocation.getLatitude());
+            //			Log.i ("Info11",  "OrientatioN" +cameraView.getDisplay().getRotation());
+        }
+        else {
+            ((ViewGroup) openGLAugmentationView.getParent()).removeView(openGLAugmentationView);
+        }
+        cameraView.addView(openGLAugmentationView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    }
 	/**
 	 * Refreshes Download TODO refresh downloads
 	 */
@@ -697,6 +703,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	 */
 	public void refresh(){
 		markerRenderer.refresh();
+        update3D();
 	}
 
 	public void setErrorDialog(int error) {
@@ -773,18 +780,17 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	 * Handle First time users. It display license agreement and store user's
 	 * acceptance.
 	 *
-	 * @param settings
 	 */
-	private void firstAccess(SharedPreferences settings) {
+	private void firstAccess() {
 		SharedPreferences.Editor editor = settings.edit();
 
 		AlertDialog licenseDialog = new LicensePreference(this).getDialog();
         licenseDialog.show();
-		editor.putBoolean(getString(R.string.pref_item_firstaccess), true);
+		editor.putBoolean(getString(R.string.pref_item_firstacess_key), false);
 
 		// value for maximum POI for each selected OSM URL to be active by
 		// default is 5
-		editor.putInt(getString(R.string.pref_item_osmmaxobject), 5);
+		editor.putInt(getString(R.string.pref_item_osmmaxobjects_key), 5);
 		editor.apply();
 
 		// add the default datasources to the preferences file
@@ -808,17 +814,17 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	@Override
 	public void selectItem(int position) {
 		int menuItemId=getResources().obtainTypedArray(R.array.menu_item_titles).getResourceId(position,-1);
+        Intent intent=null;
 		switch (menuItemId) {
 		/* List markerRenderer */
 			case R.string.menu_item_list:
 			/*
-			 * if the list of titles to show in alternative list markerRenderer is not
-			 * empty
+			 * if the list markers is not empty
 			 */
 				if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
-					Intent intent1 = new Intent(MixViewActivity.this, MarkerListActivity.class);
-					intent1.setAction(Intent.ACTION_VIEW);
-					startActivityForResult(intent1, Config.INTENT_REQUEST_CODE_MARKERLIST);
+                    intent = new Intent(MixViewActivity.this, MarkerListActivity.class);
+                    intent.setAction(Intent.ACTION_VIEW);
+					startActivityForResult(intent, Config.INTENT_REQUEST_CODE_MARKERLIST);
 				}
 			/* if the list is empty */
 				else {
@@ -826,66 +832,52 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 							addNotification(getString(R.string.empty_list));
 				}
 				break;
-		/* Map View */
 			case R.string.menu_item_map:
-				Intent intent2 = new Intent(MixViewActivity.this, MapActivity.class);
-				startActivityForResult(intent2, Config.INTENT_REQUEST_CODE_MAP);
+                intent = new Intent(MixViewActivity.this, MapActivity.class);
+				startActivityForResult(intent, Config.INTENT_REQUEST_CODE_MAP);
 				break;
-		/* RangeBar */
 			case R.string.menu_item_range:
                 hudView.showRangeBar();
                 drawerLayout.closeDrawer(drawerList);
                 break;
-		/* Search */
 			case R.string.menu_item_search:
 				onSearchRequested();
 				break;
-			case R.string.menu_item_3drendering:
-	//			Log.d(Config.TAG, "info 1: aktuelle Postition: " + curLocation.getLongitude() + ", " + curLocation.getLatitude());
-	//			Log.i ("Info11",  "OrientatioN" +cameraView.getDisplay().getRotation());
-
-				if(openGLAugmentationView.isAttachedToWindow()) {
-                    cameraView.removeView(openGLAugmentationView);
-				}
-				else {
-                    Location startLocation = Config.getDefaultFix();
-                    Location endLocation = Config.getDefaultDestination();
-
-                    startLocation = MixViewDataHolder.getInstance().getCurLocation();
-                    endLocation = MixViewDataHolder.getInstance().getCurDestination();
-
-                    /*
-                    startLocation = new Location("TEST_LOC");
-					startLocation.setLatitude(51.50595);
-					startLocation.setLongitude(7.44919);
-
-                    endLocation = new Location("TEST_DEST");
-					endLocation.setLatitude(51.50658);
-					endLocation.setLongitude(7.45098);
-					*/
-
-                    RouteManager r = new RouteManager(openGLAugmentationView);
-					r.getRoute(startLocation, endLocation);
-                    openGLAugmentationView.routeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers());
-                    cameraView.addView(openGLAugmentationView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-				}
-
-				break;
-			/* test destination selection (from marker) */
 			case R.string.menu_item_route:
                 new MarkerListFragment().show(getFragmentManager(), "TAG");
 				break;
-
 			case R.string.menu_item_settings:
-				Intent intent5 = new Intent(MixViewActivity.this, SettingsActivity.class);
-				startActivityForResult(intent5, Config.INTENT_REQUEST_CODE_SETTINGS);
+                intent = new Intent(MixViewActivity.this, SettingsActivity.class);
+				startActivityForResult(intent, Config.INTENT_REQUEST_CODE_SETTINGS);
                 break;
-            /* some random error (for testing?!)*/
 			default:
-				doError(null, new Random().nextInt(3));
 				break;
 		}
 	}
+
+    public void update3D(){
+        Location startLocation = Config.getDefaultFix();
+        Location endLocation = Config.getDefaultDestination();
+
+        startLocation = MixViewDataHolder.getInstance().getCurLocation();
+        endLocation = MixViewDataHolder.getInstance().getCurDestination();
+
+        /*
+        startLocation = new Location("TEST_LOC");
+        startLocation.setLatitude(51.50595);
+        startLocation.setLongitude(7.44919);
+
+        endLocation = new Location("TEST_DEST");
+        endLocation.setLatitude(51.50658);
+        endLocation.setLongitude(7.45098);
+        */
+
+        if(openGLAugmentationView!=null) {
+            RouteManager r = new RouteManager(openGLAugmentationView);
+            r.getRoute(startLocation, endLocation);
+            openGLAugmentationView.routeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers());
+        }
+    }
 
 	public void onSensorChanged(SensorEvent evt) {
 		try {
@@ -1140,13 +1132,13 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
      */
     public static MarkerRenderer getMarkerRendererStatically() {
         if(markerRenderer==null){
-            Log.e(Config.TAG,"markerRenderer was null (called statically)");
+            Log.e(Config.TAG, "markerRenderer was null (called statically)");
         }
         return markerRenderer;
     }
 
     public void updateHud(Location curFix){
-        if(Config.useHUD) {
+        if(settings.getBoolean(getString(R.string.pref_item_usehud_key), true)) {
             hudView.updatePositionStatus(curFix);
             hudView.setDataSourcesStatus(getMarkerRenderer().dataSourceWorking, false, null);
             hudView.setDestinationStatus(getMixViewData().getCurDestination());

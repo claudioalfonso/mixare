@@ -23,14 +23,48 @@
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="Rendering">
-        <CheckBoxPreference android:title="Render HUD" />
-        <CheckBoxPreference android:title="Render text blocks" />
-        <CheckBoxPreference android:title="Enable routing" />
+        <CheckBoxPreference
+            android:key="@string/pref_item_usehud_key"
+            android:title="@string/pref_item_usehud_title"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="@string/pref_item_markertext_key"
+            android:title="@string/pref_item_markertext_title"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:title="@string/pref_item_routing_title"
+            android:key="@string/pref_item_routing_key"
+            android:defaultValue="true" />
     </PreferenceCategory>
     <PreferenceCategory android:title="other">
         <CheckBoxPreference
-            android:key="@string/pref_item_firstaccess"
-            android:title="First access" />
+            android:key="@string/pref_item_firstacess_key"
+            android:title="@string/pref_item_firstacess_title"
+            android:summary="@string/pref_item_firstacess_summary"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="landscapeMode"
+            android:title="View in landscape mode"
+            android:defaultValue="true" />
+        <EditTextPreference
+            android:key="lastFix"
+            android:title="Last set/obtained position" />
+        <EditTextPreference
+            android:key="lastDest"
+            android:title="Last set/obtained destination" />
+        <SwitchPreference
+            android:key="useLocationServices"
+            android:title="Auto locate"
+            android:summary="Use system's location services (GPS, WLAN etc.) to obtain current position (instead of setting manually)"
+            android:defaultValue="true" />
+        <EditTextPreference
+            android:key="routeColor"
+            android:title="Color of the 3d rendered route"
+            android:defaultValue="color/pumpkin_orange"/>
+        <CheckBoxPreference
+            android:key="camera2"
+            android:title="Use Camera2 (if available)"
+            android:defaultValue="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_info_title">

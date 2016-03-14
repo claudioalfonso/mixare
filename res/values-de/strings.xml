@@ -113,7 +113,7 @@
 	<string name="map_menu_map_osm">OpenStreetMap</string>
 	<string name="map_toggle_path_off">Pfad verbergen</string>
 	<string name="map_toggle_path_on">Pfad zeigen</string>
-	<string name="marker">Marker</string>
+	<string name="plugin_type_marker">Marker</string>
 	<string name="mix_list_view">Marker-Liste</string>
 	<string name="no">Nein</string>
 	<string name="none">Keine</string>
@@ -157,5 +157,10 @@
 	<string name="pref_item_license_summary">Lizenztext anzeigen</string>
 	<string name="pref_item_datasources_summary">Datenquellen auswählen, die abgerufen und angezeigt werden sollen</string>
 	<string name="menu_item_settings">Einstellungen</string>
+	<string name="pref_item_firstacess_summary">Verhalten, als sei App zum ersten Mal gestartet worden</string>
+	<string name="pref_item_firstacess_title">Erststart</string>
+	<string name="pref_item_markertext_title">Texte an Markern darstellen</string>
+	<string name="pref_item_routing_title">Routing aktivieren</string>
+	<string name="pref_item_usehud_title">HUD darstellen</string>
 
 </resources>

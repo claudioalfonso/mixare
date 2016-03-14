@@ -197,7 +197,7 @@ public abstract class LocalMarker implements Marker {
 
 	public void draw(PaintScreen paintScreen) {
 		drawCircle(paintScreen);
-		if (Config.drawTextBlock) {
+		if (Config.drawMarkerTextBlocks) {
 			drawTextBlock(paintScreen);
 		}
 	}

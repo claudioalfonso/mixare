@@ -122,11 +122,11 @@
 	<string name="deselect_all">Deselect all</string>
 	<string name="reload_plugins">Reload Plugins</string>
 	
-	<string name="bootstrap1">Splashscreen</string>
-	<string name="bootstrap2">Bootstrap</string>
-	<string name="marker">Marker</string>
-	<string name="dataselector">Dataselector</string>
-	<string name="datahandler">Datahandler</string>
+	<string name="plugin_type_splashscreen">Splashscreen</string>
+	<string name="plugin_type_bootstrap">Bootstrap</string>
+	<string name="plugin_type_marker">Marker</string>
+	<string name="plugin_type_dataselector">Dataselector</string>
+	<string name="plugin_type_datahandler">Datahandler</string>
 	
 	<string name="list_view_total_markers">Total markers: </string>
 	<string name="list_view_marker_in_section">Markers: %1$d</string>
@@ -180,6 +180,14 @@
 	<string name="pref_item_datasources_key" translatable="false">prefItemDatasourcesKey</string>
 	<string name="pref_item_plugins_key" translatable="false">prefItemPluginsKey</string>
 	<string name="menu_item_settings">Settings</string>
-	<string name="pref_item_firstaccess">firstAccess</string>
-	<string name="pref_item_osmmaxobject">osmMaxObject</string>
+	<string name="pref_item_firstacess_key" translatable="false">firstAccess</string>
+	<string name="pref_item_osmmaxobjects_key" translatable="false">osmMaxObject</string>
+	<string name="pref_item_firstacess_title">First access</string>
+	<string name="pref_item_firstacess_summary">Act as if app was executed first time</string>
+	<string name="pref_item_routing_key" translatable="false">prefRouting</string>
+	<string name="pref_item_routing_title">Enable routing</string>
+	<string name="pref_item_markertext_key" translatable="false">drawMarkerText</string>
+	<string name="pref_item_markertext_title">Render text on markers</string>
+	<string name="pref_item_usehud_key" translatable="false">useHUD</string>
+	<string name="pref_item_usehud_title">Render HUD</string>
 </resources>

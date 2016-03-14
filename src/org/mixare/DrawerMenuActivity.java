@@ -146,12 +146,10 @@ public class DrawerMenuActivity extends SherlockActivity {
                 break;
             case R.string.menu_item_settings:
                 Intent intent5 = new Intent(DrawerMenuActivity.this, SettingsActivity.class);
-               // new Intent(DrawerMenuActivity.this, );
                 startActivityForResult(intent5, Config.INTENT_REQUEST_CODE_SETTINGS);
                 break;
             default:
                 break;
-
         }
     }
 
