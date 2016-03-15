@@ -2,6 +2,7 @@ package org.mixare.data;
 
 import android.util.Log;
 
+import org.mixare.gui.opengl.OpenGLMarker;
 import org.mixare.marker.ImageMarker;
 import org.mixare.marker.LocalMarker;
 import org.mixare.marker.NavigationMarker;
@@ -172,6 +173,9 @@ public class MarkerBuilder {
                     break;
                 case IMAGE_MARKER:
                     newMarker=new ImageMarker(id,title,latitude,longitude,altitude,pageURL,0,color,"",imageURL);
+                    break;
+                case OPENGL_MARKER:
+                    newMarker=new OpenGLMarker(id,title,latitude,longitude,altitude,pageURL,0,color);
                     break;
                 default:
                     newMarker=new POIMarker(id,title,latitude,longitude,altitude,pageURL,0,color);

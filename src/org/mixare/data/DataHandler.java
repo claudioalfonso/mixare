@@ -25,6 +25,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.mixare.MixContext;
+import org.mixare.gui.opengl.OpenGLMarker;
 import org.mixare.lib.marker.Marker;
 
 import android.location.Location;
@@ -97,7 +98,13 @@ public class DataHandler {
 		return markerList.get(index);
 	}
 
-	public List<Marker> getCopyOfMarkers(){
-		return new ArrayList<Marker>(markerList);//shallow copy of original marker list;
+	public List<Marker> getCopyOfMarkers(Class<? extends Marker> markerClass){
+		ArrayList<Marker> copyOfMarkers = new ArrayList<Marker>();
+		for (Marker curMarker: markerList) {
+			if(curMarker instanceof OpenGLMarker){
+				copyOfMarkers.add(curMarker);
+			}
+		}
+		return copyOfMarkers;
 	}
 }

@@ -36,4 +36,13 @@
         <editable>true</editable>
         <blur>0</blur>
     </datasource>
+    <datasource id="4" >
+        <name>roUDE 3D</name>
+        <url>http://www-stud.uni-due.de/~sehawagn/roUDE/dynamic.php</url>
+        <type>3</type>
+        <display>3</display>
+        <visible>true</visible>
+        <editable>true</editable>
+        <blur>0</blur>
+    </datasource>
 </datasources>

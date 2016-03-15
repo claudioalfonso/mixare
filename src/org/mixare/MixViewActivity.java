@@ -58,6 +58,7 @@ import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
 import org.mixare.gui.LicensePreference;
 import org.mixare.gui.opengl.OpenGLAugmentationView;
+import org.mixare.gui.opengl.OpenGLMarker;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.render.Matrix;
 import org.mixare.map.MapActivity;
@@ -127,8 +128,8 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 			killOnError();
 			//requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-			if(getSupportActionBar() != null){
-				getSupportActionBar().hide();
+			if(getActionBar() != null){
+				getActionBar().hide();
 			}
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -875,7 +876,7 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
         if(openGLAugmentationView!=null) {
             RouteManager r = new RouteManager(openGLAugmentationView);
             r.getRoute(startLocation, endLocation);
-            openGLAugmentationView.routeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers());
+            openGLAugmentationView.routeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers(OpenGLMarker.class));
         }
     }
 
