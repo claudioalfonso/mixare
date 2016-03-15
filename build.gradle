@@ -19,7 +19,7 @@ repositories{
 }
 
 dependencies {
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    // compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     //   compile 'org.apache.aries.application:twitter4j:0.3'
     compile 'org.mapsforge:mapsforge-core:0.6.0'
     compile 'org.mapsforge:mapsforge-map:0.6.0'

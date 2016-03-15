@@ -18,6 +18,7 @@
  */
 package org.mixare;
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
@@ -25,18 +26,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import org.mixare.map.MapActivity;
 
-public class MarkerListActivity extends SherlockActivity {
+public class MarkerListActivity extends Activity {
     private static final int MENU_MAPVIEW_ID = 0;
     private static final int MENU_SEARCH_ID = 1;
     private EditText editText;
@@ -65,8 +64,8 @@ public class MarkerListActivity extends SherlockActivity {
 		}
         fragmentTransaction.commit();
 
-        if(getSupportActionBar()!=null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getActionBar()!=null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -145,7 +144,7 @@ public class MarkerListActivity extends SherlockActivity {
 	@Override
 	public boolean onSearchRequested() {
 		// Open searchBox and request focus to open Keyboard
-		search.expandActionView();
+		//search.expandActionView(); //TODO reimplement afterSherlockRemove
 		editText.requestFocus();
 		return false;
 	}

@@ -25,9 +25,10 @@ import org.mixare.plugin.Plugin;
 import org.mixare.plugin.PluginStatus;
 import org.mixare.sectionedlist.Item;
 import org.mixare.sectionedlist.SectionItem;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+
+import android.app.Activity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -43,7 +44,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PluginListActivity extends SherlockActivity {
+public class PluginListActivity extends Activity {
 	private SectionAdapter sectionAdapter;
 	private ListView listView;
 	private static final int MENU_SELECT_PLUGIN_ID = Menu.FIRST;
@@ -52,7 +53,7 @@ public class PluginListActivity extends SherlockActivity {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		List<Item> list = createList();
 

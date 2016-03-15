@@ -23,11 +23,11 @@ import java.util.List;
 
 import org.mixare.R;
 
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +45,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DataSourceList extends SherlockListActivity {
+public class DataSourceList extends ListActivity {
 
 	private static DataSourceAdapter dataSourceAdapter;
 
@@ -59,7 +59,7 @@ public class DataSourceList extends SherlockListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class DataSourceList extends SherlockListActivity {
 	/* Options Menu */
 	
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(MENU_CREATE_ID, MENU_CREATE_ID, Menu.NONE, "Add")
 				.setIcon(R.drawable.ic_compose)
 				.setShowAsAction(
@@ -136,7 +136,7 @@ public class DataSourceList extends SherlockListActivity {
 		subMenu1.add(MENU_RESTORE_ID, MENU_RESTORE_ID, Menu.NONE, "Restore Default");
 
 		MenuItem subMenu1Item = subMenu1.getItem();
-		subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_holo_dark);
+		subMenu1Item.setIcon(android.R.drawable.ic_menu_more);
 		subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return true;

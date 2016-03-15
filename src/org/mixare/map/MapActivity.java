@@ -28,7 +28,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Paint;
@@ -115,7 +115,7 @@ public class MapActivity extends DrawerMenuActivity {
         //setContentView(mapView);
         contentFrame.removeAllViews();
         contentFrame.addView(this.mapView);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Retrieve the search query
         Intent intent = this.getIntent();

@@ -54,6 +54,6 @@
         android:layout_margin="0dp"
         android:padding="0dp"
         android:scaleType="centerInside"
-        android:src="@drawable/abs__ic_menu_moreoverflow_normal_holo_dark"
+        android:src="@android:drawable/ic_menu_more"
         android:contentDescription="@string/more_actions" />
 </LinearLayout>

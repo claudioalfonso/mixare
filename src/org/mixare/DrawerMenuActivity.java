@@ -1,6 +1,7 @@
 package org.mixare;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,12 +13,10 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.mixare.data.DataSourceList;
 import org.mixare.map.MapActivity;
@@ -26,7 +25,7 @@ import org.mixare.settings.SettingsActivity;
 /**
  * Created by MelanieW on 30.12.2015.
  */
-public class DrawerMenuActivity extends SherlockActivity {
+public class DrawerMenuActivity extends Activity {
 
     DrawerLayout drawerLayout;
     ListView drawerList;
@@ -168,7 +167,7 @@ public class DrawerMenuActivity extends SherlockActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
+        getActionBar().setTitle(mTitle);
     }
 
     public MixViewDataHolder getMixViewData() {

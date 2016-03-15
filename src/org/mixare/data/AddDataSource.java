@@ -20,10 +20,10 @@ package org.mixare.data;
 
 import org.mixare.R;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -38,7 +38,7 @@ import android.widget.Toast;
  * Activity to add new DataSources
  * @author KlemensE
  */
-public class AddDataSource extends SherlockActivity {
+public class AddDataSource extends Activity {
 	
 	private static final int MENU_SAVE_ID = Menu.FIRST;
 	
@@ -88,7 +88,7 @@ public class AddDataSource extends SherlockActivity {
 			}
 		}
 		
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class AddDataSource extends SherlockActivity {
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, com.actionbarsherlock.view.MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
@@ -150,7 +150,7 @@ public class AddDataSource extends SherlockActivity {
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {	
+	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MENU_SAVE_ID, Menu.NONE, "Save").setShowAsAction(
 				MenuItem.SHOW_AS_ACTION_IF_ROOM
 						| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
