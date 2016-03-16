@@ -163,5 +163,12 @@
 	<string name="pref_item_routing_title">Routing aktivieren</string>
 	<string name="pref_item_usehud_title">HUD darstellen</string>
 	<string name="OPENGL_MARKER">3D-Objekt</string>
+	<string name="ds_detail_url_label">URL</string>
+	<string name="ds_detail_name_label">Name</string>
+	<string name="ds_detail_dstype_infobutton_description">Info zu Datenquellen-Typ</string>
+	<string name="ds_detail_displaytype_label">Anzeigen als</string>
+	<string name="ds_detail_blurgps_label">Position verfälschen</string>
+	<string name="ds_detail_dstype_label">Typ der Datenquelle</string>
+	<string name="ds_detail_dstype_infobutton_title">Info zu Datenquellen-Typ</string>
 
 </resources>

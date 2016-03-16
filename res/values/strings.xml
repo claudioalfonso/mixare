@@ -22,7 +22,7 @@
     <string name="CIRCLE_MARKER">Circles</string>
     <string name="NAVIGATION_MARKER">Arrows</string>
     <string name="IMAGE_MARKER">Images</string>
-	<string name="OPENGL_MARKER">3D-Objekt</string>
+	<string name="OPENGL_MARKER">3D object</string>
 
 
 	<string name="empty_list">Sorry, \nThere is no location information \navailable within this radius.\nPlease try to search in a wider range.</string>
@@ -192,4 +192,13 @@
 	<string name="pref_item_markertext_title">Render text on markers</string>
 	<string name="pref_item_usehud_key" translatable="false">useHUD</string>
 	<string name="pref_item_usehud_title">Render HUD</string>
+    <string name="ds_detail_blurgps_label">Blur GPS</string>
+    <string name="ds_detail_displaytype_label">Display as</string>
+    <string name="ds_detail_dstype_label">Datasource type</string>
+    <string name="ds_detail_url_label">URL</string>
+    <string name="ds_detail_name_label">Name</string>
+    <string name="ds_detail_url_hint" translatable="false">http://</string>
+    <string name="ds_detail_dstype_infobutton_description">Datasource type info</string>
+    <string name="ds_detail_dstype_infobutton_message"><![CDATA[This option tells mixare what informations your datasource needs to process the request and send mixare the marker data. Some examples:Wikipedia: \n?lat=0.0&lng=0.0&radius=20.0&maxRows=50&lang=de&username=mixare \n\nTwitter: \n?geocode=0.0,0.0,20.0km \n\nArena: \n&lat=0.0&lng=0.0 \n\nOSM: \n[bbox=-1.0,1.0,-2.0,2.0] \n\nPanoramio \n?set=public&from=0&to=20&minx=-180&miny=-90&maxx=180&maxy=90&size=medium&mapfilter=true \n\n]]></string>
+    <string name="ds_detail_dstype_infobutton_title">Datasource Info</string>
 </resources>

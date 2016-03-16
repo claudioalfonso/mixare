@@ -55,11 +55,11 @@ public class AddDataSource extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.datasource_details);
 		
-		nameField = (EditText) findViewById(R.id.name);
-		urlField = (EditText) findViewById(R.id.url);
-		typeSpinner = (Spinner) findViewById(R.id.type);
-		displaySpinner = (Spinner) findViewById(R.id.displaytype);
-		blurSpinner = (Spinner) findViewById(R.id.blurtype);
+		nameField = (EditText) findViewById(R.id.ds_detail_name_input);
+		urlField = (EditText) findViewById(R.id.ds_detail_url_input);
+		typeSpinner = (Spinner) findViewById(R.id.ds_detail_dstype_input);
+		displaySpinner = (Spinner) findViewById(R.id.ds_detail_displaytype_input);
+		blurSpinner = (Spinner) findViewById(R.id.ds_detail_blurgps_input);
 		
 		extras = getIntent().getExtras();
 		if (extras != null) {
@@ -164,13 +164,7 @@ public class AddDataSource extends Activity {
 	public void onDataSourceInfoClick(View v) {
 		Builder builder = new Builder(this);
 		builder.setIcon(android.R.drawable.ic_dialog_info);
-		builder.setMessage("This option tells mixare what informations your DataSource needs to process the request and send mixare the marker data. Some examples:" 
-				+ "Wikipedia: \n" + "?lat=0.0&lng=0.0&radius=20.0&maxRows=50&lang=de&username=mixare \n\n"
-				+ "Twitter: \n" + "?geocode=0.0,0.0,20.0km \n\n"
-				+ "Arena: \n" + "&lat=0.0&lng=0.0 \n\n"
-				+ "OSM: \n" + "[bbox=-1.0,1.0,-2.0,2.0] \n\n"
-				+ "Panoramio \n" + "?set=public&from=0&to=20&minx=-180&miny=-90&maxx=180&maxy=90&size=medium&mapfilter=true \n\n"
-				);
+		builder.setMessage(R.string.ds_detail_dstype_infobutton_message	);
 		builder.setNegativeButton(getString(R.string.close_button),
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -178,7 +172,7 @@ public class AddDataSource extends Activity {
 					}
 				});
 		AlertDialog alert1 = builder.create();
-		alert1.setTitle("DataSource Info");
+		alert1.setTitle(getString(R.string.ds_detail_dstype_infobutton_title));
 		alert1.show();
 	}
 }

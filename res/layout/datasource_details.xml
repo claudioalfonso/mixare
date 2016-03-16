@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ScrollView01"
+    android:id="@+id/ds_detail_scrollview"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:scrollbars="vertical" >
@@ -8,40 +8,40 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/nameLabel"
+            android:id="@+id/ds_detail_name_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"
+            android:text="@string/ds_detail_name_label"
             android:textAppearance="?android:attr/textAppearanceLarge" >
         </TextView>
 
         <EditText
-            android:id="@+id/name"
+            android:id="@+id/ds_detail_name_input"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <requestFocus>
-            </requestFocus>
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords">
+            <requestFocus />
         </EditText>
 
         <TextView
-            android:id="@+id/urlLabel"
+            android:id="@+id/ds_detail_url_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Url"
+            android:text="@string/ds_detail_url_label"
             android:textAppearance="?android:attr/textAppearanceLarge" >
         </TextView>
 
         <EditText
-            android:id="@+id/url"
+            android:id="@+id/ds_detail_url_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textUri"
-            android:text="http://" >
+            android:text="@string/ds_detail_url_hint"
+            android:hint="@string/ds_detail_url_hint">
         </EditText>
 
         <LinearLayout
@@ -49,56 +49,57 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/typeLabel"
+                android:id="@+id/ds_detail_dstype_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Data source"
+                android:text="@string/ds_detail_dstype_label"
                 android:paddingRight="20dp"
                 android:textAppearance="?android:attr/textAppearanceLarge" >
             </TextView>
 
             <ImageButton
-                android:id="@+id/imageButton1"
+                android:id="@+id/ds_detail_dstype_infobutton"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:padding="0dp"
                 android:onClick="onDataSourceInfoClick"
                 android:scaleType="centerInside"
-                android:src="@android:drawable/ic_dialog_info" />
+                android:src="@android:drawable/ic_dialog_info"
+                android:contentDescription="@string/ds_detail_dstype_infobutton_description" />
         </LinearLayout>
 
         <Spinner
-            android:id="@+id/type"
+            android:id="@+id/ds_detail_dstype_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/datasourcetypelist" >
         </Spinner>
 
         <TextView
-            android:id="@+id/displaytypeLabel"
+            android:id="@+id/ds_detail_displaytype_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Display as"
+            android:text="@string/ds_detail_displaytype_label"
             android:textAppearance="?android:attr/textAppearanceLarge" >
         </TextView>
 
         <Spinner
-            android:id="@+id/displaytype"
+            android:id="@+id/ds_detail_displaytype_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/displaytypelist" >
         </Spinner>
         
         <TextView
-            android:id="@+id/blurLabel"
+            android:id="@+id/ds_detail_blurgps_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Blur GPS"
+            android:text="@string/ds_detail_blurgps_label"
             android:textAppearance="?android:attr/textAppearanceLarge" >
         </TextView>
 
         <Spinner
-            android:id="@+id/blurtype"
+            android:id="@+id/ds_detail_blurgps_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/blurgps" >
