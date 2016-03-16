@@ -21,8 +21,10 @@ package org.mixare.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mixare.Config;
 import org.mixare.R;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -36,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
@@ -98,7 +101,7 @@ public class DataSourceList extends ListActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Returned from AddDataSourceActivity
-		if (requestCode == 545) {
+		if (requestCode == Config.INTENT_REQUEST_CODE_ADDDATASOURCE) {
 			dataSourceAdapter.notifyDataSetChanged();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -144,21 +147,27 @@ public class DataSourceList extends ListActivity {
 	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			break;
-		case MENU_CREATE_ID:
-			Intent addSource = new Intent(DataSourceList.this,
-					AddDataSource.class);
-			startActivityForResult(addSource, 545);
-			break;
-		case MENU_RESTORE_ID:
-			DataSourceStorage.getInstance(getApplicationContext()).fillDefaultDataSources();
-			init();
-			break;
-		}
-		return true;
+        if(featureId != Window.FEATURE_CONTEXT_MENU){
+            Boolean finishProcessing=true;
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    finish();
+                    break;
+                case MENU_CREATE_ID:
+                    Intent addSource = new Intent(DataSourceList.this,
+                            AddDataSource.class);
+                    startActivityForResult(addSource, Config.INTENT_REQUEST_CODE_ADDDATASOURCE);
+                    break;
+                case MENU_RESTORE_ID:
+                    DataSourceStorage.getInstance(getApplicationContext()).fillDefaultDataSources();
+                    init();
+                    break;
+                default:
+                    finishProcessing=false;
+            }
+            return finishProcessing;
+        }
+        return super.onMenuItemSelected(featureId, item);
 	}
 
 	/* Context Menu */
@@ -167,9 +176,9 @@ public class DataSourceList extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		menu.add(MENU_EDIT_ID, MENU_EDIT_ID, MENU_EDIT_ID,
-				R.string.data_source_edit);
+                R.string.data_source_edit);
 		menu.add(MENU_DELETE_ID, MENU_DELETE_ID, MENU_DELETE_ID,
-				R.string.data_source_delete);
+                R.string.data_source_delete);
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 
@@ -183,6 +192,7 @@ public class DataSourceList extends ListActivity {
 		}
 		final long idOfMenu = getListAdapter().getItemId(info.position);
 		DataSource ds = (DataSource) dataSourceAdapter.getItem((int) idOfMenu);
+
 		switch (item.getItemId()) {
 		case MENU_EDIT_ID:
 			Intent editDataSource = new Intent(this, AddDataSource.class);

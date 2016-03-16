@@ -25,6 +25,7 @@ public class Config {
     public static final int INTENT_REQUEST_CODE_MIXVIEW = 0;
     public static final int INTENT_REQUEST_CODE_CENTERMAP = 76;
     public static final int INTENT_REQUEST_CODE_DATASOURCES = 40;
+    public static final int INTENT_REQUEST_CODE_ADDDATASOURCE = 545;
     public static final int INTENT_REQUEST_CODE_PLUGINS = 35;
     public static final int INTENT_REQUEST_CODE_MARKERLIST = 42;
     public static final int INTENT_REQUEST_CODE_MAP = 20;
