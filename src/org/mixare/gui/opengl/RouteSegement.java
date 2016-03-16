@@ -111,8 +111,7 @@ public class RouteSegement {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA) ;
 
-
-        gl.glColor4f(0.2f, 0.6f, 1.0f, 0.5f);
+        gl.glColor4f(51.0f / 255.0f, 153.0f / 255.0f, 255.0f / 255.0f, 128.0f / 255.0f);
 
         gl.glDrawElements(GL10.GL_TRIANGLES, rectTriangles.length,
                 GL10.GL_UNSIGNED_SHORT, rectTrianglesBuffer);

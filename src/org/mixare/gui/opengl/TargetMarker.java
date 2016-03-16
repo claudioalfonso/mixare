@@ -73,7 +73,9 @@ public class TargetMarker {
         // gl.glColorPointer(4, gl.GL_FIXED, 0, mColorBuffer);
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA) ;
-        gl.glColor4f(1.0f, 0.0f, 0.0f, 0.8f);
+
+        gl.glColor4f(255.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 204.0f / 255.0f);
+
 
         gl.glDrawElements(gl.GL_TRIANGLES, 36, gl.GL_UNSIGNED_BYTE, mIndexBuffer);
 
