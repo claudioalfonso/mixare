@@ -170,5 +170,6 @@
 	<string name="ds_detail_blurgps_label">Position verfälschen</string>
 	<string name="ds_detail_dstype_label">Typ der Datenquelle</string>
 	<string name="ds_detail_dstype_infobutton_title">Info zu Datenquellen-Typ</string>
+	<string name="ds_detail_color_label">Farbe</string>
 
 </resources>

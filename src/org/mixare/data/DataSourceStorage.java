@@ -43,6 +43,7 @@ import org.xml.sax.InputSource;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 
 /**
@@ -143,7 +144,7 @@ public class DataSourceStorage {
 	 */
 	private Element createDataSourceElement(Document doc, String id,
 			String name, String url, String type, String display,
-			boolean visible, boolean editable, String blur) {
+			boolean visible, boolean editable, String blur, String color) {
 		// Set rootElement to "DataSource"
 		Element rootElement = doc.createElement("datasource");
 
@@ -185,6 +186,11 @@ public class DataSourceStorage {
 		Element blurElement = doc.createElement("blur");
 		blurElement.appendChild(doc.createTextNode(blur));
 		rootElement.appendChild(blurElement);
+
+        // create "color" Element and add it to rootElement
+        Element colorElement = doc.createElement("color");
+        colorElement.appendChild(doc.createTextNode(color));
+        rootElement.appendChild(colorElement);
 		
 		return rootElement;
 	}
@@ -286,12 +292,13 @@ public class DataSourceStorage {
 										getTagValue("editable",eElement)));
 						ds.setBlur(DataSource.BLUR.values()[Integer
 								.parseInt(getTagValue("blur", eElement))]);
+						ds.setColor(Color.parseColor(getTagValue("color", eElement)));
 						return ds;
 					}
 				}
 			}
 		} catch (Exception e) {
-			Log.d(Config.TAG, "getDataSource: " + id + " Failed");
+			Log.d(Config.TAG, "getDataSource: " + id + " failed", e);
 		}
 		return null;
 	}
@@ -396,16 +403,19 @@ public class DataSourceStorage {
 			Element documentRoot = doc.getDocumentElement();
 			
 			for (int i = 0; i < length; i++) {
+                DataSource curDataSource = dataSourceList.get(i);
 				// Create the XML Element for the new DataSource
 				Element dataSourceElement = createDataSourceElement(doc,
-						String.valueOf(dataSourceList.get(i).getDataSourceId()),
-						dataSourceList.get(i).getName(), 
-						dataSourceList.get(i).getUrl(),
-						String.valueOf(dataSourceList.get(i).getTypeId()),
-						String.valueOf(dataSourceList.get(i).getDisplayId()),
-						dataSourceList.get(i).getEnabled(), 
-						dataSourceList.get(i).isEditable(),
-						String.valueOf(dataSourceList.get(i).getBlurId()));
+						String.valueOf(curDataSource.getDataSourceId()),
+                        curDataSource.getName(),
+                        curDataSource.getUrl(),
+						String.valueOf(curDataSource.getTypeId()),
+						String.valueOf(curDataSource.getDisplayId()),
+                        curDataSource.getEnabled(),
+                        curDataSource.isEditable(),
+						String.valueOf(curDataSource.getBlurId()),
+                        curDataSource.getColorString()
+                        );
 				
 				documentRoot.appendChild(dataSourceElement);
 			}

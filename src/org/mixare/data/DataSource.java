@@ -22,12 +22,14 @@ package org.mixare.data;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.mixare.Config;
 import org.mixare.R;
 import org.mixare.data.convert.DataConvertor;
 import org.mixare.data.convert.PanoramioDataProcessor;
 import org.mixare.utils.TwitterClient;
 
 import android.graphics.Color;
+import android.util.Log;
 
 /**
  * The DataSource class is able to create the URL where the information about a
@@ -47,6 +49,7 @@ public class DataSource {
 	private DISPLAY display;
 	private boolean editable;
 	private BLUR blur;
+	private int color=-1;
 
 	/**
 	 * Recreate's a previously existing DataSource
@@ -205,26 +208,35 @@ public class DataSource {
 		this.blur = BLUR.values()[id];
 	}
 
+	public void setColor(int color){
+		this.color=color;
+	}
+
 	public int getColor() {
-		int ret;
-		switch (this.type) {
-		case TWITTER:
-			ret = Color.rgb(50, 204, 255);
-			break;
-		case WIKIPEDIA:
-			ret = Color.RED;
-			break;
-		case ARENA:
-			ret = Color.RED;
-			break;
-		case PANORAMIO:
-			ret = Color.GREEN;
-			break;
-		default:
-			ret = Color.WHITE;
-			break;
+		if(this.color==-1) { //color was not set before, so set default
+			switch (this.type) {
+				case TWITTER:
+					this.color = Color.rgb(50, 204, 255);
+					break;
+				case WIKIPEDIA:
+					this.color = Color.RED;
+					break;
+				case ARENA:
+					this.color = Color.RED;
+					break;
+				case PANORAMIO:
+					this.color = Color.GREEN;
+					break;
+				default:
+					this.color = Color.WHITE;
+					break;
+			}
 		}
-		return ret;
+		return this.color;
+	}
+
+	public String getColorString(){
+		return String.format("#%06x",(0x00ffffff & this.getColor())); //remove alpha and format as Hex
 	}
 
 	public int getDataSourceIcon() {

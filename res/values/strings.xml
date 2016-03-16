@@ -201,4 +201,7 @@
     <string name="ds_detail_dstype_infobutton_description">Datasource type info</string>
     <string name="ds_detail_dstype_infobutton_message"><![CDATA[This option tells mixare what informations your datasource needs to process the request and send mixare the marker data. Some examples:Wikipedia: \n?lat=0.0&lng=0.0&radius=20.0&maxRows=50&lang=de&username=mixare \n\nTwitter: \n?geocode=0.0,0.0,20.0km \n\nArena: \n&lat=0.0&lng=0.0 \n\nOSM: \n[bbox=-1.0,1.0,-2.0,2.0] \n\nPanoramio \n?set=public&from=0&to=20&minx=-180&miny=-90&maxx=180&maxy=90&size=medium&mapfilter=true \n\n]]></string>
     <string name="ds_detail_dstype_infobutton_title">Datasource Info</string>
+    <string name="ds_detail_color_label">Color</string>
+    <string name="ds_detail_color_text" translatable="false">#</string>
+    <string name="ds_detail_color_hint" translatable="false">#12AC79</string>
 </resources>

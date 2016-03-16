@@ -20,6 +20,7 @@ package org.mixare.data;
 
 import org.mixare.R;
 
+import android.graphics.Color;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -44,6 +45,7 @@ public class AddDataSource extends Activity {
 	
 	EditText nameField;
 	EditText urlField;
+	EditText colorField;
 	Spinner typeSpinner;
 	Spinner displaySpinner;
 	Spinner blurSpinner;
@@ -57,6 +59,7 @@ public class AddDataSource extends Activity {
 		
 		nameField = (EditText) findViewById(R.id.ds_detail_name_input);
 		urlField = (EditText) findViewById(R.id.ds_detail_url_input);
+		colorField = (EditText) findViewById(R.id.ds_detail_color_input);
 		typeSpinner = (Spinner) findViewById(R.id.ds_detail_dstype_input);
 		displaySpinner = (Spinner) findViewById(R.id.ds_detail_displaytype_input);
 		blurSpinner = (Spinner) findViewById(R.id.ds_detail_blurgps_input);
@@ -72,6 +75,7 @@ public class AddDataSource extends Activity {
 				typeSpinner.setSelection(ds.getTypeId());
 				displaySpinner.setSelection(ds.getDisplayId());
 				blurSpinner.setSelection(ds.getBlurId());
+				colorField.setText(ds.getColorString(), TextView.BufferType.EDITABLE);
 			}
 			
 			// Check whether DataSource can be edited or not
@@ -97,6 +101,7 @@ public class AddDataSource extends Activity {
 	private boolean saveNewDataSource() {
 		String name = nameField.getText().toString();
 		String url = urlField.getText().toString();
+		String colorString = colorField.getText().toString();
 		int typeId = (int) typeSpinner.getItemIdAtPosition(typeSpinner
 				.getSelectedItemPosition());
 		int displayId = (int) displaySpinner.getItemIdAtPosition(displaySpinner
@@ -107,7 +112,7 @@ public class AddDataSource extends Activity {
 		if (!name.isEmpty() && !url.isEmpty()) {
 			if (extras != null) {
 				if (extras.containsKey("DataSourceId")) {
-					// DataSource allready exists
+					// DataSource already exists
 					DataSource ds = DataSourceStorage.getInstance().getDataSource(
 							extras.getInt("DataSourceId"));
 					ds.setName(name);
@@ -115,6 +120,7 @@ public class AddDataSource extends Activity {
 					ds.setType(typeId);
 					ds.setDisplay(displayId);
 					ds.setBlur(blurId);
+					ds.setColor(Color.parseColor(colorString));
 					
 					DataSourceStorage.getInstance(getApplicationContext()).save();
 					return true;
@@ -125,6 +131,7 @@ public class AddDataSource extends Activity {
 					DataSource.TYPE.values()[typeId],
 					DataSource.DISPLAY.values()[displayId], true);
 			ds.setBlur(DataSource.BLUR.values()[blurId]);
+			ds.setColor(Color.parseColor(colorString));
 			DataSourceStorage.getInstance().add(ds);
 			return true;
 		} else {

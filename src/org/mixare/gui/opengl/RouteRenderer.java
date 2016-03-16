@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.util.MercatorProjection;
+import org.mixare.Config;
 import org.mixare.route.AsyncResponse;
 import org.mixare.MixViewDataHolder;
 import org.mixare.route.MyRoute;
@@ -166,6 +167,10 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                     lon=((LatLong)curObj).longitude;
                 }
                 newWaypoint = new Waypoint(lat, lon, geoObjects.indexOf(curObj),this);
+
+                if (curObj instanceof Marker) {
+                    newWaypoint.setColor(((Marker) curObj).getColor());
+                }
                 waypointList.add(newWaypoint);
             }
         }

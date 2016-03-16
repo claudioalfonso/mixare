@@ -14,9 +14,11 @@ package org.mixare.gui.opengl;/*
  * limitations under the License.
  */
 
+import android.graphics.Color;
 import android.util.Log;
 
 import org.mapsforge.core.util.MercatorProjection;
+import org.mixare.Config;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -39,12 +41,13 @@ class Waypoint
     public float relativeX;
     public float relativeY;
 
+    private static final int alpha=Color.argb(204,0,0,0);
+
+    private int color = Color.argb(204,0,255,0);
 
     private static final int MERCATOR_SCALE = 10000000;
 
     private boolean isStart = false;
-
-
 
     public float getRelativeX() {
         return relativeX;
@@ -80,6 +83,13 @@ class Waypoint
         this.absoluteY = absoluteY;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = (0x00ffffff & color) | alpha; //remove alpha from argb color, then combine rgb with alpha
+    }
 
     public  Waypoint(){}
   //  public float z;
@@ -182,7 +192,7 @@ class Waypoint
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA) ;
 
-        gl.glColor4f(0.0f/255.0f, 255.0f/255.0f, 0.0f/255.0f, 204.0f/255.0f);
+        gl.glColor4f(Color.red(color)/255.0f, Color.green(color)/255.0f, Color.blue(color)/255.0f, Color.alpha(color)/255.0f);
 
         gl.glDrawElements(gl.GL_TRIANGLES, 36, gl.GL_UNSIGNED_BYTE, mIndexBuffer);
 

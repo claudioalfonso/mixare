@@ -5,6 +5,7 @@
 		<url>http://ws.geonames.org/findNearbyWikipediaJSON</url>
 		<type>0</type>
         <display>0</display>
+        <color>#C0C0C0</color>
         <visible>false</visible>
         <editable>false</editable>
         <blur>0</blur>
@@ -14,6 +15,7 @@
         <url>http://www.panoramio.com/map/get_panoramas.php</url>
         <type>5</type>
         <display>2</display>
+        <color>#0000FF</color>
         <visible>false</visible>
         <editable>false</editable>
         <blur>0</blur>
@@ -23,6 +25,7 @@
         <url>http://search.twitter.com/search.json</url>
         <type>1</type>
         <display>0</display>
+        <color>#32CCFF</color>
         <visible>false</visible>
         <editable>false</editable>
         <blur>0</blur>
@@ -32,6 +35,7 @@
         <url>http://www-stud.uni-due.de/~sehawagn/roUDE/dynamic.php</url>
         <type>3</type>
         <display>0</display>
+        <color>#FFFF00</color>
         <visible>true</visible>
         <editable>true</editable>
         <blur>0</blur>
@@ -41,6 +45,7 @@
         <url>http://www-stud.uni-due.de/~sehawagn/roUDE/dynamic.php</url>
         <type>3</type>
         <display>3</display>
+        <color>#00FF00</color>
         <visible>true</visible>
         <editable>true</editable>
         <blur>0</blur>
