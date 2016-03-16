@@ -34,6 +34,8 @@ import org.mixare.mgr.webcontent.WebContentManagerFactory;
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * Cares about location management and about the data (source, inputstream)
@@ -43,8 +45,9 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
     private static MixContext instance;
 
     private final Matrix rotationM = new Matrix();
+    private final SharedPreferences settings;
 
-	/** Responsible for all download */
+    /** Responsible for all download */
 	private DownloadManager downloadManager;
 
 	/** Responsible for all location tasks */
@@ -70,7 +73,9 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	private MixContext() {
 		super(mixViewActivity);
 
-		// TODO: RE-ORDER THIS SEQUENCE... IS NECESSARY?
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // TODO: RE-ORDER THIS SEQUENCE... IS NECESSARY?
 		getDataSourceManager().refreshDataSources();
 
 		if (!getDataSourceManager().isAtLeastOneDataSourceSelected()) {
@@ -120,6 +125,10 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 			rotationM.set(smoothR);
 		}
 	}
+
+    public SharedPreferences getSettings(){
+        return settings;
+    }
 
 	public DataSourceManager getDataSourceManager() {
 		if (this.dataSourceManager == null) {

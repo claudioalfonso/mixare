@@ -36,7 +36,7 @@
             android:key="@string/pref_item_routing_key"
             android:defaultValue="true" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="other">
+    <PreferenceCategory android:title="@string/pref_cat_other_title">
         <CheckBoxPreference
             android:key="@string/pref_item_firstacess_key"
             android:title="@string/pref_item_firstacess_title"
@@ -58,9 +58,10 @@
             android:summary="Use system's location services (GPS, WLAN etc.) to obtain current position (instead of setting manually)"
             android:defaultValue="true" />
         <EditTextPreference
-            android:key="routeColor"
-            android:title="Color of the 3d rendered route"
-            android:defaultValue="color/pumpkin_orange"/>
+            android:key="@string/pref_item_routecolor_key"
+            android:title="@string/pref_item_routecolor_title"
+            android:summary="@string/pref_item_routecolor_summary"
+            android:defaultValue="@string/color_hint"/>
         <CheckBoxPreference
             android:key="camera2"
             android:title="Use Camera2 (if available)"

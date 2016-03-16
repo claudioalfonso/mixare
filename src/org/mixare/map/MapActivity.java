@@ -25,7 +25,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 import android.view.MenuItem;
@@ -42,6 +41,7 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mapsforge.map.layer.overlay.Polyline;
+import org.mixare.MixContext;
 import org.mixare.route.AsyncResponse;
 import org.mixare.Config;
 import org.mixare.DrawerMenuActivity;
@@ -326,7 +326,7 @@ public class MapActivity extends DrawerMenuActivity {
 
     public void paintRoute(Location routeStart, Location routeEnd) {
         Paint paint = AndroidGraphicFactory.INSTANCE.createPaint();
-        paint.setColor(Color.BLUE);
+        paint.setColor(Color.parseColor(MixContext.getInstance().getSettings().getString(getString(R.string.pref_item_routecolor_key),getString(R.string.color_hint))));
         paint.setStrokeWidth(6);
         paint.setStyle(Style.STROKE);
 

@@ -41,9 +41,8 @@ class Waypoint
     public float relativeX;
     public float relativeY;
 
-    private static final int alpha=Color.argb(204,0,0,0);
-
     private int color = Color.argb(204,0,255,0);
+    private static final int alpha=Color.argb(204, 0, 0, 0);
 
     private static final int MERCATOR_SCALE = 10000000;
 

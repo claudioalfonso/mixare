@@ -171,5 +171,8 @@
 	<string name="ds_detail_dstype_label">Typ der Datenquelle</string>
 	<string name="ds_detail_dstype_infobutton_title">Info zu Datenquellen-Typ</string>
 	<string name="ds_detail_color_label">Farbe</string>
+	<string name="pref_cat_other_title">Anderes</string>
+	<string name="pref_item_routecolor_title">Routenfarbe</string>
+	<string name="pref_item_routecolor_summary">Farbe der OpenGL-3D-Route</string>
 
 </resources>

@@ -1,5 +1,7 @@
 package org.mixare.gui.opengl;
 
+import android.graphics.Color;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -20,23 +22,31 @@ public class RouteSegement {
     private float endX;
     private float endY;
 
-
     float directionX;
     float directionY;
 
     float resultTemp1;
 
+    private int color = Color.argb(128, 255, 0, 255); //128, 51, 153, 255= light blue
+    private static final int alpha=Color.argb(128, 0, 0, 0);
 
     MyVector leftStartVector = new MyVector();
     MyVector rightStartVector = new MyVector();
     MyVector leftEndVector = new MyVector();
     MyVector rightEndVector = new MyVector();
 
-
     short[] rectTriangles = new short[]{
             0, 1, 2,
             2, 3, 0
     };
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = (0x00ffffff & color) | alpha; //remove alpha from argb color, then combine rgb with alpha
+    }
 
     public RouteSegement(float startX, float startY, float endX, float endY){
 
@@ -111,7 +121,7 @@ public class RouteSegement {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA) ;
 
-        gl.glColor4f(51.0f / 255.0f, 153.0f / 255.0f, 255.0f / 255.0f, 128.0f / 255.0f);
+        gl.glColor4f(Color.red(color)/255.0f, Color.green(color)/255.0f, Color.blue(color)/255.0f, Color.alpha(color)/255.0f);
 
         gl.glDrawElements(GL10.GL_TRIANGLES, rectTriangles.length,
                 GL10.GL_UNSIGNED_SHORT, rectTrianglesBuffer);

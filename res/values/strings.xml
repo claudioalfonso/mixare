@@ -203,5 +203,9 @@
     <string name="ds_detail_dstype_infobutton_title">Datasource Info</string>
     <string name="ds_detail_color_label">Color</string>
     <string name="ds_detail_color_text" translatable="false">#</string>
-    <string name="ds_detail_color_hint" translatable="false">#12AC79</string>
+    <string name="color_hint" translatable="false">#FF00FF</string>
+    <string name="pref_item_routecolor_key" translatable="false">routeColor</string>
+    <string name="pref_cat_other_title">Other</string>
+    <string name="pref_item_routecolor_title">Route color</string>
+    <string name="pref_item_routecolor_summary">Color of the 3d rendered route</string>
 </resources>
