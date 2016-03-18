@@ -41,10 +41,10 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.download.TileDownloadLayer;
 import org.mapsforge.map.layer.download.tilesource.OpenStreetMapMapnik;
 import org.mapsforge.map.layer.overlay.Polyline;
+import org.mixare.MaterialDrawerMenuActivity;
 import org.mixare.MixContext;
 import org.mixare.route.AsyncResponse;
 import org.mixare.Config;
-import org.mixare.DrawerMenuActivity;
 import org.mixare.MixViewActivity;
 import org.mixare.MixViewDataHolder;
 import org.mixare.R;
@@ -57,7 +57,7 @@ import org.mixare.marker.LocalMarker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends DrawerMenuActivity {
+public class MapActivity extends MaterialDrawerMenuActivity {
     public final static byte ZOOM_LEVEL_DEFAULT = 12;
     public final static byte ZOOM_LEVEL_CLOSE = 18;
 
@@ -113,9 +113,11 @@ public class MapActivity extends DrawerMenuActivity {
 
         // Add mapView to View
         //setContentView(mapView);
-        contentFrame.removeAllViews();
+        //contentFrame.removeAllViews();
         contentFrame.addView(this.mapView);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getActionBar()!=null){
+           getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Retrieve the search query
         Intent intent = this.getIntent();
@@ -163,8 +165,7 @@ public class MapActivity extends DrawerMenuActivity {
                 // the Keyword is not Empty
                 if (!searchKeyword.isEmpty()) {
                     // the title of the Marker contains the searchKeyword
-                    if (marker.getTitle().toLowerCase()
-                            .indexOf(searchKeyword.toLowerCase().trim()) == -1) {
+                    if (!marker.getTitle().toLowerCase().contains(searchKeyword.toLowerCase().trim())) {
                         marker = null;
                         continue;
                     }

@@ -53,6 +53,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+
 import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
@@ -76,7 +78,7 @@ import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
  * camera screen.
  * It also handles the main sensor events, touch events and location events.
  */
-public class MixViewActivity extends DrawerMenuActivity implements SensorEventListener, OnTouchListener {
+public class MixViewActivity extends MaterialDrawerMenuActivity implements SensorEventListener, OnTouchListener {
 
     /* Different error messages */
     protected static final int UNSUPPORTED_HARDWARE = 0;
@@ -811,47 +813,18 @@ public class MixViewActivity extends DrawerMenuActivity implements SensorEventLi
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 
-	@TargetApi(Build.VERSION_CODES.KITKAT)
 	@Override
-	public void selectItem(int position) {
-		int menuItemId=getResources().obtainTypedArray(R.array.menu_item_titles).getResourceId(position,-1);
-        Intent intent=null;
-		switch (menuItemId) {
-		/* List markerRenderer */
-			case R.string.menu_item_list:
-			/*
-			 * if the list markers is not empty
-			 */
-				if (getMarkerRenderer().getDataHandler().getMarkerCount() > 0) {
-                    intent = new Intent(MixViewActivity.this, MarkerListActivity.class);
-                    intent.setAction(Intent.ACTION_VIEW);
-					startActivityForResult(intent, Config.INTENT_REQUEST_CODE_MARKERLIST);
-				}
-			/* if the list is empty */
-				else {
-					markerRenderer.getContext().getNotificationManager().
-							addNotification(getString(R.string.empty_list));
-				}
-				break;
-			case R.string.menu_item_map:
-                intent = new Intent(MixViewActivity.this, MapActivity.class);
-				startActivityForResult(intent, Config.INTENT_REQUEST_CODE_MAP);
-				break;
-			case R.string.menu_item_range:
+	public void selectItem(int position, IDrawerItem drawerItem) {
+		switch ((int) drawerItem.getIdentifier()) {
+			case R.id.menuitem_range:
                 hudView.showRangeBar();
-                drawerLayout.closeDrawer(drawerList);
+                //drawerLayout.closeDrawer(drawerList);
                 break;
-			case R.string.menu_item_search:
-				onSearchRequested();
-				break;
-			case R.string.menu_item_route:
+			case R.id.menuitem_route:
                 new MarkerListFragment().show(getFragmentManager(), "TAG");
 				break;
-			case R.string.menu_item_settings:
-                intent = new Intent(MixViewActivity.this, SettingsActivity.class);
-				startActivityForResult(intent, Config.INTENT_REQUEST_CODE_SETTINGS);
-                break;
 			default:
+				super.selectItem(position,drawerItem);
 				break;
 		}
 	}

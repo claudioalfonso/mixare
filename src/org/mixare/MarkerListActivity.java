@@ -35,7 +35,7 @@ import android.widget.EditText;
 
 import org.mixare.map.MapActivity;
 
-public class MarkerListActivity extends Activity {
+public class MarkerListActivity extends MaterialDrawerMenuActivity {
     private static final int MENU_MAPVIEW_ID = 0;
     private static final int MENU_SEARCH_ID = 1;
     private EditText editText;
@@ -53,7 +53,9 @@ public class MarkerListActivity extends Activity {
 
         editText = new EditText(this);
 
-		if (this.getIntent().getAction().equals(Intent.ACTION_SEARCH)) {
+        String intentAction=this.getIntent().getAction();
+
+		if (intentAction!=null && intentAction.equals(Intent.ACTION_SEARCH)) {
 			// Get search query from IntentExtras
 			String query = this.getIntent().getStringExtra(SearchManager.QUERY);
             markerListFragment.updateList(query);
