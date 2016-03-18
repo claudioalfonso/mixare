@@ -208,4 +208,10 @@
     <string name="pref_cat_other_title">Other</string>
     <string name="pref_item_routecolor_title">Route color</string>
     <string name="pref_item_routecolor_summary">Color of the 3d rendered route</string>
+    <string name="pref_item_lastfix_key" translatable="false">lastFix</string>
+    <string name="pref_item_lastfix_title">Last set/obtained position</string>
+    <string name="pref_item_lastdest_default" translatable="false">51.46301,7.00396</string>
+    <string name="pref_item_lastfix_default" translatable="false">51.46184,7.01655</string>
+    <string name="pref_item_lastdest_key" translatable="false">lastDest</string>
+    <string name="pref_item_lastdest_title">Last set destination</string>
 </resources>

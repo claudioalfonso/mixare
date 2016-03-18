@@ -46,12 +46,15 @@
             android:key="landscapeMode"
             android:title="View in landscape mode"
             android:defaultValue="true" />
-        <EditTextPreference
-            android:key="lastFix"
-            android:title="Last set/obtained position" />
-        <EditTextPreference
-            android:key="lastDest"
-            android:title="Last set/obtained destination" />
+        <org.mixare.settings.LongClickEditTextPreference
+            android:key="@string/pref_item_lastfix_key"
+            android:title="@string/pref_item_lastfix_title"
+            android:defaultValue="@string/pref_item_lastfix_default" />
+        <org.mixare.settings.LongClickEditTextPreference
+            android:key="@string/pref_item_lastdest_key"
+            android:title="@string/pref_item_lastdest_title"
+            android:defaultValue="@string/pref_item_lastdest_default"
+            />
         <SwitchPreference
             android:key="useLocationServices"
             android:title="Auto locate"
