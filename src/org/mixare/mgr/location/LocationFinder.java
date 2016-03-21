@@ -39,8 +39,6 @@ public interface LocationFinder {
 		Confused // Same problem in internal state
 	}
 
-	boolean isEnabled();
-
 	/**
 	 * Finds the location through the providers  
 	 * @return

@@ -67,7 +67,7 @@ class LocationObserver implements LocationListener {
 							+ location.getLongitude() + " alt: "
 							+ location.getAltitude() + " acc: "
 							+ location.getAccuracy());
-			locationFinder.setPosition(location);
+			locationFinder.setCurrentLocation(location);
 		} catch (Exception ex) {
 			Log.e(Config.TAG, this.getClass().getName(), ex);
 		}

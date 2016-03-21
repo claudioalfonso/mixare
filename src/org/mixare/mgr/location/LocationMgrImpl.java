@@ -40,7 +40,7 @@ import android.location.LocationManager;
  *
  * @author A. Egal
  */
-class LocationMgrImpl implements LocationFinder {
+class LocationFinderImpl implements LocationFinder {
 
 	private static final int ACCURACY_THRESHOLD = 200;
 	private static final long LOCATION_WAIT_TIME = 20 * 1000; //wait 20 seconds for the location updates to find the location
@@ -62,7 +62,7 @@ class LocationMgrImpl implements LocationFinder {
 	private final long freq = 5000; // 5 seconds
 	private final float dist = 20; // 20 meters
 
-	public LocationMgrImpl(MixContext mixContext) {
+	public LocationFinderImpl(MixContext mixContext) {
 		this.mixContext = mixContext;
 		this.lob = new LocationObserver(this);
 		this.state = LocationFinderState.Inactive;
@@ -119,8 +119,7 @@ class LocationMgrImpl implements LocationFinder {
 	public void locationCallback(String provider) {
 		Location foundLocation = lm.getLastKnownLocation(provider);
 		if (bestLocationProvider != null) {
-			Location bestLocation = lm
-					.getLastKnownLocation(bestLocationProvider);
+			Location bestLocation = lm.getLastKnownLocation(bestLocationProvider);
 			if (isBetterLocation(foundLocation, bestLocation)) {
 				curLoc = foundLocation;
 				bestLocationProvider = provider;
@@ -194,7 +193,7 @@ class LocationMgrImpl implements LocationFinder {
 		return gmf;
 	}
 
-	public void setPosition(Location location) {
+	public void setCurrentLocation(Location location) {
 		synchronized (curLoc) {
 			curLoc = location;
 		}

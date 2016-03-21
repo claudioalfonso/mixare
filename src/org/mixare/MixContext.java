@@ -223,6 +223,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	}
 
 	public void setCurLocation(Location curLocation) {
+		settings.edit().putBoolean(getString(R.string.pref_item_autolocate_key),false).apply();  //switch off autolocating
 		this.curLocation = curLocation;
 	}
 

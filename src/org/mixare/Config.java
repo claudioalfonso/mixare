@@ -14,6 +14,10 @@ public class Config {
 
     public static final int DEFAULT_RANGE_PROGRESS = 37;
 
+    public final static double DEFAULT_FIX_LAT = 51.46184; //Campus Schützenbahn, Eingang SA
+    public final static double DEFAULT_FIX_LON = 7.01655;
+    public final static int DEFAULT_FIX_HEIGHT = 0;
+    public final static String DEFAULT_FIX_NAME = "defaultFix";
     public final static double DEFAULT_DESTINATION_LAT = 51.46301; //Mensa
     public final static double DEFAULT_DESTINATION_LON = 7.00396;
     public final static int DEFAULT_DESTINATION_HEIGHT = 0;
@@ -47,6 +51,15 @@ public class Config {
     public static final int SPLASHTIME = 1000; // 1 second
 
     public static boolean drawMarkerTextBlocks = true;
+
+    public static Location getDefaultFix(){
+        Location defaultFix = new Location(DEFAULT_FIX_NAME);
+
+        defaultFix.setLatitude(DEFAULT_FIX_LAT);
+        defaultFix.setLongitude(DEFAULT_FIX_LON);
+        defaultFix.setAltitude(DEFAULT_FIX_HEIGHT);
+        return defaultFix;
+    }
 
     public static Location getDefaultDestination(){
         Location defaultDestination = new Location(DEFAULT_DESTINATION_NAME);
