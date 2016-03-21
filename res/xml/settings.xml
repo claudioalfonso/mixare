@@ -47,11 +47,11 @@
             android:title="View in landscape mode"
             android:defaultValue="true"
             android:enabled="false"/>
-        <org.mixare.settings.LongClickEditTextPreference
+        <org.mixare.settings.LocationPreference
             android:key="@string/pref_item_lastfix_key"
             android:title="@string/pref_item_lastfix_title"
             android:defaultValue="@string/pref_item_lastfix_default" />
-        <org.mixare.settings.LongClickEditTextPreference
+        <org.mixare.settings.LocationPreference
             android:key="@string/pref_item_lastdest_key"
             android:title="@string/pref_item_lastdest_title"
             android:defaultValue="@string/pref_item_lastdest_default"

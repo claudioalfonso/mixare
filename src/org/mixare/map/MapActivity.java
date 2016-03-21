@@ -126,8 +126,8 @@ public class MapActivity extends MaterialDrawerMenuActivity {
         // Set center of the Map to your position or a Position out of the
         // IntentExtras
         if (intent.getBooleanExtra(Config.INTENT_EXTRA_DO_CENTER, false)) {
-            setCenterZoom(intent.getDoubleExtra(Config.INTENT_EXTRA_LATITUDE, Config.DEFAULT_FIX_LAT),
-                    intent.getDoubleExtra(Config.INTENT_EXTRA_LONGITUDE, Config.DEFAULT_FIX_LON), ZOOM_LEVEL_CLOSE);
+            setCenterZoom(intent.getDoubleExtra(Config.INTENT_EXTRA_LATITUDE, getOwnLocation().getLatitude()),
+                    intent.getDoubleExtra(Config.INTENT_EXTRA_LONGITUDE, getOwnLocation().getLongitude()), ZOOM_LEVEL_CLOSE);
         } else {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();

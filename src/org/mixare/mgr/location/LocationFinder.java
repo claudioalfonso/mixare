@@ -25,7 +25,7 @@ import android.location.Location;
 
 /**
  * This class is repsonsible for finding the location, and sending it back to
- * the mixcontext.
+ * the MixContext.
  */
 public interface LocationFinder {
 
@@ -39,9 +39,10 @@ public interface LocationFinder {
 		Confused // Same problem in internal state
 	}
 
+	boolean isEnabled();
+
 	/**
 	 * Finds the location through the providers  
-	 * @param ctx
 	 * @return
 	 */
 	void findLocation();
@@ -54,7 +55,7 @@ public interface LocationFinder {
 	
 	/**
 	 * Returns the current location.
-	 */
+     */
 	Location getCurrentLocation();
 
 	/**

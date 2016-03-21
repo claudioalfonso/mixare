@@ -32,7 +32,7 @@ public class LocationFinderFactory {
 	 * @return LocationFinder
 	 */
 	public static LocationFinder makeLocationFinder(MixContext mixContext){
-		return new LocationMgrImpl(mixContext);
+		return new LocationFinderImpl(mixContext);
 	}
 
 }

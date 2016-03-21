@@ -32,11 +32,11 @@ import android.util.Log;
 class LocationObserver implements LocationListener {
 	
 	private DownloadManager downloadManager;
-	private LocationMgrImpl myController;
+	private LocationFinderImpl locationFinder;
 
-	public LocationObserver(LocationMgrImpl myController) {
+	public LocationObserver(LocationFinderImpl locationFinder) {
 		super();
-		this.myController=myController;
+		this.locationFinder = locationFinder;
 	}
 	
 	
@@ -67,7 +67,7 @@ class LocationObserver implements LocationListener {
 							+ location.getLongitude() + " alt: "
 							+ location.getAltitude() + " acc: "
 							+ location.getAccuracy());
-			myController.setPosition(location);
+			locationFinder.setPosition(location);
 		} catch (Exception ex) {
 			Log.e(Config.TAG, this.getClass().getName(), ex);
 		}

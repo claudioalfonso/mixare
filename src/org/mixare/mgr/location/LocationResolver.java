@@ -14,16 +14,16 @@ import android.os.Bundle;
 public class LocationResolver implements LocationListener{
 
 	private String provider;
-	private LocationMgrImpl locationMgrImpl;
+	private LocationFinderImpl locationFinderImpl;
 	
-	public LocationResolver(String provider, LocationMgrImpl locationMgrImpl){
+	public LocationResolver(String provider, LocationFinderImpl locationFinderImpl){
 		this.provider = provider;
-		this.locationMgrImpl = locationMgrImpl;
+		this.locationFinderImpl = locationFinderImpl;
 	}
 	
 	@Override
 	public void onLocationChanged(Location location) {
-		locationMgrImpl.locationCallback(provider);
+		locationFinderImpl.locationCallback(provider);
 	}
 
 	@Override

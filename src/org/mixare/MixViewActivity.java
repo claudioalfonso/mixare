@@ -250,15 +250,11 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 				getMixViewDataHolder().setSensorMag(null);
 				getMixViewDataHolder().setSensorGyro(null);
 
-				MixContext.getInstance().getLocationFinder()
-						.switchOff();
-				MixContext.getInstance().getDownloadManager()
-						.switchOff();
+				MixContext.getInstance().getLocationFinder().switchOff();
+				MixContext.getInstance().getDownloadManager().switchOff();
 
-				MixContext.getInstance().getNotificationManager()
-						.setEnabled(false);
-				MixContext.getInstance().getNotificationManager()
-						.clear();
+				MixContext.getInstance().getNotificationManager().setEnabled(false);
+				MixContext.getInstance().getNotificationManager().clear();
 				if (getMarkerRenderer() != null) {
 					getMarkerRenderer().cancelRefreshTimer();
 				}
@@ -459,7 +455,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			}
 
 			MixContext.getInstance().getDownloadManager().switchOn();
-			MixContext.getInstance().getLocationFinder().switchOn();
+			MixContext.getInstance().startLocationManager();
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);
 			try {
@@ -822,11 +818,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	}
 
     public void update3D(){
-        Location startLocation = Config.getDefaultFix();
-        Location endLocation = Config.getDefaultDestination();
-
-        startLocation = MixContext.getInstance().getCurLocation();
-        endLocation = MixContext.getInstance().getCurDestination();
+        Location startLocation = MixContext.getInstance().getCurLocation();
+        Location endLocation = MixContext.getInstance().getCurDestination();
 
         /*
         startLocation = new Location("TEST_LOC");
