@@ -50,18 +50,16 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     Location curLocation;
 
-    MixViewDataHolder mixViewDataHolder;
-
     MixContext mixContext=MixContext.getInstance();
 
     public RouteRenderer() {
-        mixViewDataHolder = MixViewDataHolder.getInstance();
+
     }
 
 
     public  void onDrawFrame(GL10 gl) {
 
-        updateCurLocation(curLocation = mixViewDataHolder.getCurLocation());
+        updateCurLocation(curLocation = MixContext.getInstance().getCurLocation());
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -206,7 +204,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     public void updateCurLocation(Location newLocation){
         curLocation = newLocation;
         if(curLocation==null){
-            curLocation=mixViewDataHolder.getCurLocation();
+            curLocation=MixContext.getInstance().getCurLocation();
         }
         if (curLocation != null) {
             currX = (float) MercatorProjection.longitudeToPixelX(curLocation.getLongitude(), MERCATOR_SCALE);

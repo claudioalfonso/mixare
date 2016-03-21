@@ -28,7 +28,7 @@
 	<string name="empty_list">Sorry, \nThere is no location information \navailable within this radius.\nPlease try to search in a wider range.</string>
 	<string name="option_not_available">Sorry, We are working on it&#8230; \nThis option will be available soon!</string>
 
-	<string name="license_text">Copyright &#169; 2010- Peer internet solutions
+	<string name="license_text">Copyright &#169; 2010-2013 Peer internet solutions, changes &#169; 2015-2016 @MelanieWe, @pokerazor
 		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the 
 		GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
 		or at your option) any later version. 
@@ -214,4 +214,8 @@
     <string name="pref_item_lastfix_default" translatable="false">51.46184,7.01655</string>
     <string name="pref_item_lastdest_key" translatable="false">lastDest</string>
     <string name="pref_item_lastdest_title">Last set destination</string>
+	<string name="pref_item_autolocate_key" translatable="false">useLocationServices</string>
+	<string name="pref_item_autolocate_title">Auto locate</string>
+	<string name="pref_item_autolocate_summary">Use system\'s location services (GPS, WLAN etc.) to obtain current position (instead of setting manually)</string>
+	<string name="pref_cat_rendering">Rendering</string>
 </resources>

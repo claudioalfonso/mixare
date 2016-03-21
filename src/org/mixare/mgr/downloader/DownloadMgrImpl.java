@@ -37,18 +37,18 @@ import android.util.Log;
 class DownloadMgrImpl implements Runnable, DownloadManager {
 
 	private static boolean stop = false;
-	private MixContext ctx;
+	private MixContext mixContext;
 	private DownloadManagerState state = DownloadManagerState.Confused;
 	private LinkedBlockingQueue<ManagedDownloadRequest> todoList = new LinkedBlockingQueue<ManagedDownloadRequest>();
 	private ConcurrentHashMap<String, DownloadResult> doneList = new ConcurrentHashMap<>();
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	
 
-	public DownloadMgrImpl(MixContext ctx) {
-		if (ctx == null) {
+	public DownloadMgrImpl(MixContext mixContext) {
+		if (mixContext == null) {
 			throw new IllegalArgumentException("Mix Context IS NULL");
 		}
-		this.ctx = ctx;
+		this.mixContext = mixContext;
 		state=DownloadManagerState.OffLine;
 	}
 
@@ -69,7 +69,7 @@ class DownloadMgrImpl implements Runnable, DownloadManager {
 				try {
 					mRequest = todoList.poll(10, TimeUnit.SECONDS );
 					if(mRequest == null){
-						ctx.getActualMixViewActivity().refresh();
+						mixContext.getActualMixViewActivity().refresh();
 						return;
 					}
 					state=DownloadManagerState.Downloading;

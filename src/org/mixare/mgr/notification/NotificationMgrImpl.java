@@ -30,13 +30,13 @@ import android.content.Intent;
 
 public class NotificationMgrImpl implements NotificationManager{
 
-	private MixContext ctx;
+	private MixContext mixContext;
 	private boolean enabled = true;
 	
 	private int notifyId = 1100; //unique number
 	
-	public NotificationMgrImpl(MixContext ctx) {
-		this.ctx = ctx;
+	public NotificationMgrImpl(MixContext mixContext) {
+		this.mixContext = mixContext;
 	}
 
 	@Override
@@ -48,12 +48,12 @@ public class NotificationMgrImpl implements NotificationManager{
 	public void addNotification(String tickerText) {
 	    if(enabled){
 			android.app.NotificationManager nm = 
-					(android.app.NotificationManager)ctx.getSystemService(NOTIFICATION_SERVICE);
+					(android.app.NotificationManager) mixContext.getSystemService(NOTIFICATION_SERVICE);
 			
 			PendingIntent pendingIntent
-		     = PendingIntent.getActivity(ctx, 0, new Intent(), FLAG_ACTIVITY_NO_ANIMATION);
+		     = PendingIntent.getActivity(mixContext, 0, new Intent(), FLAG_ACTIVITY_NO_ANIMATION);
 			
-			Notification notif = new Notification.Builder(ctx)
+			Notification notif = new Notification.Builder(mixContext)
 					.setContentText(tickerText)
 					.setSmallIcon(R.drawable.icon_datasource)
 					.setWhen(System.currentTimeMillis())
@@ -64,7 +64,7 @@ public class NotificationMgrImpl implements NotificationManager{
 	
 	public void clear(){
 		android.app.NotificationManager nm = 
-				(android.app.NotificationManager)ctx.getSystemService(NOTIFICATION_SERVICE);
+				(android.app.NotificationManager) mixContext.getSystemService(NOTIFICATION_SERVICE);
 		nm.cancel(notifyId);
 	}
 	

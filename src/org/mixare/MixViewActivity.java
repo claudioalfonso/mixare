@@ -19,7 +19,6 @@
 package org.mixare;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -38,7 +37,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -63,10 +61,8 @@ import org.mixare.gui.opengl.OpenGLAugmentationView;
 import org.mixare.gui.opengl.OpenGLMarker;
 import org.mixare.lib.gui.PaintScreen;
 import org.mixare.lib.render.Matrix;
-import org.mixare.map.MapActivity;
 import org.mixare.mgr.HttpTools;
 import org.mixare.route.RouteManager;
-import org.mixare.settings.SettingsActivity;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
@@ -105,8 +101,6 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	private SensorManager sensorManager;
 	private Sensor orientationSensor;
 
-    private SharedPreferences settings;
-
 	/**
 	 * Main application Launcher.
 	 * Does:
@@ -125,7 +119,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-			getMixViewData().setSensorMgr((SensorManager) getSystemService(SENSOR_SERVICE));
+			getMixViewDataHolder().setSensorMgr((SensorManager) getSystemService(SENSOR_SERVICE));
 
 			killOnError();
 			//requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -155,8 +149,6 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 							PERMISSIONS_WRITE_EXTERNAL_STORAGE);
 				}
 			}
-
-            settings = PreferenceManager.getDefaultSharedPreferences(this);
 
             maintainViews();
 
@@ -193,7 +185,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			}
 
 			/* check if the application is launched for the first time */
-			if (settings.getBoolean(getString(R.string.pref_item_firstacess_key), true)) {
+			if (MixContext.getInstance().getSettings().getBoolean(getString(R.string.pref_item_firstacess_key), true)) {
 				firstAccess();
 			}
 		} catch (Exception ex) {
@@ -223,9 +215,9 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	}
 
 	@Override
-	public MixViewDataHolder getMixViewData() {
+	public MixViewDataHolder getMixViewDataHolder() {
 		MixContext.setActualMixViewActivity(this);
-		return MixViewDataHolder.getInstance();
+		return super.getMixViewDataHolder();
 	}
 
 	/**
@@ -247,16 +239,16 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			sensorManager.unregisterListener(this);
 
 			try {
-				getMixViewData().getSensorMgr().unregisterListener(this,
-						getMixViewData().getSensorGrav());
-				getMixViewData().getSensorMgr().unregisterListener(this,
-						getMixViewData().getSensorMag());
-				getMixViewData().getSensorMgr().unregisterListener(this,
-						getMixViewData().getSensorGyro());
-				getMixViewData().getSensorMgr().unregisterListener(this);
-				getMixViewData().setSensorGrav(null);
-				getMixViewData().setSensorMag(null);
-				getMixViewData().setSensorGyro(null);
+				getMixViewDataHolder().getSensorMgr().unregisterListener(this,
+						getMixViewDataHolder().getSensorGrav());
+				getMixViewDataHolder().getSensorMgr().unregisterListener(this,
+						getMixViewDataHolder().getSensorMag());
+				getMixViewDataHolder().getSensorMgr().unregisterListener(this,
+						getMixViewDataHolder().getSensorGyro());
+				getMixViewDataHolder().getSensorMgr().unregisterListener(this);
+				getMixViewDataHolder().setSensorGrav(null);
+				getMixViewDataHolder().setSensorMag(null);
+				getMixViewDataHolder().setSensorGyro(null);
 
 				MixContext.getInstance().getLocationFinder()
 						.switchOff();
@@ -384,7 +376,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 
 			// display text from left to right and keep it horizontal
 			angleX = (float) Math.toRadians(marker_orientation);
-			getMixViewData().getM1().set(1f, 0f, 0f, 0f,
+			getMixViewDataHolder().getM1().set(1f, 0f, 0f, 0f,
 					(float) Math.cos(angleX),
 					(float) -Math.sin(angleX), 0f,
 					(float) Math.sin(angleX),
@@ -392,21 +384,21 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			angleX = (float) Math.toRadians(marker_orientation);
 			angleY = (float) Math.toRadians(marker_orientation);
 			if (rotation == 1) {
-				getMixViewData().getM2().set(1f, 0f, 0f, 0f,
+				getMixViewDataHolder().getM2().set(1f, 0f, 0f, 0f,
 						(float) Math.cos(angleX),
 						(float) -Math.sin(angleX), 0f,
 						(float) Math.sin(angleX),
 						(float) Math.cos(angleX));
-				getMixViewData().getM3().set((float) Math.cos(angleY), 0f,
+				getMixViewDataHolder().getM3().set((float) Math.cos(angleY), 0f,
 						(float) Math.sin(angleY), 0f, 1f, 0f,
 						(float) -Math.sin(angleY), 0f,
 						(float) Math.cos(angleY));
 			} else {
-				getMixViewData().getM2().set((float) Math.cos(angleX), 0f,
+				getMixViewDataHolder().getM2().set((float) Math.cos(angleX), 0f,
 						(float) Math.sin(angleX), 0f, 1f, 0f,
 						(float) -Math.sin(angleX), 0f,
 						(float) Math.cos(angleX));
-				getMixViewData().getM3().set(1f, 0f, 0f, 0f,
+				getMixViewDataHolder().getM3().set(1f, 0f, 0f, 0f,
 						(float) Math.cos(angleY),
 						(float) -Math.sin(angleY), 0f,
 						(float) Math.sin(angleY),
@@ -414,44 +406,44 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 
 			}
 
-			getMixViewData().getM4().toIdentity();
+			getMixViewDataHolder().getM4().toIdentity();
 
-			for (int i = 0; i < getMixViewData().getHistR().length; i++) {
-				getMixViewData().getHistR()[i] = new Matrix();
+			for (int i = 0; i < getMixViewDataHolder().getHistR().length; i++) {
+				getMixViewDataHolder().getHistR()[i] = new Matrix();
 			}
 
-			getMixViewData().addListSensors(getMixViewData().getSensorMgr().getSensorList(
+			getMixViewDataHolder().addListSensors(getMixViewDataHolder().getSensorMgr().getSensorList(
 					Sensor.TYPE_ACCELEROMETER));
-			if (getMixViewData().getSensor(0).getType() == Sensor.TYPE_ACCELEROMETER ) {
-				getMixViewData().setSensorGrav(getMixViewData().getSensor(0));
+			if (getMixViewDataHolder().getSensor(0).getType() == Sensor.TYPE_ACCELEROMETER ) {
+				getMixViewDataHolder().setSensorGrav(getMixViewDataHolder().getSensor(0));
 			}//else report error (unsupported hardware)
 
-			getMixViewData().addListSensors(getMixViewData().getSensorMgr().getSensorList(
+			getMixViewDataHolder().addListSensors(getMixViewDataHolder().getSensorMgr().getSensorList(
 					Sensor.TYPE_MAGNETIC_FIELD));
-			if (getMixViewData().getSensor(1).getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-				getMixViewData().setSensorMag(getMixViewData().getSensor(1));
+			if (getMixViewDataHolder().getSensor(1).getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+				getMixViewDataHolder().setSensorMag(getMixViewDataHolder().getSensor(1));
 			}//else report error (unsupported hardware)
 
-			if (!getMixViewData().getSensorMgr().getSensorList(Sensor.TYPE_GYROSCOPE).isEmpty()){
-				getMixViewData().addListSensors(getMixViewData().getSensorMgr().getSensorList(
+			if (!getMixViewDataHolder().getSensorMgr().getSensorList(Sensor.TYPE_GYROSCOPE).isEmpty()){
+				getMixViewDataHolder().addListSensors(getMixViewDataHolder().getSensorMgr().getSensorList(
 						Sensor.TYPE_GYROSCOPE));
-				if (getMixViewData().getSensor(2).getType() == Sensor.TYPE_GYROSCOPE) {
-					getMixViewData().setSensorGyro(getMixViewData().getSensor(2));
+				if (getMixViewDataHolder().getSensor(2).getType() == Sensor.TYPE_GYROSCOPE) {
+					getMixViewDataHolder().setSensorGyro(getMixViewDataHolder().getSensor(2));
 				}
-				getMixViewData().getSensorMgr().registerListener(this,
-						getMixViewData().getSensorGyro(), SENSOR_DELAY_GAME);
+				getMixViewDataHolder().getSensorMgr().registerListener(this,
+						getMixViewDataHolder().getSensorGyro(), SENSOR_DELAY_GAME);
 			}
 
-				getMixViewData().getSensorMgr().registerListener(this,
-						getMixViewData().getSensorGrav(), SENSOR_DELAY_GAME);
-				getMixViewData().getSensorMgr().registerListener(this,
-						getMixViewData().getSensorMag(), SENSOR_DELAY_GAME);
+				getMixViewDataHolder().getSensorMgr().registerListener(this,
+						getMixViewDataHolder().getSensorGrav(), SENSOR_DELAY_GAME);
+				getMixViewDataHolder().getSensorMgr().registerListener(this,
+						getMixViewDataHolder().getSensorMag(), SENSOR_DELAY_GAME);
 
 			try {
 				GeomagneticField gmf = MixContext.getInstance()
 						.getLocationFinder().getGeomagneticField();
 				angleY = (float) Math.toRadians(-gmf.getDeclination());
-				getMixViewData().getM4().set((float) Math.cos(angleY), 0f,
+				getMixViewDataHolder().getM4().set((float) Math.cos(angleY), 0f,
 						(float) Math.sin(angleY), 0f, 1f, 0f,
 						(float) -Math.sin(angleY), 0f,
 						(float) Math.cos(angleY));
@@ -471,14 +463,14 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);
 			try {
-				if (getMixViewData().getSensorMgr() != null) {
-					getMixViewData().getSensorMgr().unregisterListener(this,
-							getMixViewData().getSensorGrav());
-					getMixViewData().getSensorMgr().unregisterListener(this,
-							getMixViewData().getSensorMag());
-					getMixViewData().getSensorMgr().unregisterListener(this,
-							getMixViewData().getSensorGyro());
-					getMixViewData().setSensorMgr(null);
+				if (getMixViewDataHolder().getSensorMgr() != null) {
+					getMixViewDataHolder().getSensorMgr().unregisterListener(this,
+							getMixViewDataHolder().getSensorGrav());
+					getMixViewDataHolder().getSensorMgr().unregisterListener(this,
+							getMixViewDataHolder().getSensorMag());
+					getMixViewDataHolder().getSensorMgr().unregisterListener(this,
+							getMixViewDataHolder().getSensorGyro());
+					getMixViewDataHolder().setSensorMgr(null);
 				}
 
 				if (MixContext.getInstance() != null) {
@@ -493,7 +485,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			//This does not conflict with registered sensors (sensorMag, sensorGrav)
 			//This is a place holder to API returned listed of sensors, we registered
 			//what we need, the rest is unnecessary.
-			getMixViewData().clearAllSensors();
+			getMixViewDataHolder().clearAllSensors();
 		}
 
 		Log.d(Config.TAG, "resume");
@@ -501,31 +493,31 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			return;
 		}
 		if (getMarkerRenderer().isFrozen()
-				&& getMixViewData().getSearchNotificationTxt() == null) {
-			getMixViewData().setSearchNotificationTxt(new TextView(this));
-			getMixViewData().getSearchNotificationTxt().setWidth(
+				&& getMixViewDataHolder().getSearchNotificationTxt() == null) {
+			getMixViewDataHolder().setSearchNotificationTxt(new TextView(this));
+			getMixViewDataHolder().getSearchNotificationTxt().setWidth(
 					getPaintScreen().getWidth());
-			getMixViewData().getSearchNotificationTxt().setPadding(10, 2, 0, 0);
-			getMixViewData().getSearchNotificationTxt().setText(
+			getMixViewDataHolder().getSearchNotificationTxt().setPadding(10, 2, 0, 0);
+			getMixViewDataHolder().getSearchNotificationTxt().setText(
 					getString(R.string.search_active_1) + " "
 							+ DataSourceList.getDataSourcesStringList()
 							+ getString(R.string.search_active_2));
 			;
-			getMixViewData().getSearchNotificationTxt().setBackgroundColor(
+			getMixViewDataHolder().getSearchNotificationTxt().setBackgroundColor(
 					Color.DKGRAY);
-			getMixViewData().getSearchNotificationTxt().setTextColor(
+			getMixViewDataHolder().getSearchNotificationTxt().setTextColor(
 					Color.WHITE);
 
-			getMixViewData().getSearchNotificationTxt()
+			getMixViewDataHolder().getSearchNotificationTxt()
 					.setOnTouchListener(this);
-			addContentView(getMixViewData().getSearchNotificationTxt(),
+			addContentView(getMixViewDataHolder().getSearchNotificationTxt(),
 					new LayoutParams(LayoutParams.MATCH_PARENT,
 							LayoutParams.WRAP_CONTENT));
 		} else if (!getMarkerRenderer().isFrozen()
-				&& getMixViewData().getSearchNotificationTxt() != null) {
-			getMixViewData().getSearchNotificationTxt()
+				&& getMixViewDataHolder().getSearchNotificationTxt() != null) {
+			getMixViewDataHolder().getSearchNotificationTxt()
 					.setVisibility(View.GONE);
-			getMixViewData().setSearchNotificationTxt(null);
+			getMixViewDataHolder().setSearchNotificationTxt(null);
 		}
 	}
 
@@ -550,8 +542,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 		try{
 
 			MixContext.getInstance().getDownloadManager().shutDown();
-			getMixViewData().getSensorMgr().unregisterListener(this);
-			getMixViewData().setSensorMgr(null);
+			getMixViewDataHolder().getSensorMgr().unregisterListener(this);
+			getMixViewDataHolder().setSensorMgr(null);
 			/*
 			 * Invoked when the garbage collector has detected that this
 			 * instance is no longer reachable. The default implementation does
@@ -573,10 +565,10 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	private void maintainViews() {
 		maintainCamera();
 		maintainAugmentedView();
-		if (settings.getBoolean(getString(R.string.pref_item_usehud_key), true)) {
+		if (MixContext.getInstance().getSettings().getBoolean(getString(R.string.pref_item_usehud_key), true)) {
 			maintainHudView();
 		}
-        if (settings.getBoolean(getString(R.string.pref_item_routing_key), true)){
+        if (MixContext.getInstance().getSettings().getBoolean(getString(R.string.pref_item_routing_key), true)){
             maintainOpenGLView();
         }
 	}
@@ -686,13 +678,13 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	public void refreshDownload(){
 		MixContext.getInstance().getDownloadManager().switchOn();
 //		try {
-//			if (getMixViewData().getDownloadThread() != null){
-//				if (!getMixViewData().getDownloadThread().isInterrupted()){
-//					getMixViewData().getDownloadThread().interrupt();
+//			if (getMixViewDataHolder().getDownloadThread() != null){
+//				if (!getMixViewDataHolder().getDownloadThread().isInterrupted()){
+//					getMixViewDataHolder().getDownloadThread().interrupt();
 //					MixContext.getInstance().getDownloadManager().restart();
 //				}
 //			}else { //if no download thread found
-//				getMixViewData().setDownloadThread(new Thread(getMixViewData()
+//				getMixViewDataHolder().setDownloadThread(new Thread(getMixViewDataHolder()
 //						.getMixContext().getDownloadManager()));
 //				//@TODO Syncronize DownloadManager, call Start instead of run.
 //				mixViewData.getMixContext().getDownloadManager().run();
@@ -785,7 +777,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	 *
 	 */
 	private void firstAccess() {
-		SharedPreferences.Editor editor = settings.edit();
+		SharedPreferences.Editor editor = MixContext.getInstance().getSettings().edit();
 
 		AlertDialog licenseDialog = new LicensePreference(this).getDialog();
         licenseDialog.show();
@@ -833,8 +825,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
         Location startLocation = Config.getDefaultFix();
         Location endLocation = Config.getDefaultDestination();
 
-        startLocation = MixViewDataHolder.getInstance().getCurLocation();
-        endLocation = MixViewDataHolder.getInstance().getCurDestination();
+        startLocation = MixContext.getInstance().getCurLocation();
+        endLocation = MixContext.getInstance().getCurDestination();
 
         /*
         startLocation = new Location("TEST_LOC");
@@ -855,43 +847,43 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 
 	public void onSensorChanged(SensorEvent evt) {
 		try {
-			if (getMixViewData().getSensorGyro() != null) {
+			if (getMixViewDataHolder().getSensorGyro() != null) {
 				
 				if (evt.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-					getMixViewData().setGyro(evt.values);
+					getMixViewDataHolder().setGyro(evt.values);
 				}
 				
 				if (evt.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-					getMixViewData().setGrav(
-							getMixViewData().getGravFilter().lowPassFilter(evt.values,
-									getMixViewData().getGrav()));
+					getMixViewDataHolder().setGrav(
+							getMixViewDataHolder().getGravFilter().lowPassFilter(evt.values,
+									getMixViewDataHolder().getGrav()));
 				} else if (evt.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-					getMixViewData().setMag(
-							getMixViewData().getMagFilter().lowPassFilter(evt.values,
-									getMixViewData().getMag()));
+					getMixViewDataHolder().setMag(
+							getMixViewDataHolder().getMagFilter().lowPassFilter(evt.values,
+									getMixViewDataHolder().getMag()));
 				}
-				getMixViewData().setAngle(
-						getMixViewData().getMagFilter().complementaryFilter(
-								getMixViewData().getGrav(),
-								getMixViewData().getGyro(), 30,
-								getMixViewData().getAngle()));
+				getMixViewDataHolder().setAngle(
+						getMixViewDataHolder().getMagFilter().complementaryFilter(
+								getMixViewDataHolder().getGrav(),
+								getMixViewDataHolder().getGyro(), 30,
+								getMixViewDataHolder().getAngle()));
 				
 				SensorManager.getRotationMatrix(
-						getMixViewData().getRTmp(),
-						getMixViewData().getI(), 
-						getMixViewData().getGrav(),
-						getMixViewData().getMag());
+						getMixViewDataHolder().getRTmp(),
+						getMixViewDataHolder().getI(),
+						getMixViewDataHolder().getGrav(),
+						getMixViewDataHolder().getMag());
 			} else {
 				if (evt.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-					getMixViewData().setGrav(evt.values);
+					getMixViewDataHolder().setGrav(evt.values);
 				} else if (evt.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-					getMixViewData().setMag(evt.values);
+					getMixViewDataHolder().setMag(evt.values);
 				}
 				SensorManager.getRotationMatrix(
-						getMixViewData().getRTmp(),
-						getMixViewData().getI(), 
-						getMixViewData().getGrav(),
-						getMixViewData().getMag());
+						getMixViewDataHolder().getRTmp(),
+						getMixViewDataHolder().getI(),
+						getMixViewDataHolder().getGrav(),
+						getMixViewDataHolder().getMag());
 			}
 			
 			simpleAugmentationView.postInvalidate();
@@ -900,48 +892,48 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			int rotation = Compatibility.getRotation(this);
 
 			if (rotation == 1) {
-				SensorManager.remapCoordinateSystem(getMixViewData().getRTmp(),
+				SensorManager.remapCoordinateSystem(getMixViewDataHolder().getRTmp(),
 						SensorManager.AXIS_X, SensorManager.AXIS_MINUS_Z,
-						getMixViewData().getRot());
+						getMixViewDataHolder().getRot());
 			} else {
-				SensorManager.remapCoordinateSystem(getMixViewData().getRTmp(),
+				SensorManager.remapCoordinateSystem(getMixViewDataHolder().getRTmp(),
 						SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_Z,
-						getMixViewData().getRot());
+						getMixViewDataHolder().getRot());
 			}
-			getMixViewData().getTempR().set(getMixViewData().getRot()[0],
-					getMixViewData().getRot()[1], getMixViewData().getRot()[2],
-					getMixViewData().getRot()[3], getMixViewData().getRot()[4],
-					getMixViewData().getRot()[5], getMixViewData().getRot()[6],
-					getMixViewData().getRot()[7], getMixViewData().getRot()[8]);
+			getMixViewDataHolder().getTempR().set(getMixViewDataHolder().getRot()[0],
+					getMixViewDataHolder().getRot()[1], getMixViewDataHolder().getRot()[2],
+					getMixViewDataHolder().getRot()[3], getMixViewDataHolder().getRot()[4],
+					getMixViewDataHolder().getRot()[5], getMixViewDataHolder().getRot()[6],
+					getMixViewDataHolder().getRot()[7], getMixViewDataHolder().getRot()[8]);
 
-			getMixViewData().getFinalR().toIdentity();
-			getMixViewData().getFinalR().prod(getMixViewData().getM4());
-			getMixViewData().getFinalR().prod(getMixViewData().getM1());
-			getMixViewData().getFinalR().prod(getMixViewData().getTempR());
-			getMixViewData().getFinalR().prod(getMixViewData().getM3());
-			getMixViewData().getFinalR().prod(getMixViewData().getM2());
-			getMixViewData().getFinalR().invert();
+			getMixViewDataHolder().getFinalR().toIdentity();
+			getMixViewDataHolder().getFinalR().prod(getMixViewDataHolder().getM4());
+			getMixViewDataHolder().getFinalR().prod(getMixViewDataHolder().getM1());
+			getMixViewDataHolder().getFinalR().prod(getMixViewDataHolder().getTempR());
+			getMixViewDataHolder().getFinalR().prod(getMixViewDataHolder().getM3());
+			getMixViewDataHolder().getFinalR().prod(getMixViewDataHolder().getM2());
+			getMixViewDataHolder().getFinalR().invert();
 			
-			getMixViewData().getHistR()[getMixViewData().getrHistIdx()]
-					.set(getMixViewData().getFinalR());
+			getMixViewDataHolder().getHistR()[getMixViewDataHolder().getrHistIdx()]
+					.set(getMixViewDataHolder().getFinalR());
 			
-			int histRLenght = getMixViewData().getHistR().length;
+			int histRLenght = getMixViewDataHolder().getHistR().length;
 			
-			getMixViewData().setrHistIdx(getMixViewData().getrHistIdx() + 1);
-			if (getMixViewData().getrHistIdx() >= histRLenght)
-				getMixViewData().setrHistIdx(0);
+			getMixViewDataHolder().setrHistIdx(getMixViewDataHolder().getrHistIdx() + 1);
+			if (getMixViewDataHolder().getrHistIdx() >= histRLenght)
+				getMixViewDataHolder().setrHistIdx(0);
 
-			getMixViewData().getSmoothR().set(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f,
+			getMixViewDataHolder().getSmoothR().set(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f,
 					0f);
 			for (int i = 0; i < histRLenght; i++) {
-				getMixViewData().getSmoothR().add(
-						getMixViewData().getHistR()[i]);
+				getMixViewDataHolder().getSmoothR().add(
+						getMixViewDataHolder().getHistR()[i]);
 			}
-			getMixViewData().getSmoothR().mult(
+			getMixViewDataHolder().getSmoothR().mult(
 					1 / (float) histRLenght);
 
 			MixContext.getInstance().updateSmoothRotation(
-					getMixViewData().getSmoothR());
+					getMixViewDataHolder().getSmoothR());
 		} catch (Exception ex) {
 			Log.e(Config.TAG, "MixViewActivity onSensorChanged()",ex);
 		}
@@ -1014,23 +1006,23 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD
 				&& accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE
-				&& getMixViewData().getCompassErrorDisplayed() == 0) {
+				&& getMixViewDataHolder().getCompassErrorDisplayed() == 0) {
 			for (int i = 0; i < 2; i++) {
 				markerRenderer.getContext().getNotificationManager().
 				addNotification(getString(R.string.compass_unreliable));
 			}
-			getMixViewData().setCompassErrorDisplayed(
-					getMixViewData().getCompassErrorDisplayed() + 1);
+			getMixViewDataHolder().setCompassErrorDisplayed(
+					getMixViewDataHolder().getCompassErrorDisplayed() + 1);
 		}
 	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		getMarkerRenderer().setFrozen(false);
-		if (getMixViewData().getSearchNotificationTxt() != null) {
-			getMixViewData().getSearchNotificationTxt()
+		if (getMixViewDataHolder().getSearchNotificationTxt() != null) {
+			getMixViewDataHolder().getSearchNotificationTxt()
 					.setVisibility(View.GONE);
-			getMixViewData().setSearchNotificationTxt(null);
+			getMixViewDataHolder().setSearchNotificationTxt(null);
 		}
 		return true;
 	}
@@ -1112,10 +1104,10 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
     }
 
     public void updateHud(Location curFix){
-        if(settings.getBoolean(getString(R.string.pref_item_usehud_key), true)) {
+        if(MixContext.getInstance().getSettings().getBoolean(getString(R.string.pref_item_usehud_key), true)) {
             hudView.updatePositionStatus(curFix);
             hudView.setDataSourcesStatus(getMarkerRenderer().dataSourceWorking, false, null);
-            hudView.setDestinationStatus(getMixViewData().getCurDestination());
+            hudView.setDestinationStatus(MixContext.getInstance().getCurDestination());
         }
     }
 }

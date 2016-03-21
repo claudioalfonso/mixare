@@ -22,7 +22,7 @@
                 />
         </PreferenceScreen>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Rendering">
+    <PreferenceCategory android:title="@string/pref_cat_rendering">
         <CheckBoxPreference
             android:key="@string/pref_item_usehud_key"
             android:title="@string/pref_item_usehud_title"
@@ -45,7 +45,8 @@
         <CheckBoxPreference
             android:key="landscapeMode"
             android:title="View in landscape mode"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            android:enabled="false"/>
         <org.mixare.settings.LongClickEditTextPreference
             android:key="@string/pref_item_lastfix_key"
             android:title="@string/pref_item_lastfix_title"
@@ -56,9 +57,9 @@
             android:defaultValue="@string/pref_item_lastdest_default"
             />
         <SwitchPreference
-            android:key="useLocationServices"
-            android:title="Auto locate"
-            android:summary="Use system's location services (GPS, WLAN etc.) to obtain current position (instead of setting manually)"
+            android:key="@string/pref_item_autolocate_key"
+            android:title="@string/pref_item_autolocate_title"
+            android:summary="@string/pref_item_autolocate_summary"
             android:defaultValue="true" />
         <EditTextPreference
             android:key="@string/pref_item_routecolor_key"
@@ -66,9 +67,10 @@
             android:summary="@string/pref_item_routecolor_summary"
             android:defaultValue="@string/color_hint"/>
         <CheckBoxPreference
-            android:key="camera2"
+            android:key="useCamera2"
             android:title="Use Camera2 (if available)"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            android:enabled="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_info_title">
@@ -79,6 +81,12 @@
             android:dialogTitle="@string/pref_item_license_dialogtitle"
             android:dialogMessage="@string/license_text"
             android:negativeButtonText="@string/close_button"
+            />
+        <Preference
+            android:key="prefItemLibrarys"
+            android:title="Used Librarys"
+            android:summary="Display all used libraries and services"
+            android:enabled="false"
             />
     </PreferenceCategory>
 </PreferenceScreen>

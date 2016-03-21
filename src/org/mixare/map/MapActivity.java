@@ -81,8 +81,8 @@ public class MapActivity extends MaterialDrawerMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Location curLocation = getMixViewData().getCurLocation();
-        Location curDestination = getMixViewData().getCurDestination();
+        Location curLocation = MixContext.getInstance().getCurLocation();
+        Location curDestination = MixContext.getInstance().getCurDestination();
         if (curDestination != null) {
             target = new LatLong(curDestination.getLatitude(), curDestination.getLongitude());
         }
@@ -314,7 +314,7 @@ public class MapActivity extends MaterialDrawerMenuActivity {
      * @return My current Location
      */
     private Location getOwnLocation() {
-        return MixViewDataHolder.getInstance().getCurLocation();
+        return MixContext.getInstance().getCurLocation();
     }
 
     /**

@@ -176,5 +176,8 @@
 	<string name="pref_item_routecolor_summary">Farbe der OpenGL-3D-Route</string>
 	<string name="pref_item_lastdest_title">Zuletzt gesetztes Ziel</string>
 	<string name="pref_item_lastfix_title">Letzter gesetzter/bestimmter Standort</string>
+	<string name="pref_item_autolocate_title">Automatische Lokalisierung</string>
+	<string name="pref_item_autolocate_summary">Nutze die Lokalisierungsdienste des Systems (GPS, WLAN, etc.) um die momentane Position zu bestimmen (anstatt sie manuell zu setzen)</string>
+	<string name="pref_cat_rendering">Darstellung</string>
 
 </resources>

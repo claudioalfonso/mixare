@@ -45,8 +45,7 @@ public class MixViewDataHolder {
     private float range;
 	private TextView searchNotificationTxt;
     private static MixViewDataHolder instance;
-    private Location curDestination;
-	private Location curLocation;
+
 
 	private MixViewDataHolder() {
 		this.RTmp = new float[9];
@@ -74,7 +73,6 @@ public class MixViewDataHolder {
 		this.compassErrorDisplayed = 0;
 		this.sensorList = new ArrayList<>();
 
-        curDestination=Config.getDefaultDestination();
 	}
 
 	public synchronized static MixViewDataHolder getInstance()
@@ -84,22 +82,6 @@ public class MixViewDataHolder {
 		}
 		return instance;
 	}
-
-    public Location getCurDestination() {
-        return curDestination;
-    }
-
-	public Location getCurLocation() {
-		return curLocation;
-	}
-
-	public void setCurLocation(Location curLocation) {
-		this.curLocation = curLocation;
-	}
-
-    public void setCurDestination(Location curDestination) {
-        this.curDestination = curDestination;
-    }
 
 	/* ******* Getter and Setters ********** */
 	public float[] getRTmp() {

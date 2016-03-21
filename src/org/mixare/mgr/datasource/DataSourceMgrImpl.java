@@ -31,10 +31,10 @@ class DataSourceMgrImpl implements DataSourceManager {
 
 	private final ConcurrentLinkedQueue<DataSource> allDataSources = new ConcurrentLinkedQueue<>();
 
-	private final MixContext ctx;
+	private final MixContext mixContext;
 
-	public DataSourceMgrImpl(MixContext ctx) {
-		this.ctx = ctx;
+	public DataSourceMgrImpl(MixContext mixContext) {
+		this.mixContext = mixContext;
 	}
 
 	@Override
@@ -56,7 +56,7 @@ class DataSourceMgrImpl implements DataSourceManager {
 		this.allDataSources.clear();
 
 		int size;
-		size = DataSourceStorage.getInstance(ctx).getSize();
+		size = DataSourceStorage.getInstance(mixContext).getSize();
 
 		// copy the value from shared preference to adapter
 		for (int i = 0; i < size; i++) {
@@ -87,7 +87,7 @@ class DataSourceMgrImpl implements DataSourceManager {
 		
 		DownloadRequest request = new DownloadRequest(datasource,
 				datasource.createRequestParams(result[0], result[1], alt, radius, locale));
-		ctx.getDownloadManager().submitJob(request);
+		mixContext.getDownloadManager().submitJob(request);
 
 	}
 }

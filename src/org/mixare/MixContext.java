@@ -35,6 +35,7 @@ import android.content.ContentResolver;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.preference.PreferenceManager;
 
 /**
@@ -46,6 +47,9 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 
     private final Matrix rotationM = new Matrix();
     private final SharedPreferences settings;
+
+	private Location curDestination;
+	private Location curLocation;
 
     /** Responsible for all download */
 	private DownloadManager downloadManager;
@@ -83,6 +87,9 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		}
 		getLocationFinder().switchOn();
 		getLocationFinder().findLocation();
+
+		curDestination=Config.getDefaultDestination();
+
 	}
 
 	public String getStartUrl() {
@@ -205,5 +212,21 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	 */
 	public void doPopUp(int RidOfString) {
         doPopUp(this.getString(RidOfString));
+	}
+
+	public Location getCurDestination() {
+		return curDestination;
+	}
+
+	public Location getCurLocation() {
+		return curLocation;
+	}
+
+	public void setCurLocation(Location curLocation) {
+		this.curLocation = curLocation;
+	}
+
+	public void setCurDestination(Location curDestination) {
+		this.curDestination = curDestination;
 	}
 }

@@ -120,7 +120,7 @@ public class MaterialDrawerMenuActivity extends Activity {
         }
     }
 
-    public MixViewDataHolder getMixViewData() {
+    public MixViewDataHolder getMixViewDataHolder() {
         return MixViewDataHolder.getInstance();
     }
 

@@ -368,14 +368,14 @@ public abstract class LocalMarker implements Marker {
         Location destination = Config.getManualFix();
         destination.setLatitude(LocalMarker.this.getLatitude());
         destination.setLongitude(LocalMarker.this.getLongitude());
-        MixViewDataHolder.getInstance().setCurDestination(destination);
+        MixContext.getInstance().setCurDestination(destination);
     }
 
 	private void setAsLocation(){
 		Location location = Config.getManualFix();
 		location.setLatitude(LocalMarker.this.getLatitude());
 		location.setLongitude(LocalMarker.this.getLongitude());
-		MixViewDataHolder.getInstance().setCurLocation(location);
+		MixContext.getInstance().setCurLocation(location);
 	}
 
     public Intent prepareAction(Context ctx, Class clazz, int menuEntry){
@@ -386,12 +386,12 @@ public abstract class LocalMarker implements Marker {
         return intent;
     }
 
-    private boolean openWebPage(MixContext ctx){
+    private boolean openWebPage(MixContext mixContext){
         String webpage=getURL();
 
         if (webpage != null) {
             try {
-                ctx.getWebContentManager().loadWebPage(webpage, ctx.getActualMixViewActivity());
+                mixContext.getWebContentManager().loadWebPage(webpage, mixContext.getActualMixViewActivity());
                 return true;
             } catch (Exception ex) {
 				Log.e(Config.TAG, this.getClass().getName(), ex);
