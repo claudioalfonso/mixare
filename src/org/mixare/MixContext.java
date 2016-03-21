@@ -86,12 +86,21 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 			rotationM.toIdentity();
 		}
 		getLocationFinder().switchOn();
-		getLocationFinder().findLocation();
+//        startLocationManager();
+
+        getLocationFinder().findLocation();
 
 		curDestination=Config.getDefaultDestination();
 
 	}
-
+/*
+    public void startLocationManager(){
+        if(settings.getBoolean(getString(R.string.pref_item_autolocate_key),true)){
+            getLocationFinder().switchOn();
+        }
+        getLocationFinder().switchOn();
+    }
+*/
 	public String getStartUrl() {
 		Intent intent = (getActualMixViewActivity()).getIntent();
 		if (intent.getAction() != null
@@ -148,6 +157,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	public LocationFinder getLocationFinder() {
 		if (this.locationFinder == null) {
 			locationFinder = LocationFinderFactory.makeLocationFinder(this);
+   //         locationFinder.setCurrentLocation(Config.parseLocationFromString(settings.getString(getString(R.string.pref_item_lastfix_key), getString(R.string.pref_item_lastfix_default))));
 		}
 		return locationFinder;
 	}
@@ -219,6 +229,18 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	}
 
 	public Location getCurLocation() {
+        /*
+        Log.d(Config.TAG, "MixContext - getCurLocation - getpreflastfix "+ settings.getString(getString(R.string.pref_item_lastfix_key),""));
+
+        curLocation = getLocationFinder().getCurrentLocation();
+
+        if(curLocation==null){
+            curLocation = Config.parseLocationFromString(settings.getString(getString(R.string.pref_item_lastfix_key),getString(R.string.pref_item_lastfix_default)));
+        }
+        if(curLocation==null){ //should never occur
+            return new Location("");
+        }
+        */
 		return curLocation;
 	}
 

@@ -187,7 +187,10 @@ public class MarkerRenderer {
 
 	public void draw() {
 		mixContext.getRM(cam.transform);
-        Location autoFix=mixContext.getLocationFinder().getCurrentLocation();  // TODO why get location on every draw cycle instead of only when it changed?
+
+		//curFix = MixContext.getInstance().getCurLocation();
+
+		Location autoFix=mixContext.getLocationFinder().getCurrentLocation();  // TODO why get location on every draw cycle instead of only when it changed?
         Location currentFix=MixContext.getInstance().getCurLocation();
 
         curFix = autoFix;
@@ -199,6 +202,8 @@ public class MarkerRenderer {
         }
 
 		MixContext.getInstance().setCurLocation(curFix);
+
+
 
 		state.calcPitchBearing(cam.transform);
 

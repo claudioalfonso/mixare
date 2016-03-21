@@ -39,6 +39,8 @@ public interface LocationFinder {
 		Confused // Same problem in internal state
 	}
 
+//	boolean isEnabled();
+
 	/**
 	 * Finds the location through the providers  
 	 * @return
@@ -74,6 +76,8 @@ public interface LocationFinder {
 	 * @param downloadManager
 	 */
 	void setDownloadManager(DownloadManager downloadManager);
+
+  //  void setCurrentLocation(Location location);
 
 	/**
 	 * Request to active the service
