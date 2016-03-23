@@ -11,19 +11,19 @@ import android.os.Bundle;
  * Using this method: http://stackoverflow.com/questions/3145089/
  * @author A. Egal
  */
-public class LocationResolver implements LocationListener{
+public class InitialLocationResolver implements LocationListener{
 
 	private String provider;
-	private LocationFinderImpl locationFinderImpl;
+	private LocationFinder locationFinder;
 	
-	public LocationResolver(String provider, LocationFinderImpl locationFinderImpl){
+	public InitialLocationResolver(String provider, LocationFinder locationFinder){
 		this.provider = provider;
-		this.locationFinderImpl = locationFinderImpl;
+		this.locationFinder = locationFinder;
 	}
 	
 	@Override
 	public void onLocationChanged(Location location) {
-		locationFinderImpl.locationCallback(provider);
+		locationFinder.onWorkingProviderFound(provider, location);
 	}
 
 	@Override
@@ -37,5 +37,4 @@ public class LocationResolver implements LocationListener{
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
-	
 }

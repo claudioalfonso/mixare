@@ -88,7 +88,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		getLocationFinder().switchOn();
 //        startLocationManager();
 
-        getLocationFinder().findLocation();
+        getLocationFinder().initLocationSearch();
 
 		curDestination=Config.getDefaultDestination();
 

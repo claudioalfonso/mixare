@@ -29,29 +29,23 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
 
-class LocationObserver implements LocationListener {
+class ContinuousLocationObserver implements LocationListener {
 	
 	private DownloadManager downloadManager;
-	private LocationFinderImpl locationFinder;
+	private LocationFinder locationFinder;
 
-	public LocationObserver(LocationFinderImpl locationFinder) {
+	public ContinuousLocationObserver(LocationFinder locationFinder) {
 		super();
 		this.locationFinder = locationFinder;
 	}
-	
-	
 
 	public DownloadManager getDownloadManager() {
 		return downloadManager;
 	}
 
-
-
 	public void setDownloadManager(DownloadManager downloadManager) {
 		this.downloadManager = downloadManager;
 	}
-
-
 
 	public void onLocationChanged(Location location) {
 		Log.d(Config.TAG, "Normal Location Changed: " + location.getProvider()
@@ -91,6 +85,5 @@ class LocationObserver implements LocationListener {
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
-	
 	
 }

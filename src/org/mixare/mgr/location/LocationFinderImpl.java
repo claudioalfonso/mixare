@@ -33,6 +33,7 @@ import android.hardware.GeomagneticField;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 
 /**
  * This class is repsonsible for finding the location, and sending it back to
@@ -42,50 +43,57 @@ import android.location.LocationManager;
  */
 class LocationFinderImpl implements LocationFinder {
 
-	private static final int ACCURACY_THRESHOLD = 200;
-	private static final long LOCATION_WAIT_TIME = 20 * 1000; //wait 20 seconds for the location updates to find the location
-	private LocationManager lm;
-	private String bestLocationProvider;
-	private final MixContext mixContext;
-	private Location curLoc;
-	private Location locationAtLastDownload;
-	private LocationFinderState state;
-	private final LocationObserver lob;
-	private List<LocationResolver> locationResolvers;
-	private static final int TIME_THRESHOLD = 1000 * 60 * 2; //two minutes
+    private static final long LOCATION_WAIT_TIME = 20 * 1000; //wait 20 seconds for the location updates to find the location
+
+    private static final int ACCURACY_THRESHOLD = 200;
+    private static final int TIME_THRESHOLD = 1000 * 60 * 2; //two minutes
 
 	// frequency and minimum distance for update
 	// this values will only be used after there's a good GPS fix
 	// see back-off pattern discussion
 	// http://stackoverflow.com/questions/3433875/how-to-force-gps-provider-to-get-speed-in-android
 	// thanks Reto Meier for his presentation at gddde 2010
-	private final long freq = 5000; // 5 seconds
-	private final float dist = 20; // 20 meters
+	private static final long CONTINUOUS_UPDATE_FREQ = 5000; // 5 seconds
+	private static final float CONTINUOUS_UPDATE_DIST = 20; // 20 meters
+
+    private LocationManager locationManager;
+    private String bestLocationProvider;
+    private final MixContext mixContext;
+    private Location curLocation;
+    private Location locationAtLastDownload; // not yet used
+    private LocationFinderState state;
+    private final ContinuousLocationObserver continuousLocationObserver;
+    private List<InitialLocationResolver> initialLocationResolvers;
+
 
 	public LocationFinderImpl(MixContext mixContext) {
 		this.mixContext = mixContext;
-		this.lob = new LocationObserver(this);
-		this.state = LocationFinderState.Inactive;
-		this.locationResolvers = new ArrayList<>();
+		this.continuousLocationObserver = new ContinuousLocationObserver(this);
+		this.state = LocationFinderState.INACTIVE;
+		this.initialLocationResolvers = new ArrayList<>();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.mixare.mgr.location.LocationFinder#findLocation(android.content.Context
+	 * org.mixare.mgr.location.LocationFinder#initLocationSearch(android.content.Context
 	 * )
 	 */
-	public void findLocation() {
+    @Override
+	public void initLocationSearch() { //throws SecurityException
 		try {
-			requestBestLocationUpdates();
+			startSearchForBestLocationProvider();
 			//temporary set the current location, until a good provider is found
-			curLoc = lm.getLastKnownLocation(lm.getBestProvider(new Criteria(), true));
-			if (curLoc == null) {
+			curLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
+            Log.d(Config.TAG, "LocationFinderImpl - initLocationSearch ");
+            if (curLocation == null) {
 				setDefaultFix();
 			}
-		} catch (Exception ex2) {
-			setDefaultFix();
+		} catch (Exception ex) {
+            Log.d(Config.TAG, "LocationFinderImpl - initLocationSearch ", ex);
+
+            setDefaultFix();
 		}
 	}
 	
@@ -93,42 +101,48 @@ class LocationFinderImpl implements LocationFinder {
 		// fallback for the case where GPS and network providers are disabled
 		Location defaultFix = Config.getDefaultFix();
 
-		curLoc = defaultFix;
+		curLocation = defaultFix;
 		mixContext.doPopUp(R.string.connection_GPS_dialog_text);
 	}
 
-	private void requestBestLocationUpdates() {
+	private void startSearchForBestLocationProvider() { // throws SecurityException
 		Timer timer = new Timer();
-		for (String p : lm.getAllProviders()) {
-			if(lm.isProviderEnabled(p)){
-				LocationResolver lr = new LocationResolver(p, this);
-				locationResolvers.add(lr);
-				lm.requestLocationUpdates(p, 0, 0, lr);
+		for (String curProvider : locationManager.getAllProviders()) {
+			if(locationManager.isProviderEnabled(curProvider)){
+				InitialLocationResolver initialLocationResolver = new InitialLocationResolver(curProvider, this);
+				initialLocationResolvers.add(initialLocationResolver);
+				locationManager.requestLocationUpdates(curProvider, 0, 0, initialLocationResolver);
 			}
 		}
-		timer.schedule(new LocationTimerTask(),LOCATION_WAIT_TIME); //wait for the location updates to find the location
+		timer.schedule(new LocationTimerTask(), LOCATION_WAIT_TIME); //wait for the location updates to find the location
 	}
+
+    private void stopSearchForBestLocationProvider() {
+        for(InitialLocationResolver initialLocationResolver : initialLocationResolvers){
+            locationManager.removeUpdates(initialLocationResolver);
+        }
+    }
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.mixare.mgr.location.LocationFinder#locationCallback(android.content
+	 * org.mixare.mgr.location.LocationFinder#onWorkingProviderFound(android.content
 	 * .Context)
 	 */
-	public void locationCallback(String provider) {
-		Location foundLocation = lm.getLastKnownLocation(provider);
+    @Override
+	public void onWorkingProviderFound(String provider, Location foundLocation) { // throws SecurityException
 		if (bestLocationProvider != null) {
-			Location bestLocation = lm.getLastKnownLocation(bestLocationProvider);
+			Location bestLocation = locationManager.getLastKnownLocation(bestLocationProvider);
 			if (isBetterLocation(foundLocation, bestLocation)) {
-				curLoc = foundLocation;
+				curLocation = foundLocation;
 				bestLocationProvider = provider;
 			}
 		} else {
-			curLoc = foundLocation;
+			curLocation = foundLocation;
 			bestLocationProvider = provider;
 		}
-		setLocationAtLastDownload(curLoc);		
+        locationAtLastDownload=curLocation;
 	}
 
 	/*
@@ -136,15 +150,16 @@ class LocationFinderImpl implements LocationFinder {
 	 * 
 	 * @see org.mixare.mgr.location.LocationFinder#getCurrentLocation()
 	 */
+    @Override
 	public Location getCurrentLocation() {
-		if (curLoc == null) {
-			findLocation();
+		if (curLocation == null) {
+			initLocationSearch();
 //			mixContext.getNotificationManager().
 //			addNotification(mixContext.getString(R.string.location_not_found));
 //			throw new RuntimeException("No GPS Found");
 		}
-		synchronized (curLoc) {
-			return curLoc;
+		synchronized (curLocation) {
+			return curLocation;
 		}
 	}
 
@@ -153,6 +168,7 @@ class LocationFinderImpl implements LocationFinder {
 	 * 
 	 * @see org.mixare.mgr.location.LocationFinder#getLocationAtLastDownload()
 	 */
+    @Override
 	public Location getLocationAtLastDownload() {
 		return locationAtLastDownload;
 	}
@@ -164,8 +180,10 @@ class LocationFinderImpl implements LocationFinder {
 	 * org.mixare.mgr.location.LocationFinder#setLocationAtLastDownload(android
 	 * .location.Location)
 	 */
+    @Override
 	public void setLocationAtLastDownload(Location locationAtLastDownload) {
 		this.locationAtLastDownload = locationAtLastDownload;
+        Log.d(Config.TAG,"setLocationAtLastDownload "+locationAtLastDownload);
 	}
 
 	/*
@@ -175,6 +193,7 @@ class LocationFinderImpl implements LocationFinder {
 	 * org.mixare.mgr.location.LocationFinder#setDownloadManager(org.mixare.
 	 * mgr.downloader.DownloadManager)
 	 */
+    @Override
 	public void setDownloadManager(DownloadManager downloadManager) {
 		getObserver().setDownloadManager(downloadManager);
 	}
@@ -184,43 +203,41 @@ class LocationFinderImpl implements LocationFinder {
 	 * 
 	 * @see org.mixare.mgr.location.LocationFinder#getGeomagneticField()
 	 */
+    @Override
 	public GeomagneticField getGeomagneticField() {
 		Location location = getCurrentLocation();
-		GeomagneticField gmf = new GeomagneticField(
+		GeomagneticField geomagneticField = new GeomagneticField(
 				(float) location.getLatitude(),
 				(float) location.getLongitude(),
 				(float) location.getAltitude(), System.currentTimeMillis());
-		return gmf;
+		return geomagneticField;
 	}
 
+	@Override
 	public void setCurrentLocation(Location location) {
-		synchronized (curLoc) {
-			curLoc = location;
+		synchronized (curLocation) {
+			curLocation = location;
 		}
 		mixContext.getActualMixViewActivity().refresh();
-		Location lastLoc = getLocationAtLastDownload();
-		if (lastLoc == null) {
-			setLocationAtLastDownload(location);
+		if (locationAtLastDownload == null) {
+            locationAtLastDownload=location;
 		}
 	}
 
 	@Override
 	public void switchOn() {
-		if (!LocationFinderState.Active.equals(state)) {
-			lm = (LocationManager) mixContext
-					.getSystemService(Context.LOCATION_SERVICE);
-			state = LocationFinderState.Confused;
+		if (!LocationFinderState.ACTIVE.equals(state)) {
+			locationManager = (LocationManager) mixContext.getSystemService(Context.LOCATION_SERVICE);
+			state = LocationFinderState.CONFUSED;
 		}
 	}
 
 	@Override
 	public void switchOff() {
-		if (lm != null) {
-			for(LocationResolver locationResolver: locationResolvers){
-				lm.removeUpdates(locationResolver);
-			}
-			lm.removeUpdates(getObserver());
-			state = LocationFinderState.Inactive;
+		if (locationManager != null) {
+            stopSearchForBestLocationProvider();
+			locationManager.removeUpdates(getObserver());
+			state = LocationFinderState.INACTIVE;
 		}
 	}
 
@@ -229,16 +246,15 @@ class LocationFinderImpl implements LocationFinder {
 		return state;
 	}
 	
-	private synchronized LocationObserver getObserver() {
-		return lob;
+	private synchronized ContinuousLocationObserver getObserver() {
+		return continuousLocationObserver;
 	}
 
 	/** Determines whether one Location reading is better than the current Location fix
 	  * @param location  The new Location that you want to evaluate
 	  * @param currentBestLocation  The current Location fix, to which you want to compare the new one
 	  */
-	protected boolean isBetterLocation(Location location,
-			Location currentBestLocation) {
+	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
 		if (currentBestLocation == null) {
 			// A new location is always better than no location
 			return true;
@@ -262,15 +278,13 @@ class LocationFinderImpl implements LocationFinder {
 		}
 
 		// Check whether the new location fix is more or less accurate
-		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation
-				.getAccuracy());
+		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
 		boolean isLessAccurate = accuracyDelta > 0;
 		boolean isMoreAccurate = accuracyDelta < 0;
 		boolean isSignificantlyLessAccurate = accuracyDelta > ACCURACY_THRESHOLD;
 
 		// Check if the old and new location are from the same provider
-		boolean isFromSameProvider = isSameProvider(location.getProvider(),
-				currentBestLocation.getProvider());
+		boolean isFromSameProvider = isSameProvider(location.getProvider(),	currentBestLocation.getProvider());
 
 		// Determine location quality using a combination of timeliness and
 		// accuracy
@@ -278,8 +292,7 @@ class LocationFinderImpl implements LocationFinder {
 			return true;
 		} else if (isNewer && !isLessAccurate) {
 			return true;
-		} else if (isNewer && !isSignificantlyLessAccurate
-				&& isFromSameProvider) {
+		} else if (isNewer && !isSignificantlyLessAccurate	&& isFromSameProvider) {
 			return true;
 		}
 		return false;
@@ -292,27 +305,28 @@ class LocationFinderImpl implements LocationFinder {
 	    }
 	    return provider1.equals(provider2);
 	}
-	
+
+
+    // after 20 seconds, stop searching for best provider
+    // if one was found, hand continuous updates over to MixViewActivity
+    // if not, show error
 	class LocationTimerTask extends TimerTask {
 
 		@Override
 		public void run() {
 			//remove all location updates
-			for(LocationResolver locationResolver: locationResolvers){
-				lm.removeUpdates(locationResolver);
-			}
+            stopSearchForBestLocationProvider();
 			if(bestLocationProvider != null){
-				lm.removeUpdates(getObserver());
-				state=LocationFinderState.Confused;
+				locationManager.removeUpdates(getObserver()); // just to make sure
+				state = LocationFinderState.CONFUSED;
 				mixContext.getActualMixViewActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						lm.requestLocationUpdates(bestLocationProvider, freq, dist, getObserver());		
+						locationManager.requestLocationUpdates(bestLocationProvider, CONTINUOUS_UPDATE_FREQ, CONTINUOUS_UPDATE_DIST, getObserver());
 					}
 				});
-				state=LocationFinderState.Active;
-			}
-			else{ //no location found
+				state = LocationFinderState.ACTIVE;
+			} else { //no location/provider found, so show error
 				mixContext.getActualMixViewActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {

@@ -24,34 +24,30 @@ import android.hardware.GeomagneticField;
 import android.location.Location;
 
 /**
- * This class is repsonsible for finding the location, and sending it back to
- * the MixContext.
+ * A class implementing this interface is responsible for
+ * finding the location and sending it back to the MixContext.
  */
 public interface LocationFinder {
 
-
-	/**
-	 * Possible status of LocationFinder
-	 */
-	public enum LocationFinderState {
-		Active, // Providing Location Information
-		Inactive, // No-Active
-		Confused // Same problem in internal state
+	//Possible status of LocationFinder
+	enum LocationFinderState {
+		ACTIVE, // Providing location information
+		INACTIVE, // Not active
+		CONFUSED // Some problem in internal state
 	}
 
 //	boolean isEnabled();
 
 	/**
 	 * Finds the location through the providers  
-	 * @return
 	 */
-	void findLocation();
+	void initLocationSearch();
 
 	/**
 	 * A working location provider has been found: check if 
 	 * the found location has the best accuracy.
 	 */
-	void locationCallback(String provider);
+	void onWorkingProviderFound(String provider, Location foundLocation);
 	
 	/**
 	 * Returns the current location.
@@ -61,38 +57,38 @@ public interface LocationFinder {
 	/**
 	 * Gets the location that was used in the last download for
 	 * datasources.
-	 * @return
+	 * @return Location
 	 */
 	Location getLocationAtLastDownload();
 
 	/**
-	 * Sets the property to the location with the last successfull download.
+	 * Sets the property to the location with the last successful download.
 	 */
 	void setLocationAtLastDownload(Location locationAtLastDownload);
 
 	/**
 	 * Set the DownloadManager manager at this service
 	 * 
-	 * @param downloadManager
+	 * @param downloadManager the download manager
 	 */
 	void setDownloadManager(DownloadManager downloadManager);
 
-  //  void setCurrentLocation(Location location);
+	void setCurrentLocation(Location location);
 
 	/**
-	 * Request to active the service
+	 * Request to activate the service
 	 */
 	void switchOn();
 
 	/**
-	 * Request to deactive the service
+	 * Request to deactivate the service
 	 */
 	void switchOff();
 
 	/**
 	 * Status of service
 	 * 
-	 * @return
+	 * @return Location
 	 */
 	LocationFinderState getStatus();
 
