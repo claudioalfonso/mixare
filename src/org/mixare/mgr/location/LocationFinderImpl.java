@@ -26,7 +26,6 @@ import java.util.TimerTask;
 import org.mixare.Config;
 import org.mixare.MixContext;
 import org.mixare.R;
-import org.mixare.mgr.downloader.DownloadManager;
 
 import android.content.Context;
 import android.hardware.GeomagneticField;
@@ -83,10 +82,10 @@ class LocationFinderImpl implements LocationFinder {
     @Override
 	public void initLocationSearch() { //throws SecurityException
 		try {
+            bestLocationProvider=null;
 			startSearchForBestLocationProvider();
 			//temporary set the current location, until a good provider is found
 			curLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
-            Log.d(Config.TAG, "LocationFinderImpl - initLocationSearch "+curLocation);
             if (curLocation == null) {
                 curLocation = initialLocation;
 			}
@@ -150,9 +149,6 @@ class LocationFinderImpl implements LocationFinder {
 	public Location getCurrentLocation() {
 		if (curLocation == null) {
 			initLocationSearch();
-//			mixContext.getNotificationManager().
-//			addNotification(mixContext.getString(R.string.location_not_found));
-//			throw new RuntimeException("No GPS Found");
 		}
 		synchronized (curLocation) {
 			return curLocation;
@@ -179,7 +175,7 @@ class LocationFinderImpl implements LocationFinder {
     @Override
 	public void setLocationAtLastDownload(Location locationAtLastDownload) {
 		this.locationAtLastDownload = locationAtLastDownload;
-        Log.d(Config.TAG,"setLocationAtLastDownload "+locationAtLastDownload);
+        Log.d(Config.TAG, "setLocationAtLastDownload " + locationAtLastDownload);
 	}
 
 	/*
@@ -203,8 +199,9 @@ class LocationFinderImpl implements LocationFinder {
 		synchronized (curLocation) {
 			curLocation = location;
 		}
-		mixContext.getActualMixViewActivity().refresh();
-        mixContext.saveLocation(location);
+        mixContext.setCurLocation(location, false);
+
+        mixContext.getActualMixViewActivity().refresh();
 		if (locationAtLastDownload == null) {
             locationAtLastDownload=location;
 		}

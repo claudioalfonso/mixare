@@ -17,7 +17,7 @@
         android:linksClickable="false"
         android:padding="5dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        />
+        android:layout_marginTop="@dimen/materialize_statusbar" />
 
     <ProgressBar
         android:id="@+id/positionStatusProgress"
@@ -29,7 +29,8 @@
         android:layout_alignParentTop="true"
         android:layout_gravity="right"
         android:padding="5dp"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:layout_marginTop="@dimen/materialize_statusbar" />
 
     <ImageView
         android:id="@+id/positionStatusIcon"
@@ -41,7 +42,8 @@
         android:layout_below="@+id/positionStatusProgress"
         android:contentDescription="@string/problem_detected"
         android:src="@android:drawable/ic_dialog_alert"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:layout_marginTop="@dimen/materialize_statusbar" />
 
     <TextView
         android:id="@+id/dataSourcesStatusText"

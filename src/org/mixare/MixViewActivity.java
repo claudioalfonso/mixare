@@ -454,8 +454,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			}
 
 			MixContext.getInstance().getDownloadManager().switchOn();
-			MixContext.getInstance().getLocationFinder().switchOn();
-			// MixContext.getInstance().startLocationManager();
+			//MixContext.getInstance().getLocationFinder().switchOn();
+			MixContext.getInstance().startLocationManager();
 
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);

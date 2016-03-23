@@ -85,22 +85,20 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		if (!getDataSourceManager().isAtLeastOneDataSourceSelected()) {
 			rotationM.toIdentity();
 		}
-		getLocationFinder().switchOn();
-//        startLocationManager();
+		//getLocationFinder().switchOn();
+        startLocationManager();
 
         getLocationFinder().initLocationSearch();
-
-		curDestination=Config.getDefaultDestination();
+		curDestination=Config.parseLocationFromString(settings.getString(getString(R.string.pref_item_lastdest_key), getString(R.string.pref_item_lastdest_default)));
 
 	}
-/*
+
     public void startLocationManager(){
         if(settings.getBoolean(getString(R.string.pref_item_autolocate_key),true)){
             getLocationFinder().switchOn();
         }
-        getLocationFinder().switchOn();
     }
-*/
+
 	public String getStartUrl() {
 		Intent intent = (getActualMixViewActivity()).getIntent();
 		if (intent.getAction() != null
@@ -228,33 +226,25 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	}
 
 	public Location getCurLocation() {
-        /*
-        Log.d(Config.TAG, "MixContext - getCurLocation - getpreflastfix "+ settings.getString(getString(R.string.pref_item_lastfix_key),""));
-
-        curLocation = getLocationFinder().getCurrentLocation();
-
-        if(curLocation==null){
-            curLocation = Config.parseLocationFromString(settings.getString(getString(R.string.pref_item_lastfix_key),getString(R.string.pref_item_lastfix_default)));
+        if(curLocation==null) {
+            curLocation = getLocationFinder().getCurrentLocation();
         }
-        if(curLocation==null){ //should never occur
-            return new Location("");
-        }
-        */
 		return curLocation;
 	}
 
 	public void setCurLocation(Location curLocation, boolean manualOverride) {
-		if(manualOverride== true) {
+		if(manualOverride) {
 			settings.edit().putBoolean(getString(R.string.pref_item_autolocate_key), false).apply();  //switch off autolocating
+            // TODO actually disable LocationFinder
 		}
-		this.curLocation = curLocation;
+        settings.edit().putString(getString(R.string.pref_item_lastfix_key), Config.locationToString(curLocation)).apply();  //save in settings
+
+        this.curLocation = curLocation;
 	}
 
 	public void setCurDestination(Location curDestination) {
-		this.curDestination = curDestination;
-	}
+        settings.edit().putString(getString(R.string.pref_item_lastdest_key), Config.locationToString(curDestination)).apply();  //save in settings
 
-	public void saveLocation(Location location) {
-
+        this.curDestination = curDestination;
 	}
 }

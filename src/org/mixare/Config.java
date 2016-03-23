@@ -14,13 +14,8 @@ public class Config {
 
     public static final int DEFAULT_RANGE_PROGRESS = 37;
 
-    public final static double DEFAULT_DESTINATION_LAT = 51.46301; //Mensa
-    public final static double DEFAULT_DESTINATION_LON = 7.00396;
-    public final static int DEFAULT_DESTINATION_HEIGHT = 0;
-    public final static String DEFAULT_DESTINATION_NAME = "defaultDest";
     public static final String MANUAL_FIX_NAME = "manualSet";
     public static final String PREF_FIX_NAME = "prefFix";
-
 
     public static final int INTENT_REQUEST_CODE_MIXVIEW = 0;
     public static final int INTENT_REQUEST_CODE_CENTERMAP = 76;
@@ -48,16 +43,6 @@ public class Config {
 
     public static boolean drawMarkerTextBlocks = true;
 
-    public static Location getDefaultDestination(){
-        Location defaultDestination = new Location(DEFAULT_DESTINATION_NAME);
-
-        defaultDestination.setLatitude(DEFAULT_DESTINATION_LAT);
-        defaultDestination.setLongitude(DEFAULT_DESTINATION_LON);
-        defaultDestination.setAltitude(DEFAULT_DESTINATION_HEIGHT);
-
-        return defaultDestination;
-    }
-
     public static Location getManualFix(){
         Location manualFix = new Location(MANUAL_FIX_NAME);
         manualFix.setTime(System.currentTimeMillis());
@@ -76,5 +61,13 @@ public class Config {
         newLocation.setLatitude(coordinates[0]);
         newLocation.setLongitude(coordinates[1]);
         return newLocation;
+    }
+
+    public static String  locationToString(Location location){
+        String returnString="";
+        if(location!=null){
+            returnString=location.getLatitude()+","+location.getLongitude();
+        }
+        return returnString;
     }
 }

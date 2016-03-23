@@ -188,22 +188,9 @@ public class MarkerRenderer {
 	public void draw() {
 		mixContext.getRM(cam.transform);
 
-		//curFix = MixContext.getInstance().getCurLocation();
+		// TODO update curFix asynchronously via interface callback not via get on every draw cycle
 
-		Location autoFix=mixContext.getLocationFinder().getCurrentLocation();  // TODO why get location on every draw cycle instead of only when it changed?
-        Location currentFix=MixContext.getInstance().getCurLocation();
-
-        curFix = autoFix;
-
-        if(currentFix!=null){
-            if(currentFix.getProvider().equals(Config.MANUAL_FIX_NAME)) {
-                curFix = currentFix;
-            }
-        }
-
-		MixContext.getInstance().setCurLocation(curFix, false);
-
-
+        curFix = MixContext.getInstance().getCurLocation();
 
 		state.calcPitchBearing(cam.transform);
 
