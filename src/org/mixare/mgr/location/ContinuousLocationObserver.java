@@ -20,7 +20,6 @@ package org.mixare.mgr.location;
 
 import org.mixare.Config;
 //import org.mixare.map.GoogleMap;
-import org.mixare.mgr.downloader.DownloadManager;
 
 //import com.google.android.maps.GeoPoint;
 
@@ -31,20 +30,11 @@ import android.util.Log;
 
 class ContinuousLocationObserver implements LocationListener {
 	
-	private DownloadManager downloadManager;
 	private LocationFinder locationFinder;
 
 	public ContinuousLocationObserver(LocationFinder locationFinder) {
 		super();
 		this.locationFinder = locationFinder;
-	}
-
-	public DownloadManager getDownloadManager() {
-		return downloadManager;
-	}
-
-	public void setDownloadManager(DownloadManager downloadManager) {
-		this.downloadManager = downloadManager;
 	}
 
 	public void onLocationChanged(Location location) {
@@ -54,8 +44,7 @@ class ContinuousLocationObserver implements LocationListener {
 						+ location.getAltitude() + " acc: "
 						+ location.getAccuracy());
 		try {
-			addWalkingPathPosition(location);
-			deleteAllDownloadActivity();
+			recordPosition(location);
 			Log.v(Config.TAG, "Location Changed: " + location.getProvider()
 							+ " lat: " + location.getLatitude() + " lon: "
 							+ location.getLongitude() + " alt: "
@@ -67,13 +56,7 @@ class ContinuousLocationObserver implements LocationListener {
 		}
 	}
 
-	private void deleteAllDownloadActivity() {
-		if (downloadManager != null) {
-			downloadManager.resetActivity();
-		}
-	}
-
-	private void addWalkingPathPosition(Location location) {
+	private void recordPosition(Location location) {
 		//GoogleMap.addWalkingPathPosition(new GeoPoint((int) (location.getLatitude() * 1E6),(int) (location.getLongitude() * 1E6)));
 	}
 	

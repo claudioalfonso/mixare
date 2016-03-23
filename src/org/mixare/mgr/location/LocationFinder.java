@@ -43,7 +43,9 @@ public interface LocationFinder {
 	 */
 	void initLocationSearch();
 
-	/**
+    void setInitialLocation(Location initialLocation);
+
+    /**
 	 * A working location provider has been found: check if 
 	 * the found location has the best accuracy.
 	 */
@@ -65,13 +67,6 @@ public interface LocationFinder {
 	 * Sets the property to the location with the last successful download.
 	 */
 	void setLocationAtLastDownload(Location locationAtLastDownload);
-
-	/**
-	 * Set the DownloadManager manager at this service
-	 * 
-	 * @param downloadManager the download manager
-	 */
-	void setDownloadManager(DownloadManager downloadManager);
 
 	void setCurrentLocation(Location location);
 

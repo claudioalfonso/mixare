@@ -64,9 +64,9 @@ class LocationFinderImpl implements LocationFinder {
     private LocationFinderState state;
     private final ContinuousLocationObserver continuousLocationObserver;
     private List<InitialLocationResolver> initialLocationResolvers;
+    private static Location initialLocation = new Location("");
 
-
-	public LocationFinderImpl(MixContext mixContext) {
+    public LocationFinderImpl(MixContext mixContext) {
 		this.mixContext = mixContext;
 		this.continuousLocationObserver = new ContinuousLocationObserver(this);
 		this.state = LocationFinderState.INACTIVE;
@@ -86,24 +86,20 @@ class LocationFinderImpl implements LocationFinder {
 			startSearchForBestLocationProvider();
 			//temporary set the current location, until a good provider is found
 			curLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
-            Log.d(Config.TAG, "LocationFinderImpl - initLocationSearch ");
+            Log.d(Config.TAG, "LocationFinderImpl - initLocationSearch "+curLocation);
             if (curLocation == null) {
-				setDefaultFix();
+                curLocation = initialLocation;
 			}
 		} catch (Exception ex) {
-            Log.d(Config.TAG, "LocationFinderImpl - initLocationSearch ", ex);
-
-            setDefaultFix();
+            Log.d(Config.TAG, "LocationFinderImpl - initLocationSearch exception", ex);
+            curLocation = initialLocation;
 		}
 	}
-	
-	private void setDefaultFix() {
-		// fallback for the case where GPS and network providers are disabled
-		Location defaultFix = Config.getDefaultFix();
 
-		curLocation = defaultFix;
-		mixContext.doPopUp(R.string.connection_GPS_dialog_text);
-	}
+    @Override
+    public void setInitialLocation(Location initialLocation){
+        LocationFinderImpl.initialLocation = initialLocation;
+    }
 
 	private void startSearchForBestLocationProvider() { // throws SecurityException
 		Timer timer = new Timer();
@@ -189,18 +185,6 @@ class LocationFinderImpl implements LocationFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.mixare.mgr.location.LocationFinder#setDownloadManager(org.mixare.
-	 * mgr.downloader.DownloadManager)
-	 */
-    @Override
-	public void setDownloadManager(DownloadManager downloadManager) {
-		getObserver().setDownloadManager(downloadManager);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.mixare.mgr.location.LocationFinder#getGeomagneticField()
 	 */
     @Override
@@ -215,10 +199,12 @@ class LocationFinderImpl implements LocationFinder {
 
 	@Override
 	public void setCurrentLocation(Location location) {
+        mixContext.getDownloadManager().resetActivity();
 		synchronized (curLocation) {
 			curLocation = location;
 		}
 		mixContext.getActualMixViewActivity().refresh();
+        mixContext.saveLocation(location);
 		if (locationAtLastDownload == null) {
             locationAtLastDownload=location;
 		}

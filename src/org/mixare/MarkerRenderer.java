@@ -201,7 +201,7 @@ public class MarkerRenderer {
             }
         }
 
-		MixContext.getInstance().setCurLocation(curFix);
+		MixContext.getInstance().setCurLocation(curFix, false);
 
 
 

@@ -436,8 +436,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 						getMixViewDataHolder().getSensorMag(), SENSOR_DELAY_GAME);
 
 			try {
-				GeomagneticField gmf = MixContext.getInstance()
-						.getLocationFinder().getGeomagneticField();
+				GeomagneticField gmf = MixContext.getInstance().getLocationFinder().getGeomagneticField();
 				angleY = (float) Math.toRadians(-gmf.getDeclination());
 				getMixViewDataHolder().getM4().set((float) Math.cos(angleY), 0f,
 						(float) Math.sin(angleY), 0f, 1f, 0f,
@@ -472,10 +471,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 				}
 
 				if (MixContext.getInstance() != null) {
-					MixContext.getInstance().getLocationFinder()
-							.switchOff();
-					MixContext.getInstance().getDownloadManager()
-							.switchOff();
+					MixContext.getInstance().getLocationFinder().switchOff();
+					MixContext.getInstance().getDownloadManager().switchOff();
 				}
 			} catch (Exception ignore) {
 			}

@@ -375,7 +375,7 @@ public abstract class LocalMarker implements Marker {
 		Location location = Config.getManualFix();
 		location.setLatitude(LocalMarker.this.getLatitude());
 		location.setLongitude(LocalMarker.this.getLongitude());
-		MixContext.getInstance().setCurLocation(location);
+		MixContext.getInstance().setCurLocation(location, true);
 	}
 
     public Intent prepareAction(Context ctx, Class clazz, int menuEntry){

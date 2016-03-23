@@ -157,7 +157,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	public LocationFinder getLocationFinder() {
 		if (this.locationFinder == null) {
 			locationFinder = LocationFinderFactory.makeLocationFinder(this);
-   //         locationFinder.setCurrentLocation(Config.parseLocationFromString(settings.getString(getString(R.string.pref_item_lastfix_key), getString(R.string.pref_item_lastfix_default))));
+            locationFinder.setInitialLocation(Config.parseLocationFromString(settings.getString(getString(R.string.pref_item_lastfix_key), getString(R.string.pref_item_lastfix_default))));
 		}
 		return locationFinder;
 	}
@@ -165,7 +165,6 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	public DownloadManager getDownloadManager() {
 		if (this.downloadManager == null) {
 			downloadManager = DownloadManagerFactory.makeDownloadManager(this);
-			getLocationFinder().setDownloadManager(downloadManager);
 		}
 		return downloadManager;
 	}
@@ -244,12 +243,18 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		return curLocation;
 	}
 
-	public void setCurLocation(Location curLocation) {
-		settings.edit().putBoolean(getString(R.string.pref_item_autolocate_key),false).apply();  //switch off autolocating
+	public void setCurLocation(Location curLocation, boolean manualOverride) {
+		if(manualOverride== true) {
+			settings.edit().putBoolean(getString(R.string.pref_item_autolocate_key), false).apply();  //switch off autolocating
+		}
 		this.curLocation = curLocation;
 	}
 
 	public void setCurDestination(Location curDestination) {
 		this.curDestination = curDestination;
+	}
+
+	public void saveLocation(Location location) {
+
 	}
 }
