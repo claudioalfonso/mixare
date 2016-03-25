@@ -9,6 +9,7 @@ public class MyVector {
 
     private float xCoordinate;
     private float yCoordinate;
+    private float distance;
 
 
     public void setXCoordinate(float xCoordinate) {
@@ -26,5 +27,9 @@ public class MyVector {
     public float getYCoordinate (){
         return yCoordinate;
     }
+
+    public void setDistance (float distance){this.distance = distance;}
+
+    public float getDistance (){return distance;}
 
 }
