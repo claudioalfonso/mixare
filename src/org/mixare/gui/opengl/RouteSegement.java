@@ -19,6 +19,8 @@ public class RouteSegement {
 
     private float startX;
     private float startY;
+    private MyVector startVector = new MyVector();
+    private MyVector endVector = new MyVector();
     private float endX;
     private float endY;
 
@@ -35,6 +37,10 @@ public class RouteSegement {
     MyVector leftEndVector = new MyVector();
     MyVector rightEndVector = new MyVector();
 
+
+
+    MyVectorOperations myVectorOperations = new MyVectorOperations();
+
     short[] rectTriangles = new short[]{
             0, 1, 2,
             2, 3, 0
@@ -49,6 +55,11 @@ public class RouteSegement {
     }
 
     public RouteSegement(float startX, float startY, float endX, float endY){
+
+        startVector.setXCoordinate(startX);
+        startVector.setYCoordinate(startY);
+        endVector.setXCoordinate(endX);
+        endVector.setYCoordinate(endY);
 
         this.startX = startX;
         this.startY = startY;
@@ -79,13 +90,36 @@ public class RouteSegement {
 
     public void calculateRecVertices(){
 
-        directionX = startX-endX;
-        directionY = startY-endY;
-
-        resultTemp1 = (float)Math.sqrt(Math.pow(-directionY,2) + Math.pow(directionX,2));
+        MyVector directionVector= myVectorOperations.getDirectionVector(startVector, endVector);
+        MyVector orthogonalDirectionVector = myVectorOperations.getOrthogonalDirectionVector(directionVector);
 
 
-        leftStartVector.setXCoordinate(-directionY / resultTemp1);
+
+        resultTemp1 = myVectorOperations.getDirectionVectorLength(directionVector);
+
+        //directionX = startX-endX;
+        //directionY = startY-endY;
+
+        //resultTemp1 = (float)Math.sqrt(Math.pow(-directionY,2) + Math.pow(directionX,2));
+
+
+
+        leftStartVector.setXCoordinate(orthogonalDirectionVector.getXCoordinate() / resultTemp1);
+        leftStartVector.setYCoordinate((orthogonalDirectionVector.getYCoordinate() / resultTemp1));
+
+
+        rightStartVector.setXCoordinate(-orthogonalDirectionVector.getXCoordinate() / resultTemp1);
+        rightStartVector.setYCoordinate(-orthogonalDirectionVector.getXCoordinate() / resultTemp1);
+
+        leftEndVector.setXCoordinate(leftStartVector.getXCoordinate()+directionVector.getXCoordinate());
+        leftEndVector.setYCoordinate(leftStartVector.getYCoordinate() + directionVector.getYCoordinate());
+
+        rightEndVector.setXCoordinate(rightStartVector.getXCoordinate()+directionVector.getXCoordinate());
+        rightEndVector.setYCoordinate(rightStartVector.getYCoordinate()+directionVector.getYCoordinate());
+
+
+
+               /* leftStartVector.setXCoordinate(-directionY / resultTemp1);
         leftStartVector.setYCoordinate((directionX / resultTemp1));
 
         rightStartVector.setXCoordinate(directionY / resultTemp1);
@@ -96,6 +130,8 @@ public class RouteSegement {
 
         rightEndVector.setXCoordinate(rightStartVector.getXCoordinate()+directionX);
         rightEndVector.setYCoordinate(rightStartVector.getYCoordinate()+directionY);
+
+        */
 
 
     }
@@ -121,7 +157,7 @@ public class RouteSegement {
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA) ;
 
-        gl.glColor4f(Color.red(color)/255.0f, Color.green(color)/255.0f, Color.blue(color)/255.0f, Color.alpha(color)/255.0f);
+        gl.glColor4f(Color.red(color) / 255.0f, Color.green(color) / 255.0f, Color.blue(color) / 255.0f, Color.alpha(color) / 255.0f);
 
         gl.glDrawElements(GL10.GL_TRIANGLES, rectTriangles.length,
                 GL10.GL_UNSIGNED_SHORT, rectTrianglesBuffer);
@@ -148,5 +184,13 @@ public class RouteSegement {
         buffer.put(array);
         buffer.position(0);
         return buffer;
+    }
+
+    public MyVector getStartVector(){
+        return startVector;
+    }
+
+    public MyVector getEndVector(){
+        return  endVector;
     }
 }
