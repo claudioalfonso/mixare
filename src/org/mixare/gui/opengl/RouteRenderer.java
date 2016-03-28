@@ -2,8 +2,10 @@ package org.mixare.gui.opengl;
 
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
+import android.os.Bundle;
 
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.util.MercatorProjection;
@@ -58,22 +60,75 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     public RouteRenderer() {
 
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+                updateCurLocation(location);
+
+                if(!routeWaypoints.isEmpty() &&currX != 0 && currY!= 0){
+                    if (hasLowDistance()== false){
+                        Location targetLoc = new Location("Target");
+                        targetLoc.setLatitude(getActualRoute().getTargetCoordinate().getLatitude());
+                        targetLoc.setLongitude(getActualRoute().getTargetCoordinate().getLongitude());
+                        RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
+                            @Override
+                            public void processFinish(MyRoute route) {
+                                updateRoute(route);
+                            }
+                        }).execute(curLocation,targetLoc);
+                 }
+                }
+
+                updateWaypointsRelative( routeWaypoints );
+                updateWaypointsRelative(poiWaypoints);
+
+                updateRouteSegments( routeWaypoints );
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        MixContext.getInstance().getLocationFinder().addLocationListerner(locationListener);
+
+
     }
 
 
     public  void onDrawFrame(GL10 gl) {
 
-        updateCurLocation(curLocation = MixContext.getInstance().getCurLocation());
+       // updateCurLocation(curLocation = MixContext.getInstance().getLocationFinder().getCurrentLocation());
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
 
        // gl.glPushMatrix();
 
-        renderRouteSegements(gl, poiWaypoints, true);
-        renderRouteSegements(gl, routeWaypoints, false);
+        renderPOIMarker(gl, poiWaypoints);
+        renderRouteSegements(gl, routeSegements);
 
-        if(!routeWaypoints.isEmpty() &&currX != 0 && currY!= 0){
+      /*  Location location = new Location("Test");
+        location.setLatitude(51.50133);
+        location.setLongitude(7.47637);
+
+        MixContext.getInstance().getLocationFinder().setCurrentLocation(location); */
+
+
+        //  if(!routeWaypoints.isEmpty() &&currX != 0 && currY!= 0){
 
 
 
@@ -88,13 +143,13 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                     }
                 }).execute(curLocation,targetLoc);
             }*/
-        }
+      //  }
         //gl.glPopMatrix();
     }
 
-    public void renderRouteSegements(GL10 gl, List<Waypoint> waypoints, Boolean pointsItself){
-        String routeColorString=mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
-        int routeColor = Color.parseColor(routeColorString);
+    public void renderRouteSegements(GL10 gl, List<RouteSegement> routeSegements){
+       // String routeColorString=mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
+       // int routeColor = Color.parseColor(routeColorString);
         gl.glLoadIdentity();
         gl.glMultMatrixf(rotationMatrix, 0);
         gl.glTranslatef(0, 0, -3f);
@@ -105,6 +160,48 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         RouteSegement tempRouteSegement = null;
         TargetMarker targetMarker = null;
 
+        if (routeSegements != null) {
+            synchronized (routeSegements) {
+                gl.glRotatef(0, 1, 0, 0);
+                gl.glRotatef(0, 0, 1, 0);
+                gl.glRotatef(0, 0, 0, 1);
+
+                for (RouteSegement routeSegement : routeSegements) {
+            //        routeSegements.clear();
+
+                    gl.glTranslatef(routeSegement.getEndVector().getXCoordinate() - previousX, routeSegement.getEndVector().getYCoordinate() - previousY, 0);
+
+                 //   if(pointsItself) {
+                 //       waypoint.draw(gl);
+                 //   }
+                  //  if(!pointsItself) {
+                        if(routeSegements.indexOf(routeSegement)==routeSegements.size()-1){
+                            //targetMarker = new TargetMarker(waypoint.relativeX,waypoint.relativeY);
+                            targetMarker = new TargetMarker();
+                            targetMarker.draw(gl);
+                        }
+                      //  if(lastWaypoint!=null) {
+                            routeSegement.draw(gl);
+                      //  }
+                 //   }
+
+                    previousX = routeSegement.getEndVector().getXCoordinate();
+                    previousY = routeSegement.getEndVector().getYCoordinate();
+                   // lastWaypoint = waypoint;
+                }
+            }
+        }
+    }
+
+    public void renderPOIMarker(GL10 gl, List<Waypoint> waypoints){
+        gl.glLoadIdentity();
+        gl.glMultMatrixf(rotationMatrix, 0);
+        gl.glTranslatef(0, 0, -3f);
+
+        float previousX = 0;
+        float previousY = 0;
+
+
         if (waypoints != null) {
             synchronized (waypoints) {
                 gl.glRotatef(0, 1, 0, 0);
@@ -112,37 +209,13 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 gl.glRotatef(0, 0, 0, 1);
 
                 for (Waypoint waypoint : waypoints) {
-                    
-                    if (curLocation != null) {
-                            waypoint.setRelativeX(waypoint.getAbsoluteX() - currX);
-                            waypoint.setRelativeY(currY - waypoint.getAbsoluteY());
-                    }
 
                     gl.glTranslatef(waypoint.getRelativeX() - previousX, waypoint.getRelativeY() - previousY, 0);
 
-                    if(pointsItself) {
-                        waypoint.draw(gl);
-                    }
-                    if(!pointsItself) {
-                        if(waypoints.indexOf(waypoint)==waypoints.size()-1){
-                            //targetMarker = new TargetMarker(waypoint.relativeX,waypoint.relativeY);
-                            targetMarker = new TargetMarker();
-                            targetMarker.draw(gl);
-                        }
-                        if(lastWaypoint!=null) {
-                            tempRouteSegement = new RouteSegement(lastWaypoint.relativeX, lastWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
-                            tempRouteSegement.setColor(routeColor);
-                            tempRouteSegement.draw(gl);
-                            routeSegements.add(tempRouteSegement);
-                            MyVectorOperations myVectorOperations = new MyVectorOperations();
-                            myVectorOperations.lineIntersection(tempRouteSegement, currX, currY);
-
-                        }
-                    }
+                    waypoint.draw(gl);
 
                     previousX = waypoint.getRelativeX();
                     previousY = waypoint.getRelativeY();
-                    lastWaypoint = waypoint;
                 }
             }
         }
@@ -174,6 +247,47 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         }
     }
 
+    public void updateWaypointsRelative( List<Waypoint> waypoints ) {
+
+        for (Waypoint waypoint : waypoints) {
+
+            if (curLocation != null) {
+                waypoint.setRelativeX(waypoint.getAbsoluteX() - currX);
+                waypoint.setRelativeY(currY - waypoint.getAbsoluteY());
+            }
+
+        }
+
+    }
+
+    public void updateRouteSegments(List<Waypoint> waypoints){
+
+        synchronized (routeSegements) {
+
+            Waypoint lastWaypoint = null;
+            RouteSegement tempRouteSegement;
+
+            String routeColorString = mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
+            int routeColor = Color.parseColor(routeColorString);
+
+            routeSegements.clear();
+            synchronized (waypoints) {
+
+                for (Waypoint waypoint : waypoints) {
+
+                    if (lastWaypoint != null) {
+
+                        tempRouteSegement = new RouteSegement(lastWaypoint.relativeX, lastWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
+                        tempRouteSegement.setColor(routeColor);
+
+                        routeSegements.add(tempRouteSegement);
+                    }
+                    lastWaypoint = waypoint;
+                }
+            }
+        }
+    }
+
     public Waypoint getNearestWaypoint(List<Waypoint> waypoints){
         Waypoint waypoint = null;
         float distance= 100000000;
@@ -194,7 +308,12 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         float tempDistance = 0;
      //   synchronized (waypoints) {
             for (MyVector v : vectors) {
-                tempDistance = myVectorOperations.getDirectionVectorLength(v);
+
+                MyVector direction = new MyVector();
+                direction.setYCoordinate( v.getXCoordinate() - currX );
+                direction.setYCoordinate( v.getYCoordinate() - currY );
+
+                tempDistance = myVectorOperations.getDirectionVectorLength( direction );
                 v.setDistance(tempDistance);
 
                 if (tempDistance< distance) {
@@ -213,7 +332,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
         if(routeSegements!= null && currY != 0 && currY != 0) {
             for(RouteSegement routeSegement : routeSegements) {
-               tempVector= myVectorOperations.lineIntersection(routeSegement,currX, currY);
+               tempVector = myVectorOperations.lineIntersection(routeSegement,currX, currY);
 
                 if(tempVector!= null){
                     myVectors.add(tempVector);
@@ -222,7 +341,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
             if(myVectors.isEmpty()==false) {
                 MyVector myVector = getNearestVector(myVectors);
-                if (myVector.getYCoordinate() < 50) {
+                if (myVector.getDistance() < 50) {
                     return true;
                 }
             }
@@ -252,6 +371,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
  //       Log.i("Info3", "Steps" + myRoute.getCoordinateList().size());
         setActualRoute(myRoute);
         updateWaypoints(myRoute.getCoordinateList(), routeWaypoints);
+        updateRouteSegments(routeWaypoints);
+
     }
 
     public void updateCurLocation(Location newLocation){

@@ -31,6 +31,7 @@ import android.content.Context;
 import android.hardware.GeomagneticField;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.util.Log;
 
@@ -64,6 +65,7 @@ class LocationFinderImpl implements LocationFinder {
     private final ContinuousLocationObserver continuousLocationObserver;
     private List<InitialLocationResolver> initialLocationResolvers;
     private static Location initialLocation = new Location("");
+	private ArrayList<LocationListener> locationListeners = new ArrayList<>();
 
     public LocationFinderImpl(MixContext mixContext) {
 		this.mixContext = mixContext;
@@ -72,13 +74,23 @@ class LocationFinderImpl implements LocationFinder {
 		this.initialLocationResolvers = new ArrayList<>();
 	}
 
+	@Override
+	public void addLocationListerner(LocationListener locationListener) {
+		locationListeners.add(locationListener);
+	}
+
+	@Override
+	public void removeLocationListener(LocationListener locationListener) {
+		locationListeners.remove(locationListener);
+	}
+
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.mixare.mgr.location.LocationFinder#initLocationSearch(android.content.Context
-	 * )
-	 */
+         * (non-Javadoc)
+         *
+         * @see
+         * org.mixare.mgr.location.LocationFinder#initLocationSearch(android.content.Context
+         * )
+         */
     @Override
 	public void initLocationSearch() { //throws SecurityException
 		try {
@@ -200,6 +212,9 @@ class LocationFinderImpl implements LocationFinder {
 			curLocation = location;
 		}
         mixContext.setCurLocation(location, false);
+		for(LocationListener locationListener : locationListeners) {
+			locationListener.onLocationChanged(location);
+		}
 
         mixContext.getActualMixViewActivity().refresh();
 		if (locationAtLastDownload == null) {

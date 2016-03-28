@@ -75,7 +75,6 @@ public class MyVectorOperations {
 
         intersectionPoint.setXCoordinate(routeSegement.getStartVector().getXCoordinate() + (float) x * directionVector.getXCoordinate());
         intersectionPoint.setYCoordinate(routeSegement.getStartVector().getYCoordinate() + (float) y * directionVector.getYCoordinate());
-        Log.i("Test3", "Faktor x " + x + "Faktor y" + y + "sollte null sein" + matrix[0][1] + " " + matrix[1][0] + "schnittpunkt" + intersectionPoint.getXCoordinate() + " " + intersectionPoint.getYCoordinate());
 
 
         if (routeSegement.getStartVector().getXCoordinate() < intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() < routeSegement.getEndVector().getXCoordinate() ||
