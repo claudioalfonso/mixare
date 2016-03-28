@@ -22,12 +22,20 @@ import org.mixare.mgr.downloader.DownloadManager;
 
 import android.hardware.GeomagneticField;
 import android.location.Location;
+import android.location.LocationListener;
+
+import java.util.ArrayList;
 
 /**
  * A class implementing this interface is responsible for
  * finding the location and sending it back to the MixContext.
  */
 public interface LocationFinder {
+
+
+	void addLocationListerner(LocationListener locationListener);
+
+	void removeLocationListener(LocationListener locationListener);
 
 	//Possible status of LocationFinder
 	enum LocationFinderState {

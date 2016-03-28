@@ -109,7 +109,7 @@ public class RouteSegement {
 
 
         rightStartVector.setXCoordinate(-orthogonalDirectionVector.getXCoordinate() / resultTemp1);
-        rightStartVector.setYCoordinate(-orthogonalDirectionVector.getXCoordinate() / resultTemp1);
+        rightStartVector.setYCoordinate(-orthogonalDirectionVector.getYCoordinate() / resultTemp1);
 
         leftEndVector.setXCoordinate(leftStartVector.getXCoordinate()+directionVector.getXCoordinate());
         leftEndVector.setYCoordinate(leftStartVector.getYCoordinate() + directionVector.getYCoordinate());
