@@ -111,8 +111,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     public  void onDrawFrame(GL10 gl) {
 
-       // updateCurLocation(curLocation = MixContext.getInstance().getLocationFinder().getCurrentLocation());
-
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
 
@@ -121,35 +119,11 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         renderPOIMarker(gl, poiWaypoints);
         renderRouteSegements(gl, routeSegements);
 
-      /*  Location location = new Location("Test");
-        location.setLatitude(51.50133);
-        location.setLongitude(7.47637);
-
-        MixContext.getInstance().getLocationFinder().setCurrentLocation(location); */
-
-
-        //  if(!routeWaypoints.isEmpty() &&currX != 0 && currY!= 0){
-
-
-
-       /*     if (hasLowDistance()== false){
-                Location targetLoc = new Location("Target");
-                targetLoc.setLatitude(getActualRoute().getTargetCoordinate().getLatitude());
-                targetLoc.setLongitude(getActualRoute().getTargetCoordinate().getLongitude());
-                RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
-                    @Override
-                    public void processFinish(MyRoute route) {
-                        updateRoute(route);
-                    }
-                }).execute(curLocation,targetLoc);
-            }*/
-      //  }
-        //gl.glPopMatrix();
     }
 
     public void renderRouteSegements(GL10 gl, List<RouteSegement> routeSegements){
-       // String routeColorString=mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
-       // int routeColor = Color.parseColor(routeColorString);
+        String routeColorString=mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
+        int routeColor = Color.parseColor(routeColorString);
         gl.glLoadIdentity();
         gl.glMultMatrixf(rotationMatrix, 0);
         gl.glTranslatef(0, 0, -3f);
@@ -168,6 +142,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
                 for (RouteSegement routeSegement : routeSegements) {
             //        routeSegements.clear();
+                    routeSegement.setColor(routeColor);
 
                     gl.glTranslatef(routeSegement.getEndVector().getXCoordinate() - previousX, routeSegement.getEndVector().getYCoordinate() - previousY, 0);
 
