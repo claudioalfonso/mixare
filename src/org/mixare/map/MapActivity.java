@@ -88,7 +88,7 @@ public class MapActivity extends MaterialDrawerMenuActivity {
         }
 
         AndroidGraphicFactory.createInstance(this.getApplication());
-        contentFrame = (FrameLayout)findViewById(R.id.drawermenu_content_framelayout);
+        contentFrame = (FrameLayout)findViewById(R.id.drawermenu_content_camerascreen);
 
         this.mapView = new MapView(this);
         //setContentView(this.mapView);
