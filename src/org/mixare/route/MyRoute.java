@@ -75,7 +75,11 @@ public class MyRoute extends com.locoslab.api.data.carta.route.direction.Route {
 
     public String getDistanceInKMandMeters(){
 
-        return "";
+        int km = (int)getDistance() / 1000;
+        int meters = (int)getDistance() % 1000;
+
+
+        return "Entfernung: " + km+ " km " + meters +" m";
     }
 
 
