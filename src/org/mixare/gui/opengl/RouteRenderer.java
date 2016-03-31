@@ -12,14 +12,12 @@ import org.mapsforge.core.util.MercatorProjection;
 import org.mixare.MixContext;
 import org.mixare.R;
 import org.mixare.route.AsyncResponse;
-import org.mixare.MixViewDataHolder;
 import org.mixare.route.MyRoute;
 import org.mixare.route.RouteDataAsyncTask;
 import org.mixare.lib.marker.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -34,13 +32,14 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     private List<Waypoint> routeWaypoints = new ArrayList<>();
     private List<Waypoint> poiWaypoints = new ArrayList<>();
-    private List<RouteSegement> routeSegements = new ArrayList<>();
+    private List<RouteSegment> routeSegments = new ArrayList<>();
 
     float startCoordX = 0;
     float startCoordY = 0;
 
     float currX = 0;
     float currY = 0;
+
 
     public MyRoute getActualRoute() {
         return actualRoute;
@@ -83,7 +82,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 updateWaypointsRelative( routeWaypoints );
                 updateWaypointsRelative(poiWaypoints);
 
-                updateRouteSegments( routeWaypoints );
+                updateRouteSegments(routeWaypoints);
+                updateRouteSegementColor(routeSegments);
 
             }
 
@@ -117,52 +117,42 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
        // gl.glPushMatrix();
 
         renderPOIMarker(gl, poiWaypoints);
-        renderRouteSegements(gl, routeSegements);
+        renderRouteSegements(gl, routeSegments);
 
     }
 
-    public void renderRouteSegements(GL10 gl, List<RouteSegement> routeSegements){
-        String routeColorString=mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
-        int routeColor = Color.parseColor(routeColorString);
+    public void renderRouteSegements(GL10 gl, List<RouteSegment> routeSegments){
+
+      //  String routeColorString=mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
+       // int routeColor = Color.parseColor(routeColorString);
         gl.glLoadIdentity();
         gl.glMultMatrixf(rotationMatrix, 0);
         gl.glTranslatef(0, 0, -3f);
 
         float previousX = 0;
         float previousY = 0;
-        Waypoint lastWaypoint = null;
-        RouteSegement tempRouteSegement = null;
         TargetMarker targetMarker = null;
 
-        if (routeSegements != null) {
-            synchronized (routeSegements) {
+        if (routeSegments != null) {
+            synchronized (routeSegments) {
                 gl.glRotatef(0, 1, 0, 0);
                 gl.glRotatef(0, 0, 1, 0);
                 gl.glRotatef(0, 0, 0, 1);
 
-                for (RouteSegement routeSegement : routeSegements) {
-            //        routeSegements.clear();
-                    routeSegement.setColor(routeColor);
+                for (RouteSegment routeSegment : routeSegments) {
+              //      routeSegement.setColor(routeColor);
 
-                    gl.glTranslatef(routeSegement.getEndVector().getXCoordinate() - previousX, routeSegement.getEndVector().getYCoordinate() - previousY, 0);
+                    gl.glTranslatef(routeSegment.getEndVector().getXCoordinate() - previousX, routeSegment.getEndVector().getYCoordinate() - previousY, 0);
 
-                 //   if(pointsItself) {
-                 //       waypoint.draw(gl);
-                 //   }
-                  //  if(!pointsItself) {
-                        if(routeSegements.indexOf(routeSegement)==routeSegements.size()-1){
+                        if(routeSegments.indexOf(routeSegment)== routeSegments.size()-1){
                             //targetMarker = new TargetMarker(waypoint.relativeX,waypoint.relativeY);
                             targetMarker = new TargetMarker();
                             targetMarker.draw(gl);
                         }
-                      //  if(lastWaypoint!=null) {
-                            routeSegement.draw(gl);
-                      //  }
-                 //   }
+                            routeSegment.draw(gl);
 
-                    previousX = routeSegement.getEndVector().getXCoordinate();
-                    previousY = routeSegement.getEndVector().getYCoordinate();
-                   // lastWaypoint = waypoint;
+                    previousX = routeSegment.getEndVector().getXCoordinate();
+                    previousY = routeSegment.getEndVector().getYCoordinate();
                 }
             }
         }
@@ -237,25 +227,25 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     public void updateRouteSegments(List<Waypoint> waypoints){
 
-        synchronized (routeSegements) {
+        synchronized (routeSegments) {
 
             Waypoint lastWaypoint = null;
-            RouteSegement tempRouteSegement;
+            RouteSegment tempRouteSegment;
 
             String routeColorString = mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
             int routeColor = Color.parseColor(routeColorString);
 
-            routeSegements.clear();
+            routeSegments.clear();
             synchronized (waypoints) {
 
                 for (Waypoint waypoint : waypoints) {
 
                     if (lastWaypoint != null) {
 
-                        tempRouteSegement = new RouteSegement(lastWaypoint.relativeX, lastWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
-                        tempRouteSegement.setColor(routeColor);
+                        tempRouteSegment = new RouteSegment(lastWaypoint.relativeX, lastWaypoint.relativeY, waypoint.relativeX, waypoint.relativeY);
+                        tempRouteSegment.setColor(routeColor);
 
-                        routeSegements.add(tempRouteSegement);
+                        routeSegments.add(tempRouteSegment);
                     }
                     lastWaypoint = waypoint;
                 }
@@ -263,19 +253,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         }
     }
 
-    public Waypoint getNearestWaypoint(List<Waypoint> waypoints){
-        Waypoint waypoint = null;
-        float distance= 100000000;
-        synchronized (waypoints) {
-            for (Waypoint w : waypoints) {
-                if (w.distanceToCurrentPosition() < distance) {
-                    distance = w.distanceToCurrentPosition();
-                    waypoint = w;
-                }
-            }
-        }
-        return waypoint;
-    }
 
     public MyVector getNearestVector(List<MyVector> vectors){
         MyVector nearestVector = null;
@@ -300,14 +277,40 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         return nearestVector;
     }
 
+    public RouteSegment getNearestRouteSegement(List<RouteSegment> routeSegments){
+        RouteSegment nearestRouteSegment = null;
+        float distance= 100000000;
+        float tempDistance = 0;
+        //   synchronized (waypoints) {
+        for (RouteSegment routeSegment : routeSegments) {
+
+            if (routeSegment.getIntersectionPoint() != null) {
+                MyVector direction = new MyVector();
+                direction.setYCoordinate(routeSegment.getIntersectionPoint().getXCoordinate() - currX);
+                direction.setYCoordinate(routeSegment.getIntersectionPoint().getYCoordinate() - currY);
+
+                tempDistance = myVectorOperations.getDirectionVectorLength(direction);
+                routeSegment.getIntersectionPoint().setDistance(tempDistance);
+
+                if (tempDistance < distance) {
+                    distance = tempDistance;
+                    nearestRouteSegment = routeSegment;
+                }
+            }
+        }
+        nearestRouteSegment.setIsNearestRouteSegment(true);
+        // }
+        return nearestRouteSegment;
+    }
+
     public boolean hasLowDistance(){
 
         ArrayList<MyVector> myVectors = new ArrayList<>();
         MyVector tempVector = new MyVector();
 
-        if(routeSegements!= null && currY != 0 && currY != 0) {
-            for(RouteSegement routeSegement : routeSegements) {
-               tempVector = myVectorOperations.lineIntersection(routeSegement,currX, currY);
+        if(routeSegments != null && currY != 0 && currY != 0) {
+            for(RouteSegment routeSegment : routeSegments) {
+               tempVector = myVectorOperations.lineIntersection(routeSegment,currX, currY);
 
                 if(tempVector!= null){
                     myVectors.add(tempVector);
@@ -359,6 +362,51 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
             currX = (float) MercatorProjection.longitudeToPixelX(curLocation.getLongitude(), MERCATOR_SCALE);
             currY = (float) MercatorProjection.latitudeToPixelY(curLocation.getLatitude(), MERCATOR_SCALE);
         }
+    }
+
+    public void updateRouteSegementColor(List<RouteSegment> routeSegments){
+
+        MyVector tempVector = new MyVector();
+        List<MyVector> myVectors = new ArrayList<>();
+       // RouteSegment tempRouteSegment = null;
+
+        for (RouteSegment routeSegment : routeSegments){
+
+         tempVector= myVectorOperations.lineIntersection(routeSegment,currX, currY);
+
+            if(tempVector!= null){
+                myVectors.add(tempVector);
+                routeSegment.setIntersectionPoint(tempVector);
+            }
+        }
+
+        //tempRouteSegment =         getNearestRouteSegement(routeSegments);
+
+        getNearestRouteSegement(routeSegments);
+        int index = 0;
+
+        for (RouteSegment routeSegment : routeSegments){
+            RouteSegment tempRouteSegment = null;
+
+            if(routeSegment.isNearestRouteSegment==true){
+                index = routeSegments.indexOf(routeSegment);
+                tempRouteSegment = new RouteSegment(routeSegment.getEndVector().getXCoordinate(),routeSegment.getEndVector().getYCoordinate(),routeSegment.getIntersectionPoint().getXCoordinate(), routeSegment.getIntersectionPoint().getYCoordinate());
+
+                routeSegment.setEndVector(routeSegment.getIntersectionPoint());
+                routeSegment.calculateRecVertices();
+                routeSegments.add(index+1,tempRouteSegment);
+            }
+        }
+
+        for (int i = index+1; i<routeSegments.size(); i++){
+            String routeColorString = "#FA0D39";
+            int routeColor = Color.parseColor(routeColorString);
+            routeSegments.get(i).setColor(routeColor);
+        }
+
+
+
+
     }
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {

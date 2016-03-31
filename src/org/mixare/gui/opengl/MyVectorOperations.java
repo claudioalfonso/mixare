@@ -1,8 +1,5 @@
 package org.mixare.gui.opengl;
 
-import android.location.Location;
-import android.util.Log;
-
 /**
  * Created by MelanieW on 25.03.2016.
  */
@@ -34,16 +31,16 @@ public class MyVectorOperations {
         return (float) Math.sqrt(Math.pow(directionVector.getYCoordinate(), 2) + Math.pow(directionVector.getXCoordinate(), 2));
     }
 
-    public MyVector lineIntersection(RouteSegement routeSegement, float currentX, float currentY) {
+    public MyVector lineIntersection(RouteSegment routeSegment, float currentX, float currentY) {
 
         MyVector intersectionPoint = new MyVector();
 
-        MyVector directionVector = getDirectionVector(routeSegement.getStartVector(), routeSegement.getEndVector());
+        MyVector directionVector = getDirectionVector(routeSegment.getStartVector(), routeSegment.getEndVector());
         MyVector orthogonalVector = getOrthogonalDirectionVector(directionVector);
 
         double[][] matrix = {
-                {directionVector.getXCoordinate(), -orthogonalVector.getXCoordinate(), currentX - routeSegement.getStartVector().getXCoordinate()},
-                {directionVector.getYCoordinate(), -orthogonalVector.getYCoordinate(), currentY - routeSegement.getStartVector().getYCoordinate()}
+                {directionVector.getXCoordinate(), -orthogonalVector.getXCoordinate(), currentX - routeSegment.getStartVector().getXCoordinate()},
+                {directionVector.getYCoordinate(), -orthogonalVector.getYCoordinate(), currentY - routeSegment.getStartVector().getYCoordinate()}
         };
 
 
@@ -73,14 +70,14 @@ public class MyVectorOperations {
         double x = matrix[0][2] / matrix[0][0];
         double y = matrix[1][2] / matrix[1][1];
 
-        intersectionPoint.setXCoordinate(routeSegement.getStartVector().getXCoordinate() + (float) x * directionVector.getXCoordinate());
-        intersectionPoint.setYCoordinate(routeSegement.getStartVector().getYCoordinate() + (float) y * directionVector.getYCoordinate());
+        intersectionPoint.setXCoordinate(routeSegment.getStartVector().getXCoordinate() + (float) x * directionVector.getXCoordinate());
+        intersectionPoint.setYCoordinate(routeSegment.getStartVector().getYCoordinate() + (float) y * directionVector.getYCoordinate());
 
 
-        if (routeSegement.getStartVector().getXCoordinate() < intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() < routeSegement.getEndVector().getXCoordinate() ||
-                routeSegement.getStartVector().getXCoordinate() > intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() > routeSegement.getEndVector().getXCoordinate()){
-            if (routeSegement.getStartVector().getYCoordinate() < intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() < routeSegement.getEndVector().getYCoordinate() ||
-                    routeSegement.getStartVector().getYCoordinate() > intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() > routeSegement.getEndVector().getYCoordinate()){
+        if (routeSegment.getStartVector().getXCoordinate() < intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() < routeSegment.getEndVector().getXCoordinate() ||
+                routeSegment.getStartVector().getXCoordinate() > intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() > routeSegment.getEndVector().getXCoordinate()){
+            if (routeSegment.getStartVector().getYCoordinate() < intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() < routeSegment.getEndVector().getYCoordinate() ||
+                    routeSegment.getStartVector().getYCoordinate() > intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() > routeSegment.getEndVector().getYCoordinate()){
                 return intersectionPoint;
             }
         }
