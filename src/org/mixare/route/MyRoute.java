@@ -10,7 +10,9 @@ import com.locoslab.api.data.maps.model.Coordinate;
 import org.mapsforge.core.model.LatLong;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
 
 /**
  * Created by MelanieW on 05.03.2016.
@@ -46,6 +48,34 @@ public class MyRoute extends com.locoslab.api.data.carta.route.direction.Route {
 
     public void setCoordinateList(List<LatLong> coordinateList) {
         this.coordinateList = coordinateList;
+    }
+
+    public String getDurationInMinutes(){
+
+        String durationInHourAndMinutes = "";
+
+
+        Calendar calendar =  Calendar.getInstance();
+        calendar.set(0, 0, 0, 0, 0, 0);
+        calendar.set(calendar.SECOND, getDuration());
+        int hour = calendar.get(calendar.HOUR_OF_DAY);
+        int minute = calendar.get(calendar.MINUTE);
+        int seconds = calendar.get(calendar.SECOND);
+
+        if(hour>0){
+            durationInHourAndMinutes = hour + " h ";
+        }
+
+        durationInHourAndMinutes += minute + " min";
+
+        return durationInHourAndMinutes;
+
+
+    }
+
+    public String getDistanceInKMandMeters(){
+
+        return "";
     }
 
 

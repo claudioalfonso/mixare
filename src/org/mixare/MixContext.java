@@ -30,6 +30,7 @@ import org.mixare.mgr.notification.NotificationManager;
 import org.mixare.mgr.notification.NotificationManagerFactory;
 import org.mixare.mgr.webcontent.WebContentManager;
 import org.mixare.mgr.webcontent.WebContentManagerFactory;
+import org.mixare.route.MyRoute;
 
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
@@ -65,6 +66,16 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	
 	/** Responsible for Notification logging */
 	private NotificationManager notificationManager;
+
+	public MyRoute getActualRoute() {
+		return actualRoute;
+	}
+
+	public void setActualRoute(MyRoute actualRoute) {
+		this.actualRoute = actualRoute;
+	}
+
+	private MyRoute actualRoute;
 
     public synchronized static MixContext getInstance()
     {
