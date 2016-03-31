@@ -2,10 +2,10 @@ package org.mixare.settings;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.location.Location;
 import android.os.Build;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import org.mapsforge.core.util.LatLongUtils;
 import org.mixare.Config;
 import org.mixare.R;
 
@@ -54,19 +53,19 @@ public class LocationPreference extends EditTextPreference implements View.OnLon
         });
 
         setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-              @Override
-              public boolean onPreferenceChange(Preference preference, Object o) {
-                  String newValue = (String) o;
-                  try {
-                      Config.parseLocationFromString(newValue);
-                  } catch (IllegalArgumentException ex){
-                      Log.d(Config.TAG, "onPreferenceChange - not valid - not changed", ex);
-                      return false;
-                  }
-                  setSummary(getText());
-                  return true;
-              }
-          }
+                                          @Override
+                                          public boolean onPreferenceChange(Preference preference, Object o) {
+                                              String newValue = (String) o;
+                                              try {
+                                                  Config.parseLocationFromString(newValue);
+                                              } catch (IllegalArgumentException ex) {
+                                                  Log.d(Config.TAG, "onPreferenceChange - not valid - not changed", ex);
+                                                  return false;
+                                              }
+                                              setSummary(newValue);
+                                              return true;
+                                          }
+                                      }
         );
 
         return super.onCreateView(parent);
@@ -74,8 +73,15 @@ public class LocationPreference extends EditTextPreference implements View.OnLon
 
     @Override
     public boolean onLongClick(View view) {
-        setSummary("reset");
+        getEditor().remove(getKey()).commit(); // remove this specific pref
+        PreferenceManager.setDefaultValues(getContext(), R.xml.settings, true); // won't overwrite prefs set by user
+        setSummary(getPersistedString(""));
         return true;
     }
 
+    @Override
+    public void setText(String text){
+        super.setText(text);
+        setSummary(text);
+    }
 }

@@ -49,7 +49,7 @@ public class MarkerListActivity extends MaterialDrawerMenuActivity {
 
         markerListFragment=new MarkerListFragment();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(android.R.id.content, markerListFragment);
+        fragmentTransaction.add(R.id.drawermenu_content_camerascreen, markerListFragment);
 
         editText = new EditText(this);
 

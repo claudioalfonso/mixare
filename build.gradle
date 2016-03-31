@@ -19,14 +19,16 @@ repositories{
 }
 
 dependencies {
-    // compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    //   compile 'org.apache.aries.application:twitter4j:0.3'
     compile 'org.mapsforge:mapsforge-core:0.6.0'
     compile 'org.mapsforge:mapsforge-map:0.6.0'
     compile 'org.mapsforge:mapsforge-map-android:0.6.0'
     compile ('com.mikepenz:materialdrawer:5.1.5@aar'){
         transitive = true
     }
+    // MiniDrawer to normal Drawer crossfade effect via a SlidingPane layout
+    compile 'com.mikepenz:crossfader:1.3.6@aar'
+    // two step crossfade DrawerLayout (mini layout which transforms to a normal layout within the drawer)
+    compile('com.mikepenz:crossfadedrawerlayout:0.3.3@aar')
     compile fileTree(include: '*.jar', dir: 'lib')
     compile project(':mixarelib')
     compile 'com.locoslab.api:carta:1.2.0-SNAPSHOT'
@@ -65,5 +67,4 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
-
 }
