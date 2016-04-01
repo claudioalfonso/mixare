@@ -1,2 +1,3 @@
 include ':mixarelib', ':'
 include ':mixarebarcodeplugin'
+include ':mixarearenaprocessorplugin'
