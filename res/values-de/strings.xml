@@ -19,7 +19,7 @@
 	<string name="option_not_available">Es tut uns leid, wir arbeiten daran…
 		\nDiese Option wird Ihnen schon bald \nzur Verfügung stehen!</string>
 	
-	<string name="license_text"><![CDATA[Copyright © 2010-2013 Peer internet solutions
+	<string name="license_text">Copyright &#169; 2010-2013 Peer internet solutions, changes &#169; 2015-2016 @MelanieWe, @pokerazor
 		\n\nThis program is free software: 	you can redistribute it and/or modify it under the terms of the
 		GNU General Public License as published by the Free Software Foundation, either version 3 of the License,
 		or at your option) any later version.
@@ -27,8 +27,8 @@
 		the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
 		License for more details.
 		\n\n You should have received a copy of the GNU General Public License along with this program.
-		If not, see <http://www.gnu.org/licenses/>
-	]]></string>
+		If not, see &lt;http://www.gnu.org/licenses/&gt;
+	></string>
 	
 	<string name="pref_item_datasources_title">Datenquellen</string>
 	<string name="pref_item_plugins_title">Plug-Ins</string>
@@ -179,5 +179,6 @@
 	<string name="pref_item_autolocate_title">Automatische Lokalisierung</string>
 	<string name="pref_item_autolocate_summary">Nutze die Lokalisierungsdienste des Systems (GPS, WLAN, etc.) um die momentane Position zu bestimmen (anstatt sie manuell zu setzen)</string>
 	<string name="pref_cat_rendering">Darstellung</string>
+	<string name="pref_item_camera2_title">Verwende Camera2 (falls verfügbar)</string>
 
 </resources>
