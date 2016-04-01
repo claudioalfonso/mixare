@@ -74,10 +74,11 @@ public class MyVectorOperations {
         intersectionPoint.setYCoordinate(routeSegment.getStartVector().getYCoordinate() + (float) y * directionVector.getYCoordinate());
 
 
-        if (routeSegment.getStartVector().getXCoordinate() < intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() < routeSegment.getEndVector().getXCoordinate() ||
-                routeSegment.getStartVector().getXCoordinate() > intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() > routeSegment.getEndVector().getXCoordinate()){
-            if (routeSegment.getStartVector().getYCoordinate() < intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() < routeSegment.getEndVector().getYCoordinate() ||
-                    routeSegment.getStartVector().getYCoordinate() > intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() > routeSegment.getEndVector().getYCoordinate()){
+        if (routeSegment.getStartVector().getXCoordinate() <= intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() <= routeSegment.getEndVector().getXCoordinate() ||
+                routeSegment.getStartVector().getXCoordinate() >= intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() >= routeSegment.getEndVector().getXCoordinate()){
+            if (routeSegment.getStartVector().getYCoordinate() <= intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() <= routeSegment.getEndVector().getYCoordinate() ||
+                    routeSegment.getStartVector().getYCoordinate() >= intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() >=
+                            routeSegment.getEndVector().getYCoordinate()){
                 return intersectionPoint;
             }
         }

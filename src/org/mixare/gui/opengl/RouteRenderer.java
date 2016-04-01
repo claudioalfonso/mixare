@@ -6,6 +6,7 @@ import android.location.LocationListener;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.os.Bundle;
+import android.util.Log;
 
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.util.MercatorProjection;
@@ -262,7 +263,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
             for (MyVector v : vectors) {
 
                 MyVector direction = new MyVector();
-                direction.setYCoordinate( v.getXCoordinate() - currX );
+                direction.setXCoordinate( v.getXCoordinate() - currX );
                 direction.setYCoordinate( v.getYCoordinate() - currY );
 
                 tempDistance = myVectorOperations.getDirectionVectorLength( direction );
@@ -286,8 +287,11 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
             if (routeSegment.getIntersectionPoint() != null) {
                 MyVector direction = new MyVector();
-                direction.setYCoordinate(routeSegment.getIntersectionPoint().getXCoordinate() - currX);
-                direction.setYCoordinate(routeSegment.getIntersectionPoint().getYCoordinate() - currY);
+                //direction.setXCoordinate(routeSegment.getIntersectionPoint().getXCoordinate() - currX);
+                //direction.setYCoordinate(routeSegment.getIntersectionPoint().getYCoordinate() - currY);
+
+                direction.setXCoordinate(routeSegment.getIntersectionPoint().getXCoordinate() - 0);
+                direction.setYCoordinate(routeSegment.getIntersectionPoint().getYCoordinate() - 0);
 
                 tempDistance = myVectorOperations.getDirectionVectorLength(direction);
                 routeSegment.getIntersectionPoint().setDistance(tempDistance);
@@ -310,18 +314,47 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
         if(routeSegments != null && currY != 0 && currY != 0) {
             for(RouteSegment routeSegment : routeSegments) {
-               tempVector = myVectorOperations.lineIntersection(routeSegment,currX, currY);
+               tempVector = myVectorOperations.lineIntersection(routeSegment,0, 0);
+
+
+
 
                 if(tempVector!= null){
+                //    Log.i("NearestVektor: ", "tempVector" + tempVector.getDistance());
                     myVectors.add(tempVector);
+                    routeSegment.setIntersectionPoint(tempVector);
                 }
             }
 
-            if(myVectors.isEmpty()==false) {
-                MyVector myVector = getNearestVector(myVectors);
-                if (myVector.getDistance() < 50) {
-                    return true;
+               // Log.i("NearestVektor: ", "erstesSegmentx" + routeSegments.get(0).getStartVector().getXCoordinate());
+               // Log.i("NearestVektor: ", "erstesSegmentY" + routeSegments.get(0).getStartVector().getYCoordinate());
+               // Log.i("NearestVektor: ", "currentX" + currX);
+               // Log.i("NearestVektor: ", "currentY" + currY);
+
+                if(tempVector!= null){
+                  //  myVectors.add(tempVector);
+                //    Log.i("NearestVektor", "TempVektor" + "X: " + tempVector.getXCoordinate() + "Y " + tempVector.getYCoordinate() + "Distance " + tempVector.getDistance());
+
                 }
+            }
+            Log.i("NearestVektor", "Länge" + myVectors.size() );
+
+            if(myVectors.isEmpty()== true){
+                return true;
+            }
+
+           else if(myVectors.isEmpty()==false) {
+               RouteSegment routeSegment =  getNearestRouteSegement(routeSegments);
+
+            //    MyVector myVector = getNearestVector(myVectors);
+            //    Log.i("NearestVektor: ", "X: " + myVector.getXCoordinate() + "Y: " + myVector.getYCoordinate() + "Distance" + myVector.getDistance());
+             //   if (myVector.getDistance() < 500) {
+             //       return true;
+             //   }
+                Log.i("NearestVektor: ", "X: " + routeSegment.getIntersectionPoint().getXCoordinate() + "Y: " + routeSegment.getIntersectionPoint().getYCoordinate() + "Distance" + routeSegment.getIntersectionPoint().getDistance());
+
+                if(routeSegment.getIntersectionPoint().getDistance()<500){
+                    return true;
             }
         }
 
@@ -403,9 +436,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
             int routeColor = Color.parseColor(routeColorString);
             routeSegments.get(i).setColor(routeColor);
         }
-
-
-
 
     }
 
