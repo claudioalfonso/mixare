@@ -84,7 +84,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 updateWaypointsRelative(poiWaypoints);
 
                 updateRouteSegments(routeWaypoints);
-                updateRouteSegementColor(routeSegments);
+               // updateRouteSegementColor(routeSegments);
 
             }
 
@@ -319,8 +319,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                tempVector = myVectorOperations.lineIntersection(routeSegment,0, 0);
 
 
-
-
                 if(tempVector!= null){
                 //    Log.i("NearestVektor: ", "tempVector" + tempVector.getDistance());
                     myVectors.add(tempVector);
@@ -355,7 +353,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
              //   }
                 Log.i("NearestVektor: ", "X: " + routeSegment.getIntersectionPoint().getXCoordinate() + "Y: " + routeSegment.getIntersectionPoint().getYCoordinate() + "Distance" + routeSegment.getIntersectionPoint().getDistance());
 
-                if(routeSegment.getIntersectionPoint().getDistance()<500){
+                if(routeSegment.getIntersectionPoint().getDistance()<5000000){
                     return true;
             }
         }
