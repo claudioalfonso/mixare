@@ -84,7 +84,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 updateWaypointsRelative(poiWaypoints);
 
                 updateRouteSegments(routeWaypoints);
-                updateRouteSegementColor(routeSegments);
+              //  updateRouteSegementColor(routeSegments);
 
             }
 
