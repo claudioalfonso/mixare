@@ -34,9 +34,9 @@ Moved Files:
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-* AndroidManifest.xml => mixarearenasplashscreenplugin\src\main\AndroidManifest.xml
-* res\ => mixarearenasplashscreenplugin\src\main\res\
-* src\ => mixarearenasplashscreenplugin\src\main\java\
+* AndroidManifest.xml => mixareimagemarkerplugin\src\main\AndroidManifest.xml
+* res\ => mixareimagemarkerplugin\src\main\res\
+* src\ => mixareimagemarkerplugin\src\main\java\
 
 Next Steps:
 -----------
