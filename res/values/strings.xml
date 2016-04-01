@@ -218,4 +218,6 @@
 	<string name="pref_item_autolocate_title">Auto locate</string>
 	<string name="pref_item_autolocate_summary">Use system\'s location services (GPS, WLAN etc.) to obtain current position (instead of setting manually)</string>
 	<string name="pref_cat_rendering">Rendering</string>
+	<string name="pref_item_camera2_key" translatable="false">useCamera2</string>
+	<string name="pref_item_camera2_title">Use Camera2 (if available)</string>
 </resources>

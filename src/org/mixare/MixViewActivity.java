@@ -586,15 +586,15 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	private void maintainCamera() {
 		cameraView = (FrameLayout) findViewById(R.id.drawermenu_content_camerascreen);
         if (cameraSurface == null) {
-				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-	//				cameraSurface = new Camera2Surface(this);
-                    cameraSurface = new CameraSurface(this);
-
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP && MixContext.getInstance().getSettings().getBoolean(getString(R.string.pref_item_camera2_key), false)) {
+					Log.d(Config.TAG,"Camera2");
+					cameraSurface = new Camera2Surface(this);
                 } else {
+					Log.d(Config.TAG,"legacy camera");
 					cameraSurface = new CameraSurface(this);
 				}
 
-            cameraView.addView(cameraSurface);
+            	cameraView.addView(cameraSurface);
 			} else {
 				cameraView.removeView(cameraSurface);
 				cameraView.addView(cameraSurface);
@@ -603,7 +603,6 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
         Log.d(Config.TAG + " camView", "w=" + cameraView.getWidth() + ", h=" + cameraView.getHeight());
        cameraView.getLayoutParams().width=800;
    //     cameraView.getLayoutParams().height=480;
-
     }
 
 	/**
@@ -638,7 +637,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
         else {
             ((ViewGroup) hudView.getParent()).removeView(hudView);
         }
-        addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+        cameraView.addView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
 	private void maintainOpenGLView() {
@@ -811,7 +810,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
                 new MarkerListFragment().show(getFragmentManager(), "TAG");
 				break;
 			default:
-				super.selectItem(position,drawerItem);
+                Log.d(Config.TAG, "MixViewActivity selectItem "+drawerItem.getIdentifier());
+                super.selectItem(position,drawerItem);
 				break;
 		}
 	}

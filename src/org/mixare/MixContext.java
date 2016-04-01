@@ -96,10 +96,9 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		if (!getDataSourceManager().isAtLeastOneDataSourceSelected()) {
 			rotationM.toIdentity();
 		}
-		//getLocationFinder().switchOn();
+
         startLocationManager();
 
-        getLocationFinder().initLocationSearch();
 		curDestination=Config.parseLocationFromString(settings.getString(getString(R.string.pref_item_lastdest_key), getString(R.string.pref_item_lastdest_default)));
 
 	}
@@ -107,7 +106,8 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
     public void startLocationManager(){
         if(settings.getBoolean(getString(R.string.pref_item_autolocate_key),true)){
             getLocationFinder().switchOn();
-        }
+			getLocationFinder().initLocationSearch();
+		}
     }
 
 	public String getStartUrl() {

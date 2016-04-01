@@ -1,1 +1,6 @@
 include ':mixarelib', ':'
+include ':mixarebarcodeplugin'
+include ':mixarearenaprocessorplugin'
+include ':mixarearenasplashscreenplugin'
+include ':mixareimagemarkerplugin'
+include ':mixaremocklocationplugin'

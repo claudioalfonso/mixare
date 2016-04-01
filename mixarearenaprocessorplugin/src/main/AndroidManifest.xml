@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.mixare.plugin.arenaprocessor"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="23"/>
+	<uses-permission android:name="android.permission.INTERNET" />
+    <application
+        tools:replace="android:label"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <service
+            android:name=".service.ArenaProcessorService"
+            android:exported="true" >
+            <intent-filter>
+               <action android:name="org.mixare.plugin.datahandler"/>
+               <category android:name="mixare.intent.category.DATAHANDLER_PLUGIN"/>
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

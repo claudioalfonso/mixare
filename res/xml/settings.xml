@@ -5,8 +5,8 @@
         android:title="@string/pref_cat_data_title">
         <PreferenceScreen
             android:key="@string/pref_item_datasources_key"
-            android:title="@string/pref_item_datasources_title"
-            android:summary="@string/pref_item_datasources_summary" >
+            android:summary="@string/pref_item_datasources_summary"
+            android:title="@string/pref_item_datasources_title" >
             <intent
                 android:targetClass="org.mixare.data.DataSourceList"
                 android:targetPackage="org.mixare"
@@ -14,8 +14,8 @@
         </PreferenceScreen>
         <PreferenceScreen
             android:key="@string/pref_item_plugins_key"
-            android:title="@string/pref_item_plugins_title"
-            android:summary="@string/pref_item_plugins_summary" >
+            android:summary="@string/pref_item_plugins_summary"
+            android:title="@string/pref_item_plugins_title" >
             <intent
                 android:targetClass="org.mixare.PluginListActivity"
                 android:targetPackage="org.mixare"
@@ -24,69 +24,66 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cat_rendering">
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/pref_item_usehud_key"
-            android:title="@string/pref_item_usehud_title"
-            android:defaultValue="true" />
+            android:title="@string/pref_item_usehud_title" />
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/pref_item_markertext_key"
-            android:title="@string/pref_item_markertext_title"
-            android:defaultValue="true" />
+            android:title="@string/pref_item_markertext_title" />
         <CheckBoxPreference
-            android:title="@string/pref_item_routing_title"
+            android:defaultValue="true"
             android:key="@string/pref_item_routing_key"
-            android:defaultValue="true" />
+            android:title="@string/pref_item_routing_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cat_other_title">
         <CheckBoxPreference
-            android:key="@string/pref_item_firstacess_key"
-            android:title="@string/pref_item_firstacess_title"
-            android:summary="@string/pref_item_firstacess_summary"
-            android:defaultValue="true" />
-        <CheckBoxPreference
-            android:key="landscapeMode"
-            android:title="View in landscape mode"
             android:defaultValue="true"
-            android:enabled="false"/>
-        <org.mixare.settings.LocationPreference
-            android:key="@string/pref_item_lastfix_key"
-            android:title="@string/pref_item_lastfix_title"
-            android:defaultValue="@string/pref_item_lastfix_default" />
-        <org.mixare.settings.LocationPreference
-            android:key="@string/pref_item_lastdest_key"
-            android:title="@string/pref_item_lastdest_title"
-            android:defaultValue="@string/pref_item_lastdest_default"
-            />
-        <SwitchPreference
-            android:key="@string/pref_item_autolocate_key"
-            android:title="@string/pref_item_autolocate_title"
-            android:summary="@string/pref_item_autolocate_summary"
-            android:defaultValue="true" />
-        <EditTextPreference
-            android:key="@string/pref_item_routecolor_key"
-            android:title="@string/pref_item_routecolor_title"
-            android:summary="@string/pref_item_routecolor_summary"
-            android:defaultValue="@string/color_hint"/>
+            android:key="@string/pref_item_firstacess_key"
+            android:summary="@string/pref_item_firstacess_summary"
+            android:title="@string/pref_item_firstacess_title" />
         <CheckBoxPreference
-            android:key="useCamera2"
-            android:title="Use Camera2 (if available)"
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="landscapeMode"
+            android:title="View in landscape mode" />
+        <org.mixare.settings.LocationPreference
+            android:defaultValue="@string/pref_item_lastfix_default"
+            android:key="@string/pref_item_lastfix_key"
+            android:title="@string/pref_item_lastfix_title" />
+        <org.mixare.settings.LocationPreference
+            android:defaultValue="@string/pref_item_lastdest_default"
+            android:key="@string/pref_item_lastdest_key"
+            android:title="@string/pref_item_lastdest_title" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_item_autolocate_key"
+            android:summary="@string/pref_item_autolocate_summary"
+            android:title="@string/pref_item_autolocate_title" />
+        <EditTextPreference
+            android:defaultValue="@string/color_hint"
+            android:key="@string/pref_item_routecolor_key"
+            android:summary="@string/pref_item_routecolor_summary"
+            android:title="@string/pref_item_routecolor_title" />
+        <CheckBoxPreference
             android:defaultValue="false"
-            android:enabled="false" />
+            android:key="@string/pref_item_camera2_key"
+            android:title="@string/pref_item_camera2_title" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_info_title">
         <org.mixare.gui.LicensePreference
-            android:key="@string/pref_item_license_key"
-            android:title="@string/pref_item_license_title"
-            android:summary="@string/pref_item_license_summary"
-            android:dialogTitle="@string/pref_item_license_dialogtitle"
             android:dialogMessage="@string/license_text"
+            android:dialogTitle="@string/pref_item_license_dialogtitle"
+            android:key="@string/pref_item_license_key"
             android:negativeButtonText="@string/close_button"
+            android:summary="@string/pref_item_license_summary"
+            android:title="@string/pref_item_license_title"
             />
         <Preference
-            android:key="prefItemLibrarys"
-            android:title="Used Librarys"
-            android:summary="Display all used libraries and services"
             android:enabled="false"
-            />
+            android:key="prefItemLibrarys"
+            android:summary="Display all used libraries and services"
+            android:title="Used Librarys" />
     </PreferenceCategory>
 </PreferenceScreen>
