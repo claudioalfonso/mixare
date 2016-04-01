@@ -32,6 +32,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 public class ArenaProcessorService extends Service{
 
@@ -81,8 +82,8 @@ public class ArenaProcessorService extends Service{
 				int taskId, int color) throws RemoteException {
 			try {
 				return processor.get(processorName).load(rawData, taskId, color);
-			} catch (JSONException e) {
-				Log.e(Config.TAG, this.getClass().getName(), ex);
+			} catch (JSONException ex) {
+				Log.e("mixareplugin", this.getClass().getName(), ex);
 				return new ArrayList<InitialMarkerData>();
 			}
 		}

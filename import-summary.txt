@@ -1,6 +1,13 @@
 ECLIPSE ANDROID PROJECT IMPORT SUMMARY
 ======================================
 
+ * Project mixare-mock-location-plugin:D:\Android Studio
+   Projects\mixare\plugins\mixare-mock-location-plugin\.classpath:
+   Could not resolve source path src in project mixare-mock-location-plugin:
+   ignored. The project may not compile if the given source path provided source
+   code.
+
+
 Risky Project Location:
 -----------------------
 The tools *should* handle project locations in any directory. However,
@@ -10,15 +17,6 @@ eliminate these bugs, but to save yourself headaches you may want to
 move your project to a location where this is not a problem.
 D:\Android Studio Projects\mixare
           -      -               
-
-Manifest Merging:
------------------
-Your project uses libraries that provide manifests, and your Eclipse
-project did not explicitly turn on manifest merging. In Android Gradle
-projects, manifests are always merged (meaning that contents from your
-libraries' manifests will be merged into the app manifest. If you had
-manually copied contents from library manifests into your app manifest
-you may need to remove these for the app to build correctly.
 
 Ignored Files:
 --------------
@@ -34,9 +32,9 @@ Moved Files:
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-* AndroidManifest.xml => mixareimagemarkerplugin\src\main\AndroidManifest.xml
-* res\ => mixareimagemarkerplugin\src\main\res\
-* src\ => mixareimagemarkerplugin\src\main\java\
+* AndroidManifest.xml => mixaremocklocationplugin\src\main\AndroidManifest.xml
+* assets\ => mixaremocklocationplugin\src\main\assets\
+* res\ => mixaremocklocationplugin\src\main\res\
 
 Next Steps:
 -----------

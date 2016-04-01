@@ -35,6 +35,8 @@ import org.mixare.lib.marker.draw.ParcelableProperty;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Config;
+import android.util.Log;
 
 public class ArenaProcessor extends PluginDataProcessor {
 
@@ -96,8 +98,8 @@ public class ArenaProcessor extends PluginDataProcessor {
 			connection.connect();
 			InputStream input = connection.getInputStream();
 			return BitmapFactory.decodeStream(input);
-		} catch (IOException e) {
-			Log.e(Config.TAG, this.getClass().getName(), ex);
+		} catch (IOException ex) {
+			Log.e("mixareplugin", this.getClass().getName(), ex);
 			return null;
 		}		
 	}
