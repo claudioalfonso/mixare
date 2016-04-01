@@ -337,8 +337,10 @@ public class MapActivity extends MaterialDrawerMenuActivity {
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
             @Override
             public void processFinish(MyRoute route) {
-                coordinateList.addAll(route.getCoordinateList());
-                mapView.getLayerManager().getLayers().add(polyline);
+                if(route!=null) {
+                    coordinateList.addAll(route.getCoordinateList());
+                    mapView.getLayerManager().getLayers().add(polyline);
+                }
             }
 
         }).execute(routeStart,routeEnd);

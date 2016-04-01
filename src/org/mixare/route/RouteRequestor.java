@@ -5,12 +5,14 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.locoslab.api.data.carta.route.direction.Direction;
+import com.locoslab.api.data.carta.route.direction.Route;
 import com.locoslab.api.net.Connector;
 
 import org.mixare.Config;
 import org.mixare.MixContext;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created on 19.01.2016 by MelanieW.
@@ -34,9 +36,14 @@ public class RouteRequestor extends Connector {
 
         try {
             Direction resultDirection = this.executeObject(Connector.METHOD_GET, currentRouteUrl, Direction.class, direction);
-            MyRoute myRoute = new MyRoute(resultDirection.getRoutes().get(0));
-            MixContext.getInstance().setActualRoute(myRoute);
-            return myRoute;
+            List<Route> routes = resultDirection.getRoutes();
+            if(routes.size()>0) {
+                MyRoute myRoute = new MyRoute(routes.get(0));
+                MixContext.getInstance().setActualRoute(myRoute);
+                return myRoute;
+            } else {
+                return null;
+            }
 
 
         } catch (IOException ex) {

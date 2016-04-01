@@ -379,11 +379,12 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         updateWaypoints(coordinateList, routeWaypoints);
     }*/
     public void updateRoute(MyRoute myRoute){
- //       Log.i("Info3", "Steps" + myRoute.getCoordinateList().size());
-        setActualRoute(myRoute);
-        updateWaypoints(myRoute.getCoordinateList(), routeWaypoints);
-        updateRouteSegments(routeWaypoints);
-
+        if(myRoute != null) {
+            //       Log.i("Info3", "Steps" + myRoute.getCoordinateList().size());
+            setActualRoute(myRoute);
+            updateWaypoints(myRoute.getCoordinateList(), routeWaypoints);
+            updateRouteSegments(routeWaypoints);
+        }
     }
 
     public void updateCurLocation(Location newLocation){
