@@ -637,7 +637,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
         else {
             ((ViewGroup) hudView.getParent()).removeView(hudView);
         }
-        addContentView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+        cameraView.addView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
 	private void maintainOpenGLView() {
@@ -810,7 +810,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
                 new MarkerListFragment().show(getFragmentManager(), "TAG");
 				break;
 			default:
-				super.selectItem(position,drawerItem);
+                Log.d(Config.TAG, "MixViewActivity selectItem "+drawerItem.getIdentifier());
+                super.selectItem(position,drawerItem);
 				break;
 		}
 	}

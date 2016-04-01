@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" >
@@ -61,8 +60,7 @@
             android:launchMode="singleTop"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
-            android:theme="@style/MaterialDrawerTheme"
-            >
+            android:theme="@style/MaterialDrawerTheme.TranslucentStatus" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -103,21 +101,17 @@
             android:launchMode="singleTop"
             android:screenOrientation="user"
             android:label="@string/mix_list_view"
-            android:theme="@style/MaterialDrawerTheme" >
-
+            android:theme="@style/MaterialDrawerTheme.TranslucentStatus" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
 
-        
         <activity android:name=".map.MapActivity"
-            android:theme="@style/MaterialDrawerTheme"
-            >
+            android:theme="@style/MaterialDrawerTheme.TranslucentStatus" >
         </activity>
         
         <activity android:name=".data.AddDataSource" android:label="@string/add_datasource">
@@ -126,7 +120,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".data.DataSourceList" 
+        <activity android:name=".data.DataSourceList"
             android:label="@string/datasource_list" />
         
         <activity android:name=".PluginListActivity" 
@@ -135,6 +129,5 @@
         <activity android:name=".settings.SettingsActivity"
             android:label="@string/menu_item_settings">
         </activity>
-        
     </application>
 </manifest>

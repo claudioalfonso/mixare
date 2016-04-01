@@ -47,7 +47,7 @@ public class Radar implements ScreenObj {
 	/** Radius in pixel on screen */
 	public static float RADIUS = 40;
 	/** Position on screen */
-	private static float originX = 10 , originY = 20;
+	private static float originX = 10 , originY = 60;
 	/** Color */
 	private static int radarColor = Color.argb(100, 0, 0, 200);
 
@@ -56,7 +56,7 @@ public class Radar implements ScreenObj {
 
     private String[] directions;
 
-    private float rx = 10, ry = 20;
+    private float rx = 10, ry = 60;
 
     public Radar(){
         this.markerRenderer = MixContext.getInstance().getActualMixViewActivity().getMarkerRenderer();

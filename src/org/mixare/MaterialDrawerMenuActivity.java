@@ -42,8 +42,8 @@ public class MaterialDrawerMenuActivity extends Activity {
                     .inflateMenu(R.menu.drawer_menu)
                     .withSavedInstance(savedInstanceState)
                     .withOnDrawerItemClickListener(new DrawerItemClickListener())
+                    .withSelectedItem(-1)
                     .buildView(); // build only the view of the Drawer (don't inflate it automatically with .build())
-//                    .build();
 
             //move settings item to sticky footer
             IDrawerItem settingsItem = materialDrawer.getDrawerItem(R.id.menuitem_settings);
@@ -56,7 +56,7 @@ public class MaterialDrawerMenuActivity extends Activity {
 
 
             //get the widths in px for the first and second panel
-            int firstWidth = (int) UIUtils.convertDpToPixel(300, this);
+            int firstWidth = (int) UIUtils.convertDpToPixel(200, this);
             int secondWidth = (int) UIUtils.convertDpToPixel(72, this);
 
             //create and build crossfader (MiniDrawer is also built here, as the build method returns the view to be used in the crossfader)
@@ -106,7 +106,10 @@ public class MaterialDrawerMenuActivity extends Activity {
 
         switch ((int) drawerItem.getIdentifier()) {
             // Marker List View
-            case R.id.menuitem_route: //fall-through intended
+            case R.id.menuitem_route:
+                activityClass = MixViewActivity.class;
+                requestCode = Config.INTENT_REQUEST_CODE_MIXVIEW;
+                break;
             case R.id.menuitem_markerlist:
                 activityClass = MarkerListActivity.class;
                 requestCode = Config.INTENT_REQUEST_CODE_MARKERLIST;
@@ -125,6 +128,7 @@ public class MaterialDrawerMenuActivity extends Activity {
                 requestCode = Config.INTENT_REQUEST_CODE_SETTINGS;
                 break;
             default:
+                Log.d(Config.TAG, "MaterialDrawer selectItem "+drawerItem.getIdentifier());
                 break;
         }
 

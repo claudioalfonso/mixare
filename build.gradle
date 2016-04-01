@@ -29,6 +29,7 @@ dependencies {
     compile 'com.mikepenz:crossfader:1.3.6@aar'
     // two step crossfade DrawerLayout (mini layout which transforms to a normal layout within the drawer)
     compile('com.mikepenz:crossfadedrawerlayout:0.3.3@aar')
+    //compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
     compile fileTree(include: '*.jar', dir: 'lib')
     compile project(':mixarelib')
     compile 'com.locoslab.api:carta:1.2.0-SNAPSHOT'
