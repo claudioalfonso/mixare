@@ -84,7 +84,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 updateWaypointsRelative(poiWaypoints);
 
                 updateRouteSegments(routeWaypoints);
-              //  updateRouteSegementColor(routeSegments);
+               // updateRouteSegementColor(routeSegments);
 
             }
 
@@ -302,7 +302,9 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 }
             }
         }
-        nearestRouteSegment.setIsNearestRouteSegment(true);
+        if(nearestRouteSegment!= null) {
+            nearestRouteSegment.setIsNearestRouteSegment(true);
+        }
         // }
         return nearestRouteSegment;
     }
@@ -315,8 +317,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         if(routeSegments != null && currY != 0 && currY != 0) {
             for(RouteSegment routeSegment : routeSegments) {
                tempVector = myVectorOperations.lineIntersection(routeSegment,0, 0);
-
-
 
 
                 if(tempVector!= null){
@@ -353,7 +353,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
              //   }
                 Log.i("NearestVektor: ", "X: " + routeSegment.getIntersectionPoint().getXCoordinate() + "Y: " + routeSegment.getIntersectionPoint().getYCoordinate() + "Distance" + routeSegment.getIntersectionPoint().getDistance());
 
-                if(routeSegment.getIntersectionPoint().getDistance()<500){
+                if(routeSegment.getIntersectionPoint().getDistance()<5000000){
                     return true;
             }
         }
@@ -416,7 +416,9 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
         //tempRouteSegment =         getNearestRouteSegement(routeSegments);
 
-        getNearestRouteSegement(routeSegments);
+        if(myVectors.isEmpty()==false) {
+            getNearestRouteSegement(routeSegments);
+        }
         int index = 0;
 
         for (RouteSegment routeSegment : routeSegments){
