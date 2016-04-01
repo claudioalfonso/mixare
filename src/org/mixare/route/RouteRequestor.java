@@ -8,6 +8,7 @@ import com.locoslab.api.data.carta.route.direction.Direction;
 import com.locoslab.api.net.Connector;
 
 import org.mixare.Config;
+import org.mixare.MixContext;
 
 import java.io.IOException;
 
@@ -33,7 +34,9 @@ public class RouteRequestor extends Connector {
 
         try {
             Direction resultDirection = this.executeObject(Connector.METHOD_GET, currentRouteUrl, Direction.class, direction);
-            return new MyRoute(resultDirection.getRoutes().get(0));
+            MyRoute myRoute = new MyRoute(resultDirection.getRoutes().get(0));
+            MixContext.getInstance().setActualRoute(myRoute);
+            return myRoute;
 
 
         } catch (IOException ex) {

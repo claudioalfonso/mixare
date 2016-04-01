@@ -6,13 +6,14 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by MelanieW on 27.02.2016.
  */
-public class RouteSegement {
+public class RouteSegment {
 
     private FloatBuffer rectVerticesBuffer;
     private ShortBuffer rectTrianglesBuffer;
@@ -20,9 +21,29 @@ public class RouteSegement {
     private float startX;
     private float startY;
     private MyVector startVector = new MyVector();
+
+    public void setStartVector(MyVector startVector) {
+        this.startVector = startVector;
+    }
+
+    public void setEndVector(MyVector endVector) {
+        this.endVector = endVector;
+    }
+
     private MyVector endVector = new MyVector();
     private float endX;
     private float endY;
+
+    public boolean isNearestRouteSegment() {
+        return isNearestRouteSegment;
+    }
+
+    public void setIsNearestRouteSegment(boolean isNearestRouteSegment) {
+        this.isNearestRouteSegment = isNearestRouteSegment;
+    }
+
+    boolean isNearestRouteSegment = false;
+
 
     float directionX;
     float directionY;
@@ -36,6 +57,16 @@ public class RouteSegement {
     MyVector rightStartVector = new MyVector();
     MyVector leftEndVector = new MyVector();
     MyVector rightEndVector = new MyVector();
+
+    public MyVector getIntersectionPoint() {
+        return intersectionPoint;
+    }
+
+    public void setIntersectionPoint(MyVector intersectionPoint) {
+        this.intersectionPoint = intersectionPoint;
+    }
+
+    private MyVector intersectionPoint = null;
 
 
 
@@ -54,7 +85,7 @@ public class RouteSegement {
         this.color = (0x00ffffff & color) | alpha; //remove alpha from argb color, then combine rgb with alpha
     }
 
-    public RouteSegement(float startX, float startY, float endX, float endY){
+    public RouteSegment(float startX, float startY, float endX, float endY){
 
         startVector.setXCoordinate(startX);
         startVector.setYCoordinate(startY);
