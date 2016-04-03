@@ -51,8 +51,7 @@ public class MaterialDrawerMenuActivity extends Activity {
             materialDrawer.addStickyFooterItem(settingsItem);
 
             miniDrawer = materialDrawer.getMiniDrawer(); //get miniDrawer managed by the materialDrawer and hook it into Crossfader
-
-
+            miniDrawer.withEnableSelectedMiniDrawerItemBackground(true);
 
 
             //get the widths in px for the first and second panel
