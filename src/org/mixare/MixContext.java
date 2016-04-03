@@ -18,6 +18,7 @@
  */
 package org.mixare;
 
+import org.mixare.gui.opengl.RouteRenderer;
 import org.mixare.lib.MixContextInterface;
 import org.mixare.lib.render.Matrix;
 import org.mixare.mgr.datasource.DataSourceManager;
@@ -31,6 +32,7 @@ import org.mixare.mgr.notification.NotificationManagerFactory;
 import org.mixare.mgr.webcontent.WebContentManager;
 import org.mixare.mgr.webcontent.WebContentManagerFactory;
 import org.mixare.route.MyRoute;
+import org.mixare.route.RouteManager;
 
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
@@ -76,6 +78,18 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 	}
 
 	private MyRoute actualRoute;
+
+	private RouteRenderer routeRenderer;
+
+	public RouteManager getRouteManager() {
+		return routeManager;
+	}
+
+	public void setRouteManager(RouteManager routeManager) {
+		this.routeManager = routeManager;
+	}
+
+	private RouteManager routeManager;
 
     public synchronized static MixContext getInstance()
     {
@@ -213,7 +227,7 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Toast POPUP notification
 	 * 
@@ -257,5 +271,13 @@ public class MixContext extends ContextWrapper implements MixContextInterface {
         settings.edit().putString(getString(R.string.pref_item_lastdest_key), Config.locationToString(curDestination)).apply();  //save in settings
 
         this.curDestination = curDestination;
+	}
+
+	public void setRouteRenderer(RouteRenderer routeRenderer) {
+		this.routeRenderer = routeRenderer;
+
+	}
+	public RouteRenderer getRouteRenderer(){
+		return routeRenderer;
 	}
 }

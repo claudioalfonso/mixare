@@ -42,6 +42,9 @@ import org.mixare.lib.reality.PhysicalPlace;
 import org.mixare.lib.render.Camera;
 import org.mixare.lib.render.MixVector;
 import org.mixare.map.MapActivity;
+import org.mixare.route.AsyncResponse;
+import org.mixare.route.MyRoute;
+import org.mixare.route.RouteDataAsyncTask;
 
 import android.content.Context;
 import android.content.Intent;
@@ -369,13 +372,18 @@ public abstract class LocalMarker implements Marker {
         destination.setLatitude(LocalMarker.this.getLatitude());
         destination.setLongitude(LocalMarker.this.getLongitude());
         MixContext.getInstance().setCurDestination(destination);
-    }
+
+		MixContext.getInstance().getRouteManager().getRoute(MixContext.getInstance().getCurLocation(),destination);
+	}
 
 	private void setAsLocation(){
 		Location location = Config.getManualFix();
 		location.setLatitude(LocalMarker.this.getLatitude());
 		location.setLongitude(LocalMarker.this.getLongitude());
 		MixContext.getInstance().setCurLocation(location, true);
+
+		MixContext.getInstance().getRouteManager().getRoute(location, MixContext.getInstance().getCurDestination());
+
 	}
 
     public Intent prepareAction(Context ctx, Class clazz, int menuEntry){

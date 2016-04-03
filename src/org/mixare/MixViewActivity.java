@@ -188,6 +188,9 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			if (MixContext.getInstance().getSettings().getBoolean(getString(R.string.pref_item_firstacess_key), true)) {
 				firstAccess();
 			}
+
+			update3D();
+
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);
 		}
@@ -692,7 +695,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	 */
 	public void refresh(){
 		markerRenderer.refresh();
-        update3D();
+        //update3D();
 	}
 
 	public void setErrorDialog(int error) {
@@ -831,9 +834,10 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
         */
 
         if(openGLAugmentationView!=null) {
-            RouteManager r = new RouteManager(openGLAugmentationView);
+            RouteManager r = new RouteManager();
+			MixContext.getInstance().setRouteManager(r);
             r.getRoute(startLocation, endLocation);
-            openGLAugmentationView.routeRenderer.updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers(OpenGLMarker.class));
+            MixContext.getInstance().getRouteRenderer().updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers(OpenGLMarker.class));
         }
     }
 

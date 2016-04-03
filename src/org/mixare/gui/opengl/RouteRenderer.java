@@ -66,6 +66,11 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
                 updateCurLocation(location);
 
+                updateWaypointsRelative( routeWaypoints );
+                updateWaypointsRelative(poiWaypoints);
+
+                updateRouteSegments(routeWaypoints);
+
                 if(!routeWaypoints.isEmpty() &&currX != 0 && currY!= 0){
                     if (hasLowDistance()== false){
                         Location targetLoc = new Location("Target");
@@ -80,11 +85,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                  }
                 }
 
-                updateWaypointsRelative( routeWaypoints );
-                updateWaypointsRelative(poiWaypoints);
 
-                updateRouteSegments(routeWaypoints);
-               // updateRouteSegementColor(routeSegments);
+                updateRouteSegementColor(routeSegments);
 
             }
 
@@ -295,6 +297,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
                 tempDistance = myVectorOperations.getDirectionVectorLength(direction);
                 routeSegment.getIntersectionPoint().setDistance(tempDistance);
+                Log.i("Test55", "Distance" + routeSegment.getIntersectionPoint().getDistance());
 
                 if (tempDistance < distance) {
                     distance = tempDistance;
@@ -314,48 +317,99 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         ArrayList<MyVector> myVectors = new ArrayList<>();
         MyVector tempVector = new MyVector();
 
+        float minPointDistance = Float.MAX_VALUE;
+        RouteSegment nearestPointSegment = null;
+
+        float minIntersectionDistance = Float.MAX_VALUE;
+        RouteSegment nearestIntersectionSegment = null;
+        MyVector nearestIntersection = null;
+
+
+
         if(routeSegments != null && currY != 0 && currY != 0) {
             for(RouteSegment routeSegment : routeSegments) {
+
+                routeSegment.setIntersectionPoint(null);
+                routeSegment.update();
+
                tempVector = myVectorOperations.lineIntersection(routeSegment,0, 0);
 
 
                 if(tempVector!= null){
-                //    Log.i("NearestVektor: ", "tempVector" + tempVector.getDistance());
+
+                    float length = myVectorOperations.getDirectionVectorLength(tempVector);
+                    if( length < minIntersectionDistance ) {
+                        minIntersectionDistance = length;
+                        nearestIntersectionSegment = routeSegment;
+                        nearestIntersection = tempVector;
+                    }
+
                     myVectors.add(tempVector);
-                    routeSegment.setIntersectionPoint(tempVector);
+                    //routeSegment.setIntersectionPoint(tempVector);
+
+                }
+
+                float distStart = myVectorOperations.getDirectionVectorLength( routeSegment.getStartVector() );
+                float distEnd = myVectorOperations.getDirectionVectorLength( routeSegment.getEndVector() );
+
+                if( minPointDistance > distStart ) {
+                    minPointDistance = distStart;
+                    nearestPointSegment = routeSegment;
+                }
+
+                if( minPointDistance > distEnd ) {
+                    minPointDistance = distEnd;
+                    nearestPointSegment = routeSegment;
                 }
             }
 
-               // Log.i("NearestVektor: ", "erstesSegmentx" + routeSegments.get(0).getStartVector().getXCoordinate());
-               // Log.i("NearestVektor: ", "erstesSegmentY" + routeSegments.get(0).getStartVector().getYCoordinate());
-               // Log.i("NearestVektor: ", "currentX" + currX);
-               // Log.i("NearestVektor: ", "currentY" + currY);
-
-                if(tempVector!= null){
-                  //  myVectors.add(tempVector);
-                //    Log.i("NearestVektor", "TempVektor" + "X: " + tempVector.getXCoordinate() + "Y " + tempVector.getYCoordinate() + "Distance " + tempVector.getDistance());
-
-                }
             }
-            Log.i("NearestVektor", "Länge" + myVectors.size() );
 
-            if(myVectors.isEmpty()== true){
+        if( myVectors.isEmpty() ) {
+
+            nearestPointSegment.setIsNearestRouteSegment(true);
+
+            Log.d("RR", "point distance "+minPointDistance );
+
+            if( minPointDistance < 100 )
+                return true;
+
+        } else if( !myVectors.isEmpty() ) {
+
+            float distance = Float.MAX_VALUE;
+
+            Log.d("RR", "point distance "+minPointDistance );
+            Log.d("RR", "intersection distance "+minIntersectionDistance );
+
+            if( minIntersectionDistance > minPointDistance ) { //Punkt näher als Gerade
+                distance = minPointDistance;
+                nearestPointSegment.setIsNearestRouteSegment(true);
+            } else {
+                distance = minIntersectionDistance;
+                nearestIntersectionSegment.setIsNearestRouteSegment(true);
+                nearestIntersectionSegment.setIntersectionPoint(nearestIntersection);
+                nearestIntersectionSegment.update();
+            }
+
+            Log.d("RR", "distance "+distance );
+
+            if( distance < 100 )
+                return true;
+
+            /*RouteSegment routeSegment =  getNearestRouteSegement( routeSegments );
+
+            MyVector myVector = getNearestVector(myVectors);
+            Log.i("NearestVektor: ", "X: " + myVector.getXCoordinate() + "Y: " + myVector.getYCoordinate() + "Distance" + myVector.getDistance());
+            if (myVector.getDistance() < 500) {
                 return true;
             }
+            Log.i("NearestVektor: ", "X: " + routeSegment.getIntersectionPoint().getXCoordinate() + "Y: " + routeSegment.getIntersectionPoint().getYCoordinate() + "Distance" + routeSegment.getIntersectionPoint().getDistance());
 
-           else if(myVectors.isEmpty()==false) {
-               RouteSegment routeSegment =  getNearestRouteSegement(routeSegments);
+            if(routeSegment.getIntersectionPoint().getDistance()<5000000){
+                return true;
+            }*/
 
-            //    MyVector myVector = getNearestVector(myVectors);
-            //    Log.i("NearestVektor: ", "X: " + myVector.getXCoordinate() + "Y: " + myVector.getYCoordinate() + "Distance" + myVector.getDistance());
-             //   if (myVector.getDistance() < 500) {
-             //       return true;
-             //   }
-                Log.i("NearestVektor: ", "X: " + routeSegment.getIntersectionPoint().getXCoordinate() + "Y: " + routeSegment.getIntersectionPoint().getYCoordinate() + "Distance" + routeSegment.getIntersectionPoint().getDistance());
 
-                if(routeSegment.getIntersectionPoint().getDistance()<5000000){
-                    return true;
-            }
         }
 
 
@@ -370,6 +424,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
        // return true;
         return false;
     }
+
+
 
     public void updatePOIMarker(List<Marker> pois) {
         updateWaypoints(pois, poiWaypoints);
@@ -400,44 +456,22 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     public void updateRouteSegementColor(List<RouteSegment> routeSegments){
 
-        MyVector tempVector = new MyVector();
-        List<MyVector> myVectors = new ArrayList<>();
-       // RouteSegment tempRouteSegment = null;
+        String routeColorString = "#FA0D39";
+        int walkedColor = Color.parseColor(routeColorString);
 
-        for (RouteSegment routeSegment : routeSegments){
+        boolean walked = true;
 
-         tempVector= myVectorOperations.lineIntersection(routeSegment,currX, currY);
+        for( RouteSegment routeSegment : routeSegments ) {
 
-            if(tempVector!= null){
-                myVectors.add(tempVector);
-                routeSegment.setIntersectionPoint(tempVector);
-            }
-        }
+            if( routeSegment.isNearestRouteSegment() )
+                walked = false;
 
-        //tempRouteSegment =         getNearestRouteSegement(routeSegments);
+            if( walked )
+                routeSegment.setColor( walkedColor );
+            else
+                break;
 
-        if(myVectors.isEmpty()==false) {
-            getNearestRouteSegement(routeSegments);
-        }
-        int index = 0;
 
-        for (RouteSegment routeSegment : routeSegments){
-            RouteSegment tempRouteSegment = null;
-
-            if(routeSegment.isNearestRouteSegment==true){
-                index = routeSegments.indexOf(routeSegment);
-                tempRouteSegment = new RouteSegment(routeSegment.getEndVector().getXCoordinate(),routeSegment.getEndVector().getYCoordinate(),routeSegment.getIntersectionPoint().getXCoordinate(), routeSegment.getIntersectionPoint().getYCoordinate());
-
-                routeSegment.setEndVector(routeSegment.getIntersectionPoint());
-                routeSegment.calculateRecVertices();
-                routeSegments.add(index+1,tempRouteSegment);
-            }
-        }
-
-        for (int i = index+1; i<routeSegments.size(); i++){
-            String routeColorString = "#FA0D39";
-            int routeColor = Color.parseColor(routeColorString);
-            routeSegments.get(i).setColor(routeColor);
         }
 
     }

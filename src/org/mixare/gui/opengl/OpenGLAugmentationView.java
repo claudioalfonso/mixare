@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 
+import org.mixare.MixContext;
 import org.mixare.gui.opengl.RouteRenderer;
 
 
@@ -40,6 +41,7 @@ public class OpenGLAugmentationView extends GLSurfaceView implements SensorEvent
 
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         routeRenderer = new RouteRenderer();
+        MixContext.getInstance().setRouteRenderer(routeRenderer);
         setRenderer(routeRenderer);
         setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
