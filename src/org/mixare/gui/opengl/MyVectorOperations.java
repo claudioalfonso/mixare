@@ -69,8 +69,8 @@ public class MyVectorOperations {
         matrix[0][1] -= matrix[1][1];
         matrix[0][2] -= matrix[1][2];
 
-        double x = matrix[0][2] / matrix[0][0];
-        double y = matrix[1][2] / matrix[1][1];
+        double x = matrix[0][0] != 0 ? matrix[0][2] / matrix[0][0] : 0;
+        double y = matrix[1][1] != 0 ? matrix[1][2] / matrix[1][1] : 0;
 
         intersectionPoint.setXCoordinate(routeSegment.getStartVector().getXCoordinate() + (float) x * directionVector.getXCoordinate());
         intersectionPoint.setYCoordinate(routeSegment.getStartVector().getYCoordinate() + (float) x * directionVector.getYCoordinate());

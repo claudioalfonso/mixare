@@ -16,8 +16,8 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class RouteSegment {
 
-    String routeColorString = "#FA0D39";
-    int walkedColor = Color.parseColor(routeColorString);
+    String routeColorString = "#ADFF2F";
+    int walkedColor = (0x00ffffff &Color.parseColor(routeColorString)| alpha);
 
     private FloatBuffer rectVerticesBuffer;
     private FloatBuffer rectVerticesBuffer2;
@@ -120,14 +120,14 @@ public class RouteSegment {
 
             Log.d( "RS", "segment mid ("+intersectionPoint.getXCoordinate()+","+intersectionPoint.getYCoordinate()+")" );
 
-            float rectVertices2[]= {
+            float rectVertices[]= {
                     leftStartVector.getXCoordinate(),leftStartVector.getYCoordinate(),0,
                     rightStartVector.getXCoordinate(), rightStartVector.getYCoordinate(),0,
                     rightMidVector.getXCoordinate(), rightMidVector.getYCoordinate(),0,
                     leftMidVector.getXCoordinate(), leftMidVector.getYCoordinate(),0,
             };
 
-            float rectVertices[]= {
+            float rectVertices2[]= {
                     leftMidVector.getXCoordinate(),leftMidVector.getYCoordinate(),0,
                     rightMidVector.getXCoordinate(), rightMidVector.getYCoordinate(),0,
                     rightEndVector.getXCoordinate(), rightEndVector.getYCoordinate(),0,
@@ -201,7 +201,7 @@ public class RouteSegment {
             //if( false ) {
 
             //two rectangles
-            MyVector directionVectorMid = myVectorOperations.getDirectionVector(startVector, getIntersectionPoint());
+            MyVector directionVectorMid = myVectorOperations.getDirectionVector( startVector, getIntersectionPoint() );
 
             leftMidVector = new MyVector();
             rightMidVector = new MyVector();
@@ -267,7 +267,7 @@ public class RouteSegment {
             gl.glVertexPointer(3, GL10.GL_FLOAT, 0,
                     rectVerticesBuffer2 );
 
-            gl.glEnable(GL10.GL_BLEND);
+          gl.glEnable(GL10.GL_BLEND);
             gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA) ;
 
             gl.glColor4f(Color.red(walkedColor) / 255.0f, Color.green(walkedColor) / 255.0f, Color.blue(walkedColor) / 255.0f, Color.alpha(walkedColor) / 255.0f);

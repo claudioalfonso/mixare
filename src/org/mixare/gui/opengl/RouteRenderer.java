@@ -257,30 +257,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     }
 
 
-    public MyVector getNearestVector(List<MyVector> vectors){
-        MyVector nearestVector = null;
-        float distance= 100000000;
-        float tempDistance = 0;
-     //   synchronized (waypoints) {
-            for (MyVector v : vectors) {
-
-                MyVector direction = new MyVector();
-                direction.setXCoordinate( v.getXCoordinate() - currX );
-                direction.setYCoordinate( v.getYCoordinate() - currY );
-
-                tempDistance = myVectorOperations.getDirectionVectorLength( direction );
-                v.setDistance(tempDistance);
-
-                if (tempDistance< distance) {
-                    distance = tempDistance;
-                    nearestVector = v;
-                }
-            }
-       // }
-        return nearestVector;
-    }
-
-    public RouteSegment getNearestRouteSegement(List<RouteSegment> routeSegments){
+    /*public RouteSegment getNearestRouteSegement(List<RouteSegment> routeSegments){
         RouteSegment nearestRouteSegment = null;
         float distance= 100000000;
         float tempDistance = 0;
@@ -311,6 +288,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         // }
         return nearestRouteSegment;
     }
+    */
 
     public boolean hasLowDistance(){
 
@@ -456,7 +434,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     public void updateRouteSegementColor(List<RouteSegment> routeSegments){
 
-        String routeColorString = "#FA0D39";
+        String routeColorString = "#ADFF2F";
         int walkedColor = Color.parseColor(routeColorString);
 
         boolean walked = true;
