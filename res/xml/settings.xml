@@ -65,6 +65,11 @@
             android:key="@string/pref_item_routecolor_key"
             android:summary="@string/pref_item_routecolor_summary"
             android:title="@string/pref_item_routecolor_title" />
+        <EditTextPreference
+            android:defaultValue="@string/color_hint2"
+            android:key="@string/pref_item_walkedroutecolor_key"
+            android:summary="@string/pref_item_walkedroutecolor_summary"
+            android:title="@string/pref_item_walkedroutecolor_title" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pref_item_camera2_key"
