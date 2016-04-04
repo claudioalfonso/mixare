@@ -1,5 +1,7 @@
 package org.mixare.gui.opengl;
 
+import android.util.Log;
+
 /**
  * Created by MelanieW on 25.03.2016.
  */
@@ -67,11 +69,14 @@ public class MyVectorOperations {
         matrix[0][1] -= matrix[1][1];
         matrix[0][2] -= matrix[1][2];
 
-        double x = matrix[0][2] / matrix[0][0];
-        double y = matrix[1][2] / matrix[1][1];
+        double x = matrix[0][0] != 0 ? matrix[0][2] / matrix[0][0] : 0;
+        double y = matrix[1][1] != 0 ? matrix[1][2] / matrix[1][1] : 0;
 
         intersectionPoint.setXCoordinate(routeSegment.getStartVector().getXCoordinate() + (float) x * directionVector.getXCoordinate());
-        intersectionPoint.setYCoordinate(routeSegment.getStartVector().getYCoordinate() + (float) y * directionVector.getYCoordinate());
+        intersectionPoint.setYCoordinate(routeSegment.getStartVector().getYCoordinate() + (float) x * directionVector.getYCoordinate());
+
+
+        Log.i("Test55", "Schnittpunkt Koordinaten: X " + intersectionPoint.getXCoordinate() + "Y " + intersectionPoint.getYCoordinate());
 
 
         if (routeSegment.getStartVector().getXCoordinate() <= intersectionPoint.getXCoordinate() && intersectionPoint.getXCoordinate() <= routeSegment.getEndVector().getXCoordinate() ||
@@ -79,6 +84,8 @@ public class MyVectorOperations {
             if (routeSegment.getStartVector().getYCoordinate() <= intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() <= routeSegment.getEndVector().getYCoordinate() ||
                     routeSegment.getStartVector().getYCoordinate() >= intersectionPoint.getYCoordinate() && intersectionPoint.getYCoordinate() >=
                             routeSegment.getEndVector().getYCoordinate()){
+                Log.i("Test55", "Schnittpunkt Koordinaten2: X " + intersectionPoint.getXCoordinate() + "Y " + intersectionPoint.getYCoordinate() + "Distance" + intersectionPoint.getDistance());
+
                 return intersectionPoint;
             }
         }

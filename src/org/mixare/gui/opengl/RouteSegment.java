@@ -1,6 +1,7 @@
 package org.mixare.gui.opengl;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -15,7 +16,11 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class RouteSegment {
 
+    String routeColorString = "#ADFF2F";
+    int walkedColor = (0x00ffffff &Color.parseColor(routeColorString)| alpha);
+
     private FloatBuffer rectVerticesBuffer;
+    private FloatBuffer rectVerticesBuffer2;
     private ShortBuffer rectTrianglesBuffer;
 
     private float startX;
@@ -57,6 +62,8 @@ public class RouteSegment {
     MyVector rightStartVector = new MyVector();
     MyVector leftEndVector = new MyVector();
     MyVector rightEndVector = new MyVector();
+    MyVector leftMidVector = new MyVector();
+    MyVector rightMidVector = new MyVector();
 
     public MyVector getIntersectionPoint() {
         return intersectionPoint;
@@ -98,22 +105,64 @@ public class RouteSegment {
         this.endY = endY;
 
 
+        update();
+
+    }
+
+    public void update() {
+
+        Log.d("RS", "segment (" + startX + "," + startY + ") => (" + endX + "," + endY + ")");
+
         calculateRecVertices();
 
+        if( leftMidVector != null ) {
+            //if( false ) {
 
-        float rectVertices[]= {
-                leftStartVector.getXCoordinate(),leftStartVector.getYCoordinate(),0,
-                rightStartVector.getXCoordinate(), rightStartVector.getYCoordinate(),0,
-                rightEndVector.getXCoordinate(), rightEndVector.getYCoordinate(),0,
-                leftEndVector.getXCoordinate(), leftEndVector.getYCoordinate(),0,
-        };
+            Log.d( "RS", "segment mid ("+intersectionPoint.getXCoordinate()+","+intersectionPoint.getYCoordinate()+")" );
+
+            float rectVertices[]= {
+                    leftStartVector.getXCoordinate(),leftStartVector.getYCoordinate(),0,
+                    rightStartVector.getXCoordinate(), rightStartVector.getYCoordinate(),0,
+                    rightMidVector.getXCoordinate(), rightMidVector.getYCoordinate(),0,
+                    leftMidVector.getXCoordinate(), leftMidVector.getYCoordinate(),0,
+            };
+
+            float rectVertices2[]= {
+                    leftMidVector.getXCoordinate(),leftMidVector.getYCoordinate(),0,
+                    rightMidVector.getXCoordinate(), rightMidVector.getYCoordinate(),0,
+                    rightEndVector.getXCoordinate(), rightEndVector.getYCoordinate(),0,
+                    leftEndVector.getXCoordinate(), leftEndVector.getYCoordinate(),0,
+            };
+
+            rectVerticesBuffer
+                    = getDirectFloatBuffer(rectVertices);
+
+            rectVerticesBuffer2
+                    = getDirectFloatBuffer(rectVertices2);
+
+            rectTrianglesBuffer
+                    = getDirectShortBuffer(rectTriangles);
+
+        } else {
+
+            float rectVertices[]= {
+                    leftStartVector.getXCoordinate(),leftStartVector.getYCoordinate(),0,
+                    rightStartVector.getXCoordinate(), rightStartVector.getYCoordinate(),0,
+                    rightEndVector.getXCoordinate(), rightEndVector.getYCoordinate(),0,
+                    leftEndVector.getXCoordinate(), leftEndVector.getYCoordinate(),0,
+            };
+
+            rectVerticesBuffer
+                    = getDirectFloatBuffer(rectVertices);
+
+            rectTrianglesBuffer
+                    = getDirectShortBuffer(rectTriangles);
+
+            rectVerticesBuffer2 = null;
+
+        }
 
 
-        rectVerticesBuffer
-                = getDirectFloatBuffer(rectVertices);
-
-        rectTrianglesBuffer
-                = getDirectShortBuffer(rectTriangles);
 
     }
 
@@ -148,21 +197,27 @@ public class RouteSegment {
         rightEndVector.setXCoordinate(rightStartVector.getXCoordinate()+directionVector.getXCoordinate());
         rightEndVector.setYCoordinate(rightStartVector.getYCoordinate()+directionVector.getYCoordinate());
 
+        if( getIntersectionPoint() != null ) {
+            //if( false ) {
 
+            //two rectangles
+            MyVector directionVectorMid = myVectorOperations.getDirectionVector( startVector, getIntersectionPoint() );
 
-               /* leftStartVector.setXCoordinate(-directionY / resultTemp1);
-        leftStartVector.setYCoordinate((directionX / resultTemp1));
+            leftMidVector = new MyVector();
+            rightMidVector = new MyVector();
 
-        rightStartVector.setXCoordinate(directionY / resultTemp1);
-        rightStartVector.setYCoordinate(-directionX / resultTemp1);
+            leftMidVector.setXCoordinate(leftStartVector.getXCoordinate() + directionVectorMid.getXCoordinate());
+            leftMidVector.setYCoordinate(leftStartVector.getYCoordinate() + directionVectorMid.getYCoordinate());
 
-        leftEndVector.setXCoordinate(leftStartVector.getXCoordinate()+directionX);
-        leftEndVector.setYCoordinate(leftStartVector.getYCoordinate()+directionY);
+            rightMidVector.setXCoordinate(rightStartVector.getXCoordinate() + directionVectorMid.getXCoordinate());
+            rightMidVector.setYCoordinate(rightStartVector.getYCoordinate() + directionVectorMid.getYCoordinate());
 
-        rightEndVector.setXCoordinate(rightStartVector.getXCoordinate()+directionX);
-        rightEndVector.setYCoordinate(rightStartVector.getYCoordinate()+directionY);
+        } else {
 
-        */
+            leftMidVector = null;
+            rightMidVector = null;
+
+        }
 
 
     }
@@ -195,6 +250,37 @@ public class RouteSegment {
 
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glDisable(GL10.GL_CULL_FACE);
+
+        if( rectVerticesBuffer2 != null ) {
+
+            //Log.d( "RS", "draw in two parts" );
+
+            gl.glEnable(GL10.GL_CULL_FACE);
+            // What faces to remove with the face culling.
+            gl.glCullFace(GL10.GL_BACK);
+
+            // Enabled the vertices buffer for writing and to be used during
+            // rendering.
+            gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+            // Specifies the location and data format of an array of vertex
+            // coordinates to use when rendering.
+            gl.glVertexPointer(3, GL10.GL_FLOAT, 0,
+                    rectVerticesBuffer2 );
+
+          gl.glEnable(GL10.GL_BLEND);
+            gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA) ;
+
+            gl.glColor4f(Color.red(walkedColor) / 255.0f, Color.green(walkedColor) / 255.0f, Color.blue(walkedColor) / 255.0f, Color.alpha(walkedColor) / 255.0f);
+
+            gl.glDrawElements(GL10.GL_TRIANGLES, rectTriangles.length,
+                    GL10.GL_UNSIGNED_SHORT, rectTrianglesBuffer);
+
+
+            gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+            gl.glDisable(GL10.GL_CULL_FACE);
+
+        }
+
     }
 
     private static FloatBuffer getDirectFloatBuffer(float[] array) {

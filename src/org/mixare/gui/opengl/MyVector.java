@@ -11,6 +11,8 @@ public class MyVector {
     private float yCoordinate;
     private float distance;
 
+    public MyVector() {};
+    public MyVector( float x, float y ) { xCoordinate = x; yCoordinate = y; };
 
     public void setXCoordinate(float xCoordinate) {
         this.xCoordinate = xCoordinate;

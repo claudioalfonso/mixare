@@ -75,6 +75,8 @@ public class MapActivity extends MaterialDrawerMenuActivity {
 
     protected float screenRatio = 1.0f;
 
+    private MyLocationOverlay myLocationOverlay;
+
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
@@ -83,6 +85,7 @@ public class MapActivity extends MaterialDrawerMenuActivity {
 
         Location curLocation = MixContext.getInstance().getCurLocation();
         Location curDestination = MixContext.getInstance().getCurDestination();
+
         if (curDestination != null) {
             target = new LatLong(curDestination.getLatitude(), curDestination.getLongitude());
         }
@@ -110,6 +113,11 @@ public class MapActivity extends MaterialDrawerMenuActivity {
         mapView.getModel().mapViewPosition.setZoomLevelMax(OpenStreetMapMapnik.INSTANCE.getZoomLevelMax());
         mapView.getMapZoomControls().setZoomLevelMin(OpenStreetMapMapnik.INSTANCE.getZoomLevelMin());
         mapView.getMapZoomControls().setZoomLevelMax(OpenStreetMapMapnik.INSTANCE.getZoomLevelMax());
+
+        myLocationOverlay = new MyLocationOverlay(this, mapView.getModel().mapViewPosition, mapView.getModel().displayModel);
+
+        mapView.getLayerManager().getLayers().add(myLocationOverlay);
+
 
         // Add mapView to View
         //setContentView(mapView);
