@@ -173,7 +173,9 @@
 	<string name="ds_detail_color_label">Farbe</string>
 	<string name="pref_cat_other_title">Anderes</string>
 	<string name="pref_item_routecolor_title">Routenfarbe</string>
-	<string name="pref_item_routecolor_summary">Farbe der Route (OpenGL-3D und Karte)</string>
+	<string name="pref_item_walkedroutecolor_title">Routenfarbe der gelaufenen Route</string>
+	<string name="pref_item_routecolor_summary">Farbe der OpenGL-3D-Route</string>
+	<string name="pref_item_walkedroutecolor_summary">Farbe der bereits abgelaufenen OpenGL-3D-Route</string>
 	<string name="pref_item_lastdest_title">Zuletzt gesetztes Ziel</string>
 	<string name="pref_item_lastfix_title">Letzter gesetzter/bestimmter Standort</string>
 	<string name="pref_item_autolocate_title">Automatische Lokalisierung</string>

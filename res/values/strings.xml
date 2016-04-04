@@ -204,11 +204,15 @@
     <string name="ds_detail_color_label">Color</string>
     <string name="ds_detail_color_text" translatable="false">#</string>
     <string name="color_hint" translatable="false">#FF00FF</string>
-    <string name="pref_item_routecolor_key" translatable="false">routeColor</string>
-    <string name="pref_cat_other_title">Other</string>
+	<string name="color_hint2" translatable="false">#ADFF2F</string>
+	<string name="pref_item_routecolor_key" translatable="false">routeColor</string>
+	<string name="pref_item_walkedroutecolor_key" translatable="false">walkedRouteColor</string>
+	<string name="pref_cat_other_title">Other</string>
     <string name="pref_item_routecolor_title">Route color</string>
-    <string name="pref_item_routecolor_summary">Color of the rendered route (3D and map)</string>
-    <string name="pref_item_lastfix_key" translatable="false">lastFix</string>
+	<string name="pref_item_walkedroutecolor_title">Walked route color</string>
+	<string name="pref_item_routecolor_summary">Color of the 3d rendered route</string>
+	<string name="pref_item_walkedroutecolor_summary">Color of the already walked 3d rendered route</string>
+	<string name="pref_item_lastfix_key" translatable="false">lastFix</string>
     <string name="pref_item_lastfix_title">Last set/obtained position</string>
     <string name="pref_item_lastdest_default" translatable="false">51.46301,7.00396</string>
     <string name="pref_item_lastfix_default" translatable="false">51.46184,7.01655</string>

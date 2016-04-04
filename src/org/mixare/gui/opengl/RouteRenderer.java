@@ -238,6 +238,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
             String routeColorString = mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
             int routeColor = Color.parseColor(routeColorString);
 
+
+
             routeSegments.clear();
             synchronized (waypoints) {
 
@@ -434,8 +436,9 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     public void updateRouteSegementColor(List<RouteSegment> routeSegments){
 
-        String routeColorString = "#ADFF2F";
-        int walkedColor = Color.parseColor(routeColorString);
+        String walkedRouteColorString = mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_walkedroutecolor_key), mixContext.getString(R.string.color_hint2));;
+        int walkedColor = Color.parseColor(walkedRouteColorString);
+
 
         boolean walked = true;
 
