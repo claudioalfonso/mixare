@@ -41,6 +41,16 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     private List<Waypoint> poiWaypoints = new ArrayList<>();
     private List<RouteSegment> routeSegments = new ArrayList<>();
 
+    public TargetMarker getTargetMarker() {
+        return targetMarker;
+    }
+
+    public void setTargetMarker(TargetMarker targetMarker) {
+        this.targetMarker = targetMarker;
+    }
+
+    private TargetMarker targetMarker;
+
     float startCoordX = 0;
     float startCoordY = 0;
 
@@ -155,8 +165,10 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
                         if(routeSegments.indexOf(routeSegment)== routeSegments.size()-1){
                             //targetMarker = new TargetMarker(waypoint.relativeX,waypoint.relativeY);
-                            targetMarker = new TargetMarker();
+                            targetMarker = new TargetMarker(routeSegment);
                             targetMarker.draw(gl);
+
+                            setTargetMarker(targetMarker);
                         }
                             routeSegment.draw(gl);
 
@@ -243,7 +255,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
             String routeColorString = mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_routecolor_key), mixContext.getString(R.string.color_hint));
             int routeColor = Color.parseColor(routeColorString);
-
 
 
             routeSegments.clear();
@@ -480,7 +491,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         String walkedRouteColorString = mixContext.getSettings().getString(mixContext.getString(R.string.pref_item_walkedroutecolor_key), mixContext.getString(R.string.color_hint2));;
         int walkedColor = Color.parseColor(walkedRouteColorString);
 
-
         boolean walked = true;
 
         for( RouteSegment routeSegment : routeSegments ) {
@@ -495,6 +505,9 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
 
         }
+
+        getTargetMarker().setColor(walkedColor);
+
 
     }
 
