@@ -425,48 +425,43 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
             //       Log.i("Info3", "Steps" + myRoute.getCoordinateList().size());
             setActualRoute(myRoute);
 
+            showCustomToast();
 
-
-            LayoutInflater inflater = LayoutInflater.from(MixContext.getInstance().getActualMixViewActivity());
-
-            View mainLayout = inflater.inflate(R.layout.toast_layout, null);
-            View rootLayout = mainLayout.findViewById(R.id.toast_layout_root);
-
-            if(mainLayout== null){
-                Log.i("Test66", "Mainlayout ist null");
+            updateWaypoints(myRoute.getCoordinateList(), routeWaypoints);
+            updateRouteSegments(routeWaypoints);
             }
 
-            TextView text = (TextView) rootLayout.findViewById(R.id.route_info);
+    }
 
-            String infoText = mixContext.getString(R.string.timeToDestination)+": " + getActualRoute().getDurationInMinutes()+ "\n" +mixContext.getString(R.string.distanceToDestination) +": " + getActualRoute().getDistanceInKMandMeters();
+    private void showCustomToast() {
+
+        LayoutInflater inflater = LayoutInflater.from(MixContext.getInstance().getActualMixViewActivity());
+
+        View mainLayout = inflater.inflate(R.layout.toast_layout, null);
+        View toastLayout = mainLayout.findViewById(R.id.toast_layout_root);
+
+        TextView text = (TextView) toastLayout.findViewById(R.id.route_info);
+
+        String infoText = mixContext.getString(R.string.timeToDestination)+": " + getActualRoute().getDurationInMinutes()+ "\n" +mixContext.getString(R.string.distanceToDestination) +": " + getActualRoute().getDistanceInKMandMeters();
+        text.setText(infoText);
+
+        final Toast toast = new Toast(MixContext.getInstance().getActualMixViewActivity());
+
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.BOTTOM, 0, 0);
+        toast.setView(toastLayout);
 
 
-            text.setText(infoText);
+        new CountDownTimer(6000, 1000) {
 
-                //final Toast toast = Toast.makeText(MixContext.getInstance().getActualMixViewActivity(), "Voraussichtliche benötigte Zeit bis zum Ziel: " + getActualRoute().getDurationInMinutes() + "  " + "Zurückzulegende Distanz: " + getActualRoute().getDistanceInKMandMeters(), Toast.LENGTH_LONG);
-
-                final Toast toast = new Toast(MixContext.getInstance().getActualMixViewActivity());
-
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM, 0, 0);
-                toast.setView(rootLayout);
-
-
-                new CountDownTimer(6000, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-                        toast.show();
-                    }
-
-                    public void onFinish() {
-                    }
-
-                }.start();
-
-                updateWaypoints(myRoute.getCoordinateList(), routeWaypoints);
-                updateRouteSegments(routeWaypoints);
+            public void onTick(long millisUntilFinished) {
+                toast.show();
             }
 
+            public void onFinish() {
+            }
+
+        }.start();
     }
 
     public void updateCurLocation(Location newLocation){
