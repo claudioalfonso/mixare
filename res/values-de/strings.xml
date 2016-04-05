@@ -182,5 +182,7 @@
 	<string name="pref_item_autolocate_summary">Nutze die Lokalisierungsdienste des Systems (GPS, WLAN, etc.) um die momentane Position zu bestimmen (anstatt sie manuell zu setzen)</string>
 	<string name="pref_cat_rendering">Darstellung</string>
 	<string name="pref_item_camera2_title">Verwende Camera2 (falls verfügbar)</string>
+	<string name="timeToDestination">Benötigte Zeit bis zum Ziel</string>
+	<string name="distanceToDestination">Entfernung</string>
 
 </resources>

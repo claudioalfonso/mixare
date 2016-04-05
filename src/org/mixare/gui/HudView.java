@@ -239,12 +239,7 @@ public class HudView extends RelativeLayout {
 
     public void setDestinationStatus(Location destination) {
         if(destination!=null && destinationStatusText !=null) {
-        if(MixContext.getInstance().getActualRoute()!= null){
-            destinationStatusText.setText(formatLocation(destination)+ " Vorraussichtliche Dauer:" + MixContext.getInstance().getActualRoute().getDurationInMinutes() + "Entfernung:" + MixContext.getInstance().getActualRoute().getDistanceInKMandMeters());
-        }
-            else
             destinationStatusText.setText(formatLocation(destination));
-
         }
     }
 }

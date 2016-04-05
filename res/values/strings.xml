@@ -224,4 +224,6 @@
 	<string name="pref_cat_rendering">Rendering</string>
 	<string name="pref_item_camera2_key" translatable="false">useCamera2</string>
 	<string name="pref_item_camera2_title">Use Camera2 (if available)</string>
+	<string name="timeToDestination">Time to reach destination:</string>
+	<string name="distanceToDestination">Distance:</string>
 </resources>
