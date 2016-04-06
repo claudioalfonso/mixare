@@ -83,6 +83,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
     protected static final int NO_NETWORK_ERROR = 4;
 
     private static final int PERMISSIONS_REQUEST_CAMERA = 1;
+    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 2;
+    private static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
 
 	private CameraSurface cameraSurface;
     private FrameLayout cameraView;
@@ -127,21 +129,47 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			if(getActionBar() != null){
 				getActionBar().hide();
 			}
-			
+
+			/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+				if (ContextCompat.checkSelfPermission(this,
+						Manifest.permission.CAMERA)
+						!= PackageManager.PERMISSION_GRANTED) {
+
+					ActivityCompat.requestPermissions(this,
+							new String[]{Manifest.permission.CAMERA},
+							PERMISSIONS_REQUEST_CAMERA);
+				}
+				if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+					ActivityCompat.requestPermissions(this,
+							new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+							PERMISSIONS_ACCESS_FINE_LOCATION);
+				}
+				if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+					ActivityCompat.requestPermissions(this,
+							new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE},
+							PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+				}
+			}*/
+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
 				if (ContextCompat.checkSelfPermission(this,
 						Manifest.permission.CAMERA)
 						!= PackageManager.PERMISSION_GRANTED) {
 					permissions[0] = new String(Manifest.permission.CAMERA);
+
 				}
 				if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
 					permissions[1] = new String(Manifest.permission.ACCESS_FINE_LOCATION);
+
 				}
 				if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
 					permissions[2] = new String(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 				}
-				ActivityCompat.requestPermissions(this,permissions, PERMISSIONS_REQUEST_CAMERA);
+				if(permissions[0]!= null ||permissions[1]!= null || permissions[2]!= null) {
+					ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_REQUEST_CAMERA);
+				}
 			}
 
             maintainViews();
