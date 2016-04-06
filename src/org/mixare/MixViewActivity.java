@@ -83,8 +83,6 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
     protected static final int NO_NETWORK_ERROR = 4;
 
     private static final int PERMISSIONS_REQUEST_CAMERA = 1;
-    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 2;
-    private static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 3;
 
 	private CameraSurface cameraSurface;
     private FrameLayout cameraView;
@@ -124,30 +122,26 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			killOnError();
 			//requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+			String [] permissions = new String[3];
+
 			if(getActionBar() != null){
 				getActionBar().hide();
 			}
-
+			
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
 				if (ContextCompat.checkSelfPermission(this,
 						Manifest.permission.CAMERA)
 						!= PackageManager.PERMISSION_GRANTED) {
-
-					ActivityCompat.requestPermissions(this,
-							new String[]{Manifest.permission.CAMERA},
-							PERMISSIONS_REQUEST_CAMERA);
+					permissions[0] = new String(Manifest.permission.CAMERA);
 				}
 				if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-					ActivityCompat.requestPermissions(this,
-							new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-							PERMISSIONS_ACCESS_FINE_LOCATION);
+					permissions[1] = new String(Manifest.permission.ACCESS_FINE_LOCATION);
 				}
 				if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-					ActivityCompat.requestPermissions(this,
-							new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE},
-							PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+					permissions[2] = new String(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 				}
+				ActivityCompat.requestPermissions(this,permissions, PERMISSIONS_REQUEST_CAMERA);
 			}
 
             maintainViews();
