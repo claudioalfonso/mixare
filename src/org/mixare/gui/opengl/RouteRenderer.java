@@ -18,10 +18,9 @@ import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.util.MercatorProjection;
 import org.mixare.MixContext;
 import org.mixare.R;
-import org.mixare.route.AsyncResponse;
 import org.mixare.route.MyRoute;
-import org.mixare.route.RouteDataAsyncTask;
 import org.mixare.lib.marker.Marker;
+import org.mixare.route.RouteManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,52 +70,97 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
             @Override
             public void onLocationChanged(Location location) {
 
+                RouteSegment nearestIntersectionSegment;
+                RouteSegment nearestPointSegment;
+                float minDistance;
+                RouteManager routeManager;
+
                 updateCurLocation(location);
 
+                //relative waypoints should be updated if the current position changes
                 updateWaypointsRelative( routeWaypoints );
                 updateWaypointsRelative(poiWaypoints);
 
+                //routesegements should be updated if the curent position changes
                 updateRouteSegments(routeWaypoints);
 
                 if(!routeWaypoints.isEmpty() &&currX != 0 && currY!= 0){
-                    if (hasLowDistance()== false){
+                        nearestIntersectionSegment = calculateNearestIntersectionSegment();
+                        nearestPointSegment = calculateNearestPointSegment();
+                        minDistance = calculateMinimalDistance(nearestIntersectionSegment, nearestPointSegment);
+
+
+                    //if distance from current position to current route is too high, a new route will be requested
+                    if (hasLowDistance(minDistance)== false){
+
                         Location targetLoc = new Location("Target");
                         targetLoc.setLatitude(getCurrentRoute().getTargetCoordinate().getLatitude());
                         targetLoc.setLongitude(getCurrentRoute().getTargetCoordinate().getLongitude());
-                        RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
-                            @Override
-                            public void processFinish(MyRoute route) {
-                                updateRoute(route);
-                            }
-                        }).execute(curLocation,targetLoc);
+
+                        routeManager = MixContext.getInstance().getRouteManager();
+                        routeManager.getRoute(curLocation,targetLoc);
                  }
                 }
 
-
+                // the route segement color changes if the current location changes
                 updateRouteSegementColor(routeSegments);
 
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
 
             @Override
-            public void onProviderEnabled(String provider) {
-
-            }
+            public void onProviderEnabled(String provider) {}
 
             @Override
-            public void onProviderDisabled(String provider) {
-
-            }
+            public void onProviderDisabled(String provider) {}
         };
 
         MixContext.getInstance().getLocationFinder().addLocationListerner(locationListener);
 
-
     }
+
+    private float calculateMinimalDistance(RouteSegment nearestIntersectionSegment, RouteSegment nearestPointSegment) {
+
+        MyVector tempVector = new MyVector();
+
+        float minPointDistance = Float.MAX_VALUE;
+
+        float minIntersectionDistance = Float.MAX_VALUE;
+
+        if (nearestPointSegment.getStartVector().getDistance() >= nearestPointSegment.getEndVector().getDistance()) {
+            minPointDistance = nearestPointSegment.getStartVector().getDistance();
+        } else minPointDistance = nearestPointSegment.getEndVector().getDistance();
+
+
+        // when there is no intersection with routeSegements, the distance to the nearest waypoint is used. Koordinates of waypoints = startvektor and endvektor of routeSegements.
+        if (nearestIntersectionSegment == null) {
+
+            nearestPointSegment.setIsNearestRouteSegment(true);
+
+            Log.d("RR", "point distance " + minPointDistance);
+            return minPointDistance;
+
+
+        } else {
+            minIntersectionDistance = myVectorOperations.getDirectionVectorLength(nearestIntersectionSegment.getIntersectionPoint());
+
+            Log.d("RR", "point distance " + minPointDistance);
+            Log.d("RR", "intersection distance " + minIntersectionDistance);
+
+            if (minIntersectionDistance > minPointDistance) { //Punkt näher als Gerade
+                nearestPointSegment.setIsNearestRouteSegment(true);
+                return minPointDistance;
+            } else {
+                nearestIntersectionSegment.setIsNearestRouteSegment(true);
+                // nearestIntersectionSegment.setIntersectionPoint(nearestIntersectionPoint);
+                nearestIntersectionSegment.update();
+                return minIntersectionDistance;
+            }
+        }
+    }
+
 
 
     public  void onDrawFrame(GL10 gl) {
@@ -266,65 +310,16 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         }
     }
 
-    public boolean hasLowDistance(){
+    public boolean hasLowDistance(float minDistance){
 
-        MyVector tempVector = new MyVector();
-
-        float minPointDistance = Float.MAX_VALUE;
-        RouteSegment nearestPointSegment = null;
-
-        float minIntersectionDistance = Float.MAX_VALUE;
-        RouteSegment nearestIntersectionSegment = null;
-
-
-        if(routeSegments != null && currY != 0 && currY != 0) {
-            nearestIntersectionSegment = calculateDistanceToRoute();
-            nearestPointSegment = calculateDistanceToWaypoints();
-
-            if(nearestPointSegment.getStartVector().getDistance()>= nearestPointSegment.getEndVector().getDistance()){
-                minPointDistance = nearestPointSegment.getStartVector().getDistance();
-            }
-            else minPointDistance = nearestPointSegment.getEndVector().getDistance();
-        }
-
-        // when there is no intersection with routeSegements, the distance to the nearest waypoint is used
-        if( nearestIntersectionSegment== null ) {
-
-            nearestPointSegment.setIsNearestRouteSegment(true);
-
-                    Log.d("RR", "point distance " + minPointDistance);
-
-            if( minPointDistance < 100 )
+            if( minDistance < 100 )
                 return true;
-
-        } else if( nearestIntersectionSegment!=null ) {
-            minIntersectionDistance = myVectorOperations.getDirectionVectorLength(nearestIntersectionSegment.getIntersectionPoint());
-
-            float distance = Float.MAX_VALUE;
-
-            Log.d("RR", "point distance "+minPointDistance );
-            Log.d("RR", "intersection distance "+minIntersectionDistance );
-
-            if( minIntersectionDistance > minPointDistance ) { //Punkt näher als Gerade
-                distance = minPointDistance;
-                nearestPointSegment.setIsNearestRouteSegment(true);
-            } else {
-                distance = minIntersectionDistance;
-                nearestIntersectionSegment.setIsNearestRouteSegment(true);
-               // nearestIntersectionSegment.setIntersectionPoint(nearestIntersectionPoint);
-                nearestIntersectionSegment.update();
-            }
-
-            Log.d("RR", "distance "+distance );
-
-            if( distance < 100 )
-                return true;
-        }
-
-        return false;
+        else
+                return false;
     }
 
-    public RouteSegment calculateDistanceToRoute(){
+
+    public RouteSegment calculateNearestIntersectionSegment(){
 
         MyVector tempVector = new MyVector();
 
@@ -356,7 +351,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         return nearestIntersectionSegment;
     }
 
-    public RouteSegment calculateDistanceToWaypoints(){
+    public RouteSegment calculateNearestPointSegment(){
 
         float minPointDistance = Float.MAX_VALUE;
         RouteSegment nearestPointSegment = null;
@@ -497,7 +492,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         this.rotationMatrix = rotationMatrix;
     }
 
-    public float getStartCoordX() {
+   /* public float getStartCoordX() {
         return startCoordX;
     }
 
@@ -512,7 +507,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     public void setStartCoordY(float startCoordY) {
         this.startCoordY = startCoordY;
     }
-
+ */
     public float getCurrX(){
         return currX;
     }

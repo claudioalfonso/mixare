@@ -27,8 +27,6 @@ public class RouteDataAsyncTask extends AsyncTask<Location,Void,MyRoute> {
         protected MyRoute doInBackground(Location... params) {
             RouteRequestor rs = new RouteRequestor();
             myRoute = rs.init(params[0],params[1]);
-           // latLong = rs.init(params[0],params[1]);
-           // return latLong;
             return myRoute;
         }
 

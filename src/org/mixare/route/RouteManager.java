@@ -12,8 +12,6 @@ public class RouteManager {
 
 
     public RouteManager() {
-
-
     }
 
     public void getRoute(Location startLocation,Location endLocation) {
@@ -21,7 +19,6 @@ public class RouteManager {
             @Override
             public void processFinish(MyRoute route) {
                 MixContext.getInstance().getRouteRenderer().updateRoute(route);
-                //openGLView.requestRender();
             }
         }).execute(startLocation, endLocation);
     }
