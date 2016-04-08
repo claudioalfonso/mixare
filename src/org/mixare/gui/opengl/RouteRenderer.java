@@ -57,16 +57,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     float currX = 0;
     float currY = 0;
 
-
-    public MyRoute getActualRoute() {
-        return actualRoute;
-    }
-
-    public void setActualRoute(MyRoute actualRoute) {
-        this.actualRoute = actualRoute;
-    }
-
-    private MyRoute actualRoute = null;
+    private MyRoute currentRoute = null;
 
     Location curLocation;
 
@@ -88,10 +79,10 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 updateRouteSegments(routeWaypoints);
 
                 if(!routeWaypoints.isEmpty() &&currX != 0 && currY!= 0){
-                    if (hasLowDistance()== false){
+                    if (hasLowDistance2()== false){
                         Location targetLoc = new Location("Target");
-                        targetLoc.setLatitude(getActualRoute().getTargetCoordinate().getLatitude());
-                        targetLoc.setLongitude(getActualRoute().getTargetCoordinate().getLongitude());
+                        targetLoc.setLatitude(getCurrentRoute().getTargetCoordinate().getLatitude());
+                        targetLoc.setLongitude(getCurrentRoute().getTargetCoordinate().getLongitude());
                         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
                             @Override
                             public void processFinish(MyRoute route) {
@@ -311,7 +302,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
     public boolean hasLowDistance(){
 
-        ArrayList<MyVector> myVectors = new ArrayList<>();
+      //  ArrayList<MyVector> myVectors = new ArrayList<>();
         MyVector tempVector = new MyVector();
 
         float minPointDistance = Float.MAX_VALUE;
@@ -319,7 +310,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
         float minIntersectionDistance = Float.MAX_VALUE;
         RouteSegment nearestIntersectionSegment = null;
-        MyVector nearestIntersection = null;
+        MyVector nearestIntersectionPoint = null;
 
 
 
@@ -329,7 +320,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 routeSegment.setIntersectionPoint(null);
                 routeSegment.update();
 
-               tempVector = myVectorOperations.lineIntersection(routeSegment,0, 0);
+                //get intersectionPoint of current position to routeSegement.
+                tempVector = myVectorOperations.lineIntersection(routeSegment,0, 0);
 
 
                 if(tempVector!= null){
@@ -338,10 +330,10 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                     if( length < minIntersectionDistance ) {
                         minIntersectionDistance = length;
                         nearestIntersectionSegment = routeSegment;
-                        nearestIntersection = tempVector;
+                        nearestIntersectionPoint = tempVector;
                     }
 
-                    myVectors.add(tempVector);
+                   // myVectors.add(tempVector);
                     //routeSegment.setIntersectionPoint(tempVector);
 
                 }
@@ -362,7 +354,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
             }
 
-        if( myVectors.isEmpty() ) {
+       // if( myVectors.isEmpty() ) {
+            if( tempVector== null ) {
 
             nearestPointSegment.setIsNearestRouteSegment(true);
 
@@ -371,7 +364,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
             if( minPointDistance < 100 )
                 return true;
 
-        } else if( !myVectors.isEmpty() ) {
+       // } else if( !myVectors.isEmpty() ) {
+            } else if( tempVector!=null ) {
 
             float distance = Float.MAX_VALUE;
 
@@ -384,7 +378,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
             } else {
                 distance = minIntersectionDistance;
                 nearestIntersectionSegment.setIsNearestRouteSegment(true);
-                nearestIntersectionSegment.setIntersectionPoint(nearestIntersection);
+                nearestIntersectionSegment.setIntersectionPoint(nearestIntersectionPoint);
                 nearestIntersectionSegment.update();
             }
 
@@ -410,6 +404,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         }
 
 
+
+
       /*  Waypoint waypoint = getNearestWaypoint(routeWaypoints);
 //        Log.d("Waypoint", "Nearest Waypoint, distance" + waypoint.distanceToCurrentPosition());
         if(waypoint.distanceToCurrentPosition()<50) {
@@ -420,6 +416,124 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         } */
        // return true;
         return false;
+    }
+
+    public boolean hasLowDistance2(){
+
+        MyVector tempVector = new MyVector();
+
+        float minPointDistance = Float.MAX_VALUE;
+        RouteSegment nearestPointSegment = null;
+
+        float minIntersectionDistance = Float.MAX_VALUE;
+        RouteSegment nearestIntersectionSegment = null;
+
+
+        if(routeSegments != null && currY != 0 && currY != 0) {
+            nearestIntersectionSegment = calculateDistanceToRoute();
+            nearestPointSegment = calculateDistanceToWaypoints();
+
+            if(nearestPointSegment.getStartVector().getDistance()>= nearestPointSegment.getEndVector().getDistance()){
+                minPointDistance = nearestPointSegment.getStartVector().getDistance();
+            }
+            else minPointDistance = nearestPointSegment.getEndVector().getDistance();
+        }
+
+        // when there is no intersection with routeSegements, the distance to the nearest waypoint is used
+        if( nearestIntersectionSegment== null ) {
+
+            nearestPointSegment.setIsNearestRouteSegment(true);
+
+                    Log.d("RR", "point distance " + minPointDistance);
+
+            if( minPointDistance < 100 )
+                return true;
+
+        } else if( nearestIntersectionSegment!=null ) {
+            minIntersectionDistance = myVectorOperations.getDirectionVectorLength(nearestIntersectionSegment.getIntersectionPoint());
+
+            float distance = Float.MAX_VALUE;
+
+            Log.d("RR", "point distance "+minPointDistance );
+            Log.d("RR", "intersection distance "+minIntersectionDistance );
+
+            if( minIntersectionDistance > minPointDistance ) { //Punkt näher als Gerade
+                distance = minPointDistance;
+                nearestPointSegment.setIsNearestRouteSegment(true);
+            } else {
+                distance = minIntersectionDistance;
+                nearestIntersectionSegment.setIsNearestRouteSegment(true);
+               // nearestIntersectionSegment.setIntersectionPoint(nearestIntersectionPoint);
+                nearestIntersectionSegment.update();
+            }
+
+            Log.d("RR", "distance "+distance );
+
+            if( distance < 100 )
+                return true;
+        }
+
+        return false;
+    }
+
+    public RouteSegment calculateDistanceToRoute(){
+
+        MyVector tempVector = new MyVector();
+
+        float minIntersectionDistance = Float.MAX_VALUE;
+        RouteSegment nearestIntersectionSegment = null;
+        MyVector nearestIntersectionPoint = null;
+
+        if(routeSegments != null && currY != 0 && currY != 0) {
+            for(RouteSegment routeSegment : routeSegments) {
+
+                routeSegment.setIntersectionPoint(null);
+                routeSegment.update();
+
+                //get intersectionPoint of current position to routeSegement.
+                tempVector = myVectorOperations.lineIntersection(routeSegment,0, 0);
+
+                if(tempVector!= null){
+
+                    float length = myVectorOperations.getDirectionVectorLength(tempVector);
+                    if( length < minIntersectionDistance ) {
+                        minIntersectionDistance = length;
+                        nearestIntersectionSegment = routeSegment;
+                        nearestIntersectionPoint = tempVector;
+                    }
+                }
+            }
+            nearestIntersectionSegment.setIntersectionPoint(nearestIntersectionPoint);
+        }
+        return nearestIntersectionSegment;
+    }
+
+    public RouteSegment calculateDistanceToWaypoints(){
+
+        float minPointDistance = Float.MAX_VALUE;
+        RouteSegment nearestPointSegment = null;
+
+        if(routeSegments != null && currY != 0 && currY != 0) {
+            for (RouteSegment routeSegment : routeSegments) {
+
+
+                float distStart = myVectorOperations.getDirectionVectorLength(routeSegment.getStartVector());
+                routeSegment.getStartVector().setDistance(distStart);
+                float distEnd = myVectorOperations.getDirectionVectorLength(routeSegment.getEndVector());
+                routeSegment.getStartVector().setDistance(distEnd);
+
+                if (minPointDistance > distStart) {
+                    minPointDistance = distStart;
+                    nearestPointSegment = routeSegment;
+                }
+
+                if (minPointDistance > distEnd) {
+                    minPointDistance = distEnd;
+                    nearestPointSegment = routeSegment;
+                }
+            }
+        }
+        return nearestPointSegment;
     }
 
 
@@ -434,7 +548,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     public void updateRoute(MyRoute myRoute){
         if(myRoute != null) {
             //       Log.i("Info3", "Steps" + myRoute.getCoordinateList().size());
-            setActualRoute(myRoute);
+            setCurrentRoute(myRoute);
 
             showCustomToast();
 
@@ -453,7 +567,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
         TextView text = (TextView) toastLayout.findViewById(R.id.route_info);
 
-        String infoText = mixContext.getString(R.string.timeToDestination)+": " + getActualRoute().getDurationInMinutes()+ "\n" +mixContext.getString(R.string.distanceToDestination) +": " + getActualRoute().getDistanceInKMandMeters();
+        String infoText = mixContext.getString(R.string.timeToDestination)+": " + getCurrentRoute().getDurationInMinutes()+ "\n" +mixContext.getString(R.string.distanceToDestination) +": " + getCurrentRoute().getDistanceInKMandMeters();
         text.setText(infoText);
 
         final Toast toast = new Toast(MixContext.getInstance().getActualMixViewActivity());
@@ -523,7 +637,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
   
         gl.glDisable(GL10.GL_DITHER);
-        
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT,  GL10.GL_FASTEST);
         gl.glClearColor(0, 0, 0, 0);
         gl.glEnable(GL10.GL_CULL_FACE);
@@ -532,6 +645,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     }
 
     public void setRotationMatrix(float[] rotationMatrix) {
+        //
         this.rotationMatrix = rotationMatrix;
     }
 
@@ -556,5 +670,13 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
     }
     public float getCurrY(){
         return currY;
+    }
+
+    public MyRoute getCurrentRoute() {
+        return currentRoute;
+    }
+
+    public void setCurrentRoute(MyRoute currentRoute) {
+        this.currentRoute = currentRoute;
     }
 }
