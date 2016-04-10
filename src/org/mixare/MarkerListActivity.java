@@ -19,6 +19,7 @@
 package org.mixare;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
@@ -51,24 +52,27 @@ public class MarkerListActivity extends MaterialDrawerMenuActivity {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.drawermenu_content_camerascreen, markerListFragment);
 
-        editText = new EditText(this);
-
-        String intentAction=this.getIntent().getAction();
+		String intentAction=this.getIntent().getAction();
 
 		if (intentAction!=null && intentAction.equals(Intent.ACTION_SEARCH)) {
 			// Get search query from IntentExtras
 			String query = this.getIntent().getStringExtra(SearchManager.QUERY);
-            markerListFragment.updateList(query);
+			markerListFragment.setSearchString(query);
 			editText.setText(query);
 		} else {
-            // MarkerListFragment is started directly
-            markerListFragment.createList(null);
+			// MarkerListFragment is started directly
+			markerListFragment.setSearchString("");
 		}
-        fragmentTransaction.commit();
+		markerListFragment.onAttach(this);
+		fragmentTransaction.commit();
 
-        if(getActionBar()!=null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+		if(getActionBar()!=null) {
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+
+        editText = new EditText(this);
+
+
     }
 
 	@Override
