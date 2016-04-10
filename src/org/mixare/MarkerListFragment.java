@@ -87,7 +87,13 @@ public class MarkerListFragment extends DialogFragment {
 
 	}
 
-    public void updateList(String searchString){
+	@Override
+	public void onResume() {
+		super.onResume();
+		updateList(searchString);
+	}
+
+	public void updateList(String searchString){
         this.searchString=searchString;
         if(getActivity()!=null && sectionedListAdapter!=null) {
             sectionedListAdapter.changeList(createList(searchString));

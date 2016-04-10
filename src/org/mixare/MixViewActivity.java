@@ -60,9 +60,13 @@ import org.mixare.gui.LicensePreference;
 import org.mixare.gui.opengl.OpenGLAugmentationView;
 import org.mixare.gui.opengl.OpenGLMarker;
 import org.mixare.lib.gui.PaintScreen;
+import org.mixare.lib.marker.Marker;
 import org.mixare.lib.render.Matrix;
+import org.mixare.marker.POIMarker;
 import org.mixare.mgr.HttpTools;
 import org.mixare.route.RouteManager;
+
+import java.util.List;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_GAME;
 
@@ -89,6 +93,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	private CameraSurface cameraSurface;
     private FrameLayout cameraView;
     public HudView hudView;
+	public RangeBarView rangeBarView;
     private SimpleAugmentationView simpleAugmentationView;
     private OpenGLAugmentationView openGLAugmentationView;
 
@@ -177,7 +182,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			simpleAugmentationView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent me) {
-                    hudView.hideRangeBar();
+                    rangeBarView.hideRangeBar();
 
                     try {
                         killOnError();
@@ -211,7 +216,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 				firstAccess();
 			}
 
-			update3D();
+		//	update3D();
 
 		} catch (Exception ex) {
             doError(ex, GENERAL_ERROR);
@@ -585,6 +590,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	private void maintainViews() {
 		maintainCamera();
 		maintainAugmentedView();
+		maintainRangeBarView();
 		if (MixContext.getInstance().getSettings().getBoolean(getString(R.string.pref_item_usehud_key), true)) {
 			maintainHudView();
 		}
@@ -603,6 +609,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 		// clear stored data
 		getMarkerRenderer().clearEvents();
 		setPaintScreen(new PaintScreen());
+		getMarkerRenderer().refresh();
     }
 
 	/**
@@ -665,6 +672,16 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
         cameraView.addView(hudView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
     }
 
+	private void maintainRangeBarView() {
+		if (rangeBarView == null) {
+			rangeBarView = new RangeBarView(this);
+		}
+		else {
+			((ViewGroup) rangeBarView.getParent()).removeView(rangeBarView);
+		}
+		cameraView.addView(rangeBarView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+	}
+
 	private void maintainOpenGLView() {
         if(openGLAugmentationView==null) {
             sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -717,7 +734,11 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	 */
 	public void refresh(){
 		markerRenderer.refresh();
-        //update3D();
+		MixContext.getInstance().getRouteRenderer().updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers(POIMarker.class));
+
+		Log.i("test66", "Länge der POI-Liste" + getMarkerRenderer().getDataHandler().getCopyOfMarkers(POIMarker.class).size());
+
+		//update3D();
 	}
 
 	public void setErrorDialog(int error) {
@@ -828,7 +849,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	public void selectItem(int position, IDrawerItem drawerItem) {
 		switch ((int) drawerItem.getIdentifier()) {
 			case R.id.menuitem_range:
-                hudView.showRangeBar();
+                rangeBarView.showRangeBar();
                 //drawerLayout.closeDrawer(drawerList);
                 break;
 			case R.id.menuitem_route:
@@ -841,7 +862,14 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 		}
 	}
 
-    public void update3D(){
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		update3D();
+
+	}
+
+	public void update3D(){
         Location startLocation = MixContext.getInstance().getCurLocation();
         Location endLocation = MixContext.getInstance().getCurDestination();
 
@@ -860,6 +888,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			MixContext.getInstance().setRouteManager(r);
             r.getRoute(startLocation, endLocation);
             MixContext.getInstance().getRouteRenderer().updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers(OpenGLMarker.class));
+			List<Marker> pois = (getMarkerRenderer().getDataHandler().getCopyOfMarkers(OpenGLMarker.class));
         }
     }
 
@@ -905,7 +934,10 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			}
 			
 			simpleAugmentationView.postInvalidate();
-			hudView.postInvalidate();
+			if(hudView!= null) {
+				hudView.postInvalidate();
+			}
+			rangeBarView.postInvalidate();
 
 			int rotation = Compatibility.getRotation(this);
 
@@ -959,7 +991,7 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
-		hudView.hideRangeBar();
+		rangeBarView.hideRangeBar();
 		
 		try {
 			killOnError();
@@ -987,8 +1019,8 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 			killOnError();
 
 			//if range bar was visible, hide it
-			if (hudView.isRangeBarVisible()) {
-                hudView.hideRangeBar();
+			if (rangeBarView.isRangeBarVisible()) {
+				rangeBarView.hideRangeBar();
 				if (keyCode == KeyEvent.KEYCODE_MENU) {
 					return super.onKeyDown(keyCode, event);
 				}

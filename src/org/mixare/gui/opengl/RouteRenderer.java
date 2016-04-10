@@ -170,7 +170,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
        // gl.glPushMatrix();
 
-        renderPOIMarker(gl, poiWaypoints);
+       // renderPOIMarker(gl, poiWaypoints);
         renderRouteSegements(gl, routeSegments);
 
     }
