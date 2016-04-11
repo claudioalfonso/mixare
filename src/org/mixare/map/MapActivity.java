@@ -83,13 +83,6 @@ public class MapActivity extends MaterialDrawerMenuActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Location curLocation = MixContext.getInstance().getCurLocation();
-        Location curDestination = MixContext.getInstance().getCurDestination();
-
-        if (curDestination != null) {
-            target = new LatLong(curDestination.getLatitude(), curDestination.getLongitude());
-        }
-
         AndroidGraphicFactory.createInstance(this.getApplication());
         contentFrame = (FrameLayout)findViewById(R.id.drawermenu_content_camerascreen);
 
@@ -140,7 +133,7 @@ public class MapActivity extends MaterialDrawerMenuActivity {
             setOwnLocationToCenter();
             setZoomLevelBasedOnRadius();
         }
-        paintRoute(curLocation,curDestination);
+        paintRoute();
     }
 
 
@@ -333,7 +326,7 @@ public class MapActivity extends MaterialDrawerMenuActivity {
         setCenter(location.getLatitude(), location.getLongitude());
     }
 
-    public void paintRoute(Location routeStart, Location routeEnd) {
+    public void paintRoute() {
         Paint paint = AndroidGraphicFactory.INSTANCE.createPaint();
         paint.setColor(Color.parseColor(MixContext.getInstance().getSettings().getString(getString(R.string.pref_item_routecolor_key),getString(R.string.color_hint))));
         paint.setStrokeWidth(6);
@@ -342,15 +335,11 @@ public class MapActivity extends MaterialDrawerMenuActivity {
         polyline = new Polyline(paint, AndroidGraphicFactory.INSTANCE);
         coordinateList = polyline.getLatLongs();
 
-        RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
-            @Override
-            public void processFinish(MyRoute route) {
-                if(route!=null) {
-                    coordinateList.addAll(route.getCoordinateList());
-                    mapView.getLayerManager().getLayers().add(polyline);
-                }
-            }
+        MyRoute route =  MixContext.getInstance().getActualRoute();
 
-        }).execute(routeStart,routeEnd);
+        if(route!=null) {
+            coordinateList.addAll(route.getCoordinateList());
+            mapView.getLayerManager().getLayers().add(polyline);
+        }
     }
 }

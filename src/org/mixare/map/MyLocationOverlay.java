@@ -38,8 +38,6 @@ public class MyLocationOverlay extends Layer implements LocationListener {
     private static final GraphicFactory GRAPHIC_FACTORY = AndroidGraphicFactory.INSTANCE;
 
 
-
-
     private static Paint getPaint(int color, int strokeWidth, Style style, Context context) {
         Paint paint = GRAPHIC_FACTORY.createPaint();
         paint.setColor(0x00ffffff & Color.parseColor(MixContext.getInstance().getSettings().getString(context.getString(R.string.pref_item_routecolor_key),context.getString(R.string.color_hint)))|alpha);
@@ -48,13 +46,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
         return paint;
     }
 
-    public synchronized boolean isMyLocationEnabled() {
-        return this.myLocationEnabled;
-    }
-
     public MyLocationOverlay(Context context, MapViewPosition mapViewPosition, DisplayModel displayModel) {
-
-
 
 
         this.mapViewPosition = mapViewPosition;
@@ -89,10 +81,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
 
         this.circle.setLatLong(new LatLong(location.getLatitude(),location.getLongitude()));
         this.innerCircle.setLatLong(new LatLong(location.getLatitude(),location.getLongitude()));
-
-
         requestRedraw();
-
 
     }
 

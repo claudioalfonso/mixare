@@ -91,7 +91,6 @@ class Waypoint
     }
 
     public  Waypoint(){}
-  //  public float z;
     public Waypoint(double lat, double lon, int index, RouteRenderer routeRenderer)
     {
 
@@ -99,17 +98,18 @@ class Waypoint
         absoluteY =(float) MercatorProjection.latitudeToPixelY(lat, MERCATOR_SCALE);
 
         if(index == 0){
-            //sollte das so sein?-daher der große wert...
-            routeRenderer.setStartCoordX(absoluteX);
-            routeRenderer.setStartCoordY(absoluteY);
+           // routeRenderer.setStartCoordX(absoluteX);
+           // routeRenderer.setStartCoordY(absoluteY);
            // startCoordY =  absoluteY;
             isStart = true;
             relativeX = 0;
             relativeY = 0;
         }
         else {
-            relativeX = absoluteX - routeRenderer.getStartCoordX();
-            relativeY = routeRenderer.getStartCoordY() - absoluteY;
+       //     relativeX = absoluteX - routeRenderer.getStartCoordX();
+       //     relativeY = routeRenderer.getStartCoordY() - absoluteY;
+            relativeX = absoluteX - routeRenderer.getCurrX();
+            relativeY = routeRenderer.getCurrY() -absoluteY;
         }
 
 

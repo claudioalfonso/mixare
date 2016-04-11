@@ -27,6 +27,7 @@ import java.util.List;
 import org.mixare.MixContext;
 import org.mixare.gui.opengl.OpenGLMarker;
 import org.mixare.lib.marker.Marker;
+import org.mixare.marker.POIMarker;
 
 import android.location.Location;
 import android.util.Log;
@@ -101,7 +102,7 @@ public class DataHandler {
 	public List<Marker> getCopyOfMarkers(Class<? extends Marker> markerClass){
 		ArrayList<Marker> copyOfMarkers = new ArrayList<Marker>();
 		for (Marker curMarker: markerList) {
-			if(curMarker instanceof OpenGLMarker){
+			if(curMarker instanceof POIMarker){
 				copyOfMarkers.add(curMarker);
 			}
 		}

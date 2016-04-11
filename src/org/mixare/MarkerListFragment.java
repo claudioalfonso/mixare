@@ -42,7 +42,12 @@ public class MarkerListFragment extends DialogFragment {
 	private ListView listView;
 	private MarkerRenderer markerRenderer;
 
-    private String searchString="";
+	View myView;
+
+	List<Item> list;
+
+
+	private String searchString="";
 
 	/* The sections for the list in meter */
 	private static final int[] sections = { 250, 500, 1000, 1500, 3500, 5000,
@@ -56,24 +61,39 @@ public class MarkerListFragment extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		List<Item> list;
-
-		list = createList();
-
-		sectionedListAdapter = new SectionedListAdapter(this.getActivity(), this.getActivity(), 0, list);
 
 	}
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View myView=inflater.inflate(R.layout.list, container, false);
-        listView = (ListView) myView.findViewById(R.id.section_list_view);
-        listView.setAdapter(sectionedListAdapter);
+         myView=inflater.inflate(R.layout.list, container, false);
+       // listView.setAdapter(sectionedListAdapter);
         return myView;
     }
 
-    public void updateList(String searchString){
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		list = createList();
+
+		sectionedListAdapter = new SectionedListAdapter(this.getActivity(), this.getActivity(), 0, list);
+		listView = (ListView) myView.findViewById(R.id.section_list_view);
+		listView.setAdapter(sectionedListAdapter);
+
+		updateList(searchString);
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		updateList(searchString);
+	}
+
+	public void updateList(String searchString){
         this.searchString=searchString;
         if(getActivity()!=null && sectionedListAdapter!=null) {
             sectionedListAdapter.changeList(createList(searchString));
@@ -83,9 +103,6 @@ public class MarkerListFragment extends DialogFragment {
     @Override
     public void onAttach(Context context){
 		super.onAttach(context);
-			updateList(this.searchString);
-
-
     }
 
 	/**
@@ -196,6 +213,11 @@ public class MarkerListFragment extends DialogFragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         return dialog;
     }
+
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
+	}
+
 
 	/* private classes */
 
