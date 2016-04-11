@@ -18,22 +18,10 @@ import org.mixare.gui.Radar;
 import org.mixare.lib.gui.PaintScreen;
 
 /**
- * Created by MelanieW on 10.04.2016.
+ * View which includes the RangeBar and the radar.
  */
 public class RangeBarView extends RelativeLayout {
 
-    private TextView positionStatusText; // the TextView on the HUD to show information about gpsPosition
-    private TextView dataSourcesStatusText; // the TextView on the HUD to show information about dataSources
-    private TextView sensorsStatusText; // the TextView on the HUD to show information about sensors
-    private TextView destinationStatusText; // the TextView on the HUD to show information about the currently selected destination to navigate to
-
-    private ProgressBar positionStatusProgress;
-    private ProgressBar dataSourcesStatusProgress;
-    private ProgressBar sensorsStatusProgress;
-
-    private ImageView positionStatusIcon;
-    private ImageView dataSourcesStatusIcon;
-    private ImageView sensorsStatusIcon;
     private SeekBar rangeBar;
 
     private Radar radar = null;
