@@ -2,7 +2,10 @@ package org.mixare.gui.opengl;
 
 import java.util.Vector;
 
-/**
+/*
+ * Vector with (X|Y) Coordinates, unsed as Points in a 3 Dimensional Coordinate System. Z Coordinate is currently 0 in any
+ * use case, because it isn't needed for outdoor routing functionality.
+ *
  * Created by MelanieW on 01.03.2016.
  */
 public class MyVector {

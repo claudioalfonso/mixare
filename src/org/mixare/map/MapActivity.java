@@ -326,6 +326,9 @@ public class MapActivity extends MaterialDrawerMenuActivity {
         setCenter(location.getLatitude(), location.getLongitude());
     }
 
+    /**
+     * Paints the Route on the map. With route color from settings.
+     */
     public void paintRoute() {
         Paint paint = AndroidGraphicFactory.INSTANCE.createPaint();
         paint.setColor(Color.parseColor(MixContext.getInstance().getSettings().getString(getString(R.string.pref_item_routecolor_key),getString(R.string.color_hint))));

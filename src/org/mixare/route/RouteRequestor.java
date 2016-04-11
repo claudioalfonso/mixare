@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * Requests walking Route from locoslab
+ *
  * Created on 19.01.2016 by MelanieW.
  */
 public class RouteRequestor extends Connector {

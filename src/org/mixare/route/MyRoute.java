@@ -15,6 +15,9 @@ import java.util.List;
 
 
 /**
+ * Extends Route from Locoslab with methods to getDurationInMinutes and to getDistanceInKMandMeters and getter /
+ * setter for a coordinatelist
+ *
  * Created by MelanieW on 05.03.2016.
  */
 
