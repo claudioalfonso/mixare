@@ -1,4 +1,4 @@
-package org.mixare;
+package org.mixare.gui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +10,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import org.mixare.Config;
+import org.mixare.MixContext;
+import org.mixare.MixViewActivity;
+import org.mixare.MixViewDataHolder;
+import org.mixare.R;
 import org.mixare.gui.Radar;
 import org.mixare.lib.gui.PaintScreen;
 

@@ -10,10 +10,8 @@ import org.mixare.gui.opengl.OpenGLAugmentationView;
  */
 public class RouteManager {
 
-
     public RouteManager() {
     }
-
     public void getRoute(Location startLocation,Location endLocation) {
         RouteDataAsyncTask asyncTask = (RouteDataAsyncTask) new RouteDataAsyncTask(new AsyncResponse() {
             @Override

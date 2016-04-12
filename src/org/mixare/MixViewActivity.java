@@ -57,6 +57,7 @@ import org.mixare.data.DataSourceList;
 import org.mixare.data.DataSourceStorage;
 import org.mixare.gui.HudView;
 import org.mixare.gui.LicensePreference;
+import org.mixare.gui.RangeBarView;
 import org.mixare.gui.opengl.OpenGLAugmentationView;
 import org.mixare.gui.opengl.OpenGLMarker;
 import org.mixare.lib.gui.PaintScreen;
@@ -735,10 +736,6 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	public void refresh(){
 		markerRenderer.refresh();
 		MixContext.getInstance().getRouteRenderer().updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers(POIMarker.class));
-
-		Log.i("test66", "Länge der POI-Liste" + getMarkerRenderer().getDataHandler().getCopyOfMarkers(POIMarker.class).size());
-
-		//update3D();
 	}
 
 	public void setErrorDialog(int error) {

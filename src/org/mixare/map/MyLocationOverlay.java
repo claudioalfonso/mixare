@@ -22,6 +22,8 @@ import org.mixare.MixContext;
 import org.mixare.R;
 
 /**
+ * Overlay for drawing a GPS position point on the map
+ *
  * Created by MelanieW on 03.04.2016.
  */
 public class MyLocationOverlay extends Layer implements LocationListener {
