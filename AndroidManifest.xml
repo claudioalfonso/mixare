@@ -125,10 +125,11 @@
         <activity android:name=".data.DataSourceList"
             android:label="@string/datasource_list" />
         
-        <activity android:name=".PluginListActivity" 
+        <activity android:name=".PluginListActivity"
             android:label="@string/plugin_list" />
 
         <activity android:name=".settings.SettingsActivity"
+            android:theme="@style/MaterialDrawerTheme.ActionBar"
             android:label="@string/menu_item_settings">
         </activity>
     </application>

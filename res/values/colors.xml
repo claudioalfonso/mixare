@@ -4,10 +4,10 @@
 
     <color name="material_drawer_primary">#004c93</color>
 
-   <!-- <color name="material_drawer_primary_dark">#004c93</color>--> <!-- UDE color, original #1976D2 -->
+    <color name="material_drawer_primary_dark">#002c56</color> <!-- UDE color, original #1976D2 -->
 
-    <color name="material_drawer_primary_light">#BBDEFB</color>
-    <color name="material_drawer_accent">#FF4081</color>
+    <color name="material_drawer_primary_light">#006cD0</color>
+    <color name="material_drawer_accent">#006cD0</color>
 
     <!-- OVERWRITE THESE COLORS FOR A LIGHT THEME -->
     <!-- MaterialDrawer DEFAULT colors -->
