@@ -632,10 +632,6 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 				cameraView.removeView(cameraSurface);
 				cameraView.addView(cameraSurface);
 			}
-             Log.d(Config.TAG + " cameraSurface","w="+cameraSurface.getWidth()+ ", h="+cameraSurface.getHeight());
-        Log.d(Config.TAG + " camView", "w=" + cameraView.getWidth() + ", h=" + cameraView.getHeight());
-       cameraView.getLayoutParams().width=800;
-   //     cameraView.getLayoutParams().height=480;
     }
 
 	/**

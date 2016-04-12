@@ -5,6 +5,7 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,7 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 
 	MixViewActivity app;
 	SurfaceHolder holder;
+
 	Camera camera;
 
 	CameraSurface(Context context) {
@@ -28,6 +30,7 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 			app = (MixViewActivity) context;
 
 			holder = getHolder();
+
 			holder.addCallback(this);
 		} catch (Exception ex) {
             Log.e(Config.TAG, this.getClass().getName(), ex);
@@ -141,6 +144,29 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 				}
 				Log.d(Config.TAG, "Chosen camera element: w:" + bestw + " h:"
 						+ besth + " aspect ratio:" + bff);
+
+				if(besth<=h){
+					// height of camera fits into screen
+					// should always be true (because of all the hassle beforehand)
+					// so scale up (automatically, no need to do anything
+					// because of android:layout_height="match_parent" in the drawermenu_content_camerascreen)
+				}
+
+				if(bestw<=w){
+					// width of camera fits into screen
+					// should always be true (because of all the hassle beforehand)
+					// so resize the screen to fit to the scaled up height
+					// to prevent distortion
+                    double resizedWidth=h*bff;
+                    if(resizedWidth>w){
+                        resizedWidth=w; //don't make the camera bigger than the available view
+                        // this means there WILL be distortion, but probably not much
+                    }
+
+                    ((View)this.getParent()).getLayoutParams().width = (int) resizedWidth;
+				}
+
+
 				// Some Samsung phones will end up with bestw and besth = 0
 				// because their minimum preview size is bigger then the screen
 				// size.
@@ -149,12 +175,13 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 					Log.d(Config.TAG, "Using default camera parameters!");
 					bestw = DEFAULT_CAM_WIDTH;
 					besth = DEFAULT_CAM_HEIGHT;
-				}
-                parameters.setPreviewSize(800, besth);
+            }
+                        parameters.setPreviewSize(800, besth);
 
                 parameters.setPreviewSize(bestw, besth);
 			} catch (Exception ex) {
 				parameters.setPreviewSize(DEFAULT_CAM_WIDTH, DEFAULT_CAM_HEIGHT);
+                Log.d(Config.TAG, "Exeption! Set default cam parameters", ex);
 			}
 
 			camera.setParameters(parameters);
