@@ -138,6 +138,9 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         //Translate CameraView to positon:
         gl.glTranslatef(0, 0, -3f);
 
+        float previousX = 0f;
+        float previousY = 0f;
+
         if (routeSegments != null) {
             synchronized (routeSegments) {
                 gl.glRotatef(0, 1, 0, 0);
@@ -146,9 +149,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
                 for (RouteSegment routeSegment : routeSegments) {
 
-                    //Translate along the direction Vector of earch route segment and draw the route segment from this position backwards.
-                    MyVector directionVektor = myVectorOperations.getDirectionVector(routeSegment.getEndVector(), routeSegment.getStartVector());
-
                     //draw trinagles between route segments to get a better looking route course
                     if(previousRouteSegment!= null){
                         Triangle triangle =   new Triangle(previousRouteSegment,routeSegment);
@@ -156,7 +156,8 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                         triangle.draw(gl);
                     }
 
-                    gl.glTranslatef(directionVektor.getXCoordinate(), directionVektor.getYCoordinate(), 0);
+                    gl.glTranslatef(routeSegment.getEndVector().getXCoordinate() - previousX, routeSegment.getEndVector().getYCoordinate() - previousY, 0);
+
 
 
                     //if it is the last route segment also draw a targetWaypoint to show to the destination.
@@ -166,9 +167,12 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                             setTargetWaypoint(targetWaypoint);
                         }
 
-                            //draw the route segment
-                            routeSegment.draw(gl);
+                    //draw the route segment
+                    routeSegment.draw(gl);
+
                     previousRouteSegment=routeSegment;
+                    previousX = routeSegment.getEndVector().getXCoordinate();
+                    previousY = routeSegment.getEndVector().getYCoordinate();
                 }
             }
         }
