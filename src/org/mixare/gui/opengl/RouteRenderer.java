@@ -149,6 +149,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                     //Translate along the direction Vector of earch route segment and draw the route segment from this position backwards.
                     MyVector directionVektor = myVectorOperations.getDirectionVector(routeSegment.getEndVector(), routeSegment.getStartVector());
 
+                    //draw trinagles between route segments to get a better looking route course
                     if(previousRouteSegment!= null){
                         Triangle triangle =   new Triangle(previousRouteSegment,routeSegment);
                         triangle.setColor(previousRouteSegment.getColor());
@@ -237,6 +238,23 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                 waypointList.add(newWaypoint);
 
             }
+
+            Waypoint previousWaypoint = null;
+
+            Iterator<Waypoint> wpIt = waypointList.iterator();
+            while( wpIt.hasNext() ) {
+
+                Waypoint wp = wpIt.next();
+                //Remove duplicate waypoints
+                if(previousWaypoint!=null) {
+                    if (wp.getAbsoluteX() == previousWaypoint.getAbsoluteX() &&
+                            wp.getAbsoluteY() == previousWaypoint.getAbsoluteY()) {
+                        wpIt.remove();
+                    }
+                }
+                previousWaypoint = wp;
+
+            }
         }
 
 
@@ -288,18 +306,6 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                     lastWaypoint = waypoint;
                 }
 
-               Iterator<RouteSegment> rsIt = routeSegments.iterator();
-                while( rsIt.hasNext() ) {
-
-                    RouteSegment rs = rsIt.next();
-                    //Remove route segments with the same start and end vector
-                    if( rs.getStartVector().getXCoordinate() == rs.getEndVector().getXCoordinate() &&
-                            rs.getStartVector().getYCoordinate() == rs.getEndVector().getYCoordinate() ) {
-                        rsIt.remove();
-                        Log.d("RR", "Segment removed");
-                    }
-
-                }
             }
         }
     }
