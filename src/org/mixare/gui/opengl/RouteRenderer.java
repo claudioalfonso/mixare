@@ -23,6 +23,7 @@ import org.mixare.lib.marker.Marker;
 import org.mixare.route.RouteManager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -129,6 +130,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
      * @param routeSegments
      */
     public void renderRouteSegments(GL10 gl, List<RouteSegment> routeSegments){
+        RouteSegment previousRouteSegment= null;
 
         //identity matrix, has to be loaded each time route Segments are rendered
         gl.glLoadIdentity();
@@ -146,6 +148,13 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
                     //Translate along the direction Vector of earch route segment and draw the route segment from this position backwards.
                     MyVector directionVektor = myVectorOperations.getDirectionVector(routeSegment.getEndVector(), routeSegment.getStartVector());
+
+                    if(previousRouteSegment!= null){
+                        Triangle triangle =   new Triangle(previousRouteSegment,routeSegment);
+                        triangle.setColor(previousRouteSegment.getColor());
+                        triangle.draw(gl);
+                    }
+
                     gl.glTranslatef(directionVektor.getXCoordinate(), directionVektor.getYCoordinate(), 0);
 
 
@@ -158,6 +167,7 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
                             //draw the route segment
                             routeSegment.draw(gl);
+                    previousRouteSegment=routeSegment;
                 }
             }
         }
@@ -209,24 +219,28 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
         double lon=0;
 
         updateCurLocation(null);
-        synchronized(waypointList){
+        synchronized(routeWaypoints) {
             waypointList.clear();
             for (Object curObj : geoObjects) {
-                if (curObj instanceof Marker){
-                    lat=((Marker)curObj).getLatitude();
-                    lon=((Marker)curObj).getLongitude();
-                } else if (curObj instanceof LatLong){
-                    lat=((LatLong)curObj).latitude;
-                    lon=((LatLong)curObj).longitude;
+                if (curObj instanceof Marker) {
+                    lat = ((Marker) curObj).getLatitude();
+                    lon = ((Marker) curObj).getLongitude();
+                } else if (curObj instanceof LatLong) {
+                    lat = ((LatLong) curObj).latitude;
+                    lon = ((LatLong) curObj).longitude;
                 }
-                newWaypoint = new Waypoint(lat, lon, geoObjects.indexOf(curObj),this);
+                newWaypoint = new Waypoint(lat, lon, geoObjects.indexOf(curObj), this);
 
                 if (curObj instanceof Marker) {
                     newWaypoint.setColor(((Marker) curObj).getColor());
                 }
                 waypointList.add(newWaypoint);
+
             }
         }
+
+
+
     }
 
 
@@ -272,6 +286,19 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
                         routeSegments.add(tempRouteSegment);
                     }
                     lastWaypoint = waypoint;
+                }
+
+               Iterator<RouteSegment> rsIt = routeSegments.iterator();
+                while( rsIt.hasNext() ) {
+
+                    RouteSegment rs = rsIt.next();
+                    //Remove route segments with the same start and end vector
+                    if( rs.getStartVector().getXCoordinate() == rs.getEndVector().getXCoordinate() &&
+                            rs.getStartVector().getYCoordinate() == rs.getEndVector().getYCoordinate() ) {
+                        rsIt.remove();
+                        Log.d("RR", "Segment removed");
+                    }
+
                 }
             }
         }
@@ -425,7 +452,9 @@ public class RouteRenderer implements GLSurfaceView.Renderer{
 
             showCustomToast();
 
-            createWaypoints(myRoute.getCoordinateList(), routeWaypoints);
+                createWaypoints(myRoute.getCoordinateList(), routeWaypoints);
+
+
             createRouteSegments(routeWaypoints);
             }
 
