@@ -39,6 +39,12 @@
             android:defaultValue="true"
             android:key="@string/pref_item_routing_key"
             android:title="@string/pref_item_routing_title" />
+        <ListPreference
+            android:defaultValue="@string/routing_service_value_locoslab"
+            android:key="@string/pref_item_routing_service_key"
+            android:title="@string/pref_item_routing_service_title"
+            android:entries="@array/routing_services_labels"
+            android:entryValues="@array/routing_services_values"/>
         <EditTextPreference
             android:defaultValue="@string/color_hint"
             android:key="@string/pref_item_routecolor_key"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Mixare</string>
+    <string name="app_name">APP_NAME</string>
     <string name="search_hint">Search Location</string>
     
     <string name="N">N</string>
@@ -228,4 +228,10 @@
 	<string name="distanceToDestination">Distance:</string>
 	<string name="pref_cat_location">Location</string>
 	<string name="pref_item_camera2_summary">experimental support</string>
+	<string name="pref_item_routing_service_key" translatable="false">routingService</string>
+	<string name="pref_item_routing_service_title">Routing Service</string>
+	<string name="routing_service_label_osrm">OSMRoutingMachine</string>
+	<string name="routing_service_label_locoslab">Locoslab</string>
+	<string name="routing_service_value_osrm" translatable="false">routingOSRM</string>
+	<string name="routing_service_value_locoslab" translatable="false">routingLocoslab</string>
 </resources>

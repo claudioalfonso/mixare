@@ -186,4 +186,7 @@
 	<string name="distanceToDestination">Entfernung</string>
 	<string name="pref_cat_location">Orte</string>
 	<string name="pref_item_camera2_summary">experimentelle Unterstützung</string>
+	<string name="routing_service_label_locoslab">Locoslab</string>
+	<string name="routing_service_label_osrm">OSMRoutingMachine</string>
+	<string name="pref_item_routing_service_title">Routen-Dienst</string>
 </resources>

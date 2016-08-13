@@ -19,4 +19,12 @@
 	    <item>@string/add_random</item>
 	    <item>@string/truncate</item>
 	</string-array>
+	<string-array name="routing_services_labels" >
+		<item>@string/routing_service_label_osrm</item>
+		<item>@string/routing_service_label_locoslab</item>
+	</string-array>
+	<string-array name="routing_services_values">
+		<item>@string/routing_service_value_osrm</item>
+		<item>@string/routing_service_value_locoslab</item>
+	</string-array>
 </resources>

@@ -5,9 +5,15 @@ import android.util.Log;
 
 import com.locoslab.api.data.carta.route.direction.Route;
 import com.locoslab.api.data.carta.route.direction.Step;
+import com.locoslab.api.data.carta.route.direction.StreetStep;
+import com.locoslab.api.data.carta.route.direction.TransitStep;
 import com.locoslab.api.data.maps.model.Coordinate;
 
 import org.mapsforge.core.model.LatLong;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadLeg;
+import org.osmdroid.bonuspack.routing.RoadNode;
+import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +31,13 @@ import java.util.List;
 public class MyRoute extends com.locoslab.api.data.carta.route.direction.Route {
 
     private List<LatLong> coordinateList;
+
+    /*
+    Only use for generation from OSRM
+     */
+    public MyRoute() {
+
+    }
 
     public MyRoute(Route route) {
 
@@ -86,4 +99,39 @@ public class MyRoute extends com.locoslab.api.data.carta.route.direction.Route {
     }
 
 
+    public static MyRoute fromOSRMRoad(Road road) {
+        GeoPoint curGeoPoint=null; //osmdroid representation
+        LatLong curLatLong=null; //mapsforge representation
+        Coordinate curCoord=null; //locoslab representation
+        Location curLocation=null; //android representation
+
+        MyRoute builtRoute=new MyRoute();
+
+        ArrayList<LatLong> latLongList = new ArrayList<>();
+
+        builtRoute.setDistance(road.mLength);
+        builtRoute.setDuration((int) road.mDuration);
+
+        for (RoadNode curNode: road.mNodes){
+            curGeoPoint=curNode.mLocation;
+
+            curLocation=new Location("");
+            curCoord=new Coordinate();
+
+            curLatLong=new LatLong(curGeoPoint.getLatitude(),curGeoPoint.getLongitude());
+            curLocation.setLatitude(curGeoPoint.getLatitude());
+            curLocation.setLongitude(curGeoPoint.getLongitude());
+            curCoord.setLongitude(curGeoPoint.getLongitude());
+            curCoord.setLongitude(curGeoPoint.getLongitude());
+
+            if(latLongList.isEmpty()){
+                builtRoute.setSourceCoordinate(curCoord);
+            }
+            latLongList.add(curLatLong);
+        }
+        builtRoute.setCoordinateList(latLongList);
+        builtRoute.setTargetCoordinate(curCoord);
+
+        return builtRoute;
+    }
 }
