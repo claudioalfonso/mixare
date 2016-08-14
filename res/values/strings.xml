@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+	<!-- NOW DONE BY GRADLE
     <string name="app_name">APP_NAME</string>
-    <string name="search_hint">Search Location</string>
+	<string name="package_name" translatable="false">PACKAGE_NAME</string>
+	-->
+
+	<string name="search_hint">Search Location</string>
     
     <string name="N">N</string>
     <string name="NE">NE</string>

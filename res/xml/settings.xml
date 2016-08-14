@@ -23,7 +23,7 @@
             android:title="@string/pref_item_datasources_title" >
             <intent
                 android:targetClass="org.mixare.data.DataSourceList"
-                android:targetPackage="org.mixare" />
+                android:targetPackage="@string/package_name" />
         </PreferenceScreen>
         <PreferenceScreen
             android:key="@string/pref_item_plugins_key"

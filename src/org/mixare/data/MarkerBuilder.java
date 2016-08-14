@@ -26,7 +26,9 @@ public class MarkerBuilder {
     }
 
     public MarkerBuilder setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+        if(imageURL!=null) {
+            this.imageURL = imageURL;
+        }
         return this;
     }
 
@@ -164,6 +166,7 @@ public class MarkerBuilder {
 
         if(newMarker==null){ //no special marker Type set, so determine by displayType
             switch (displayType) {
+
                 case CIRCLE_MARKER:
                     newMarker=new POIMarker(id,title,latitude,longitude,altitude,pageURL,0, color);
 //                    Log.d(MixViewActivity.TAG, "new circle POI Marker created at lat="+latitude+", lon="+longitude);

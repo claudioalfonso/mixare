@@ -78,12 +78,14 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            resValue 'string', 'APP_NAME', 'Mixare'
+            resValue 'string', 'app_name', 'Mixare'
+            resValue 'string', 'package_name', 'org.mixare'
         }
 
         debug {
             applicationIdSuffix '.debug'
-            resValue 'string', 'APP_NAME', 'Mixare Debug'
+            resValue 'string', 'app_name', 'Mixare Debug'
+            resValue 'string', 'package_name', 'org.mixare.debug'
         }
 
     }

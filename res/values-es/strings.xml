@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mixare</string>
+	<!-- NOW DONE BY GRADLE
+	<string name="app_name">Mixare</string>
+	-->
     <string name="search_hint">Busca lugares</string>
 
     <string name="N">N</string>
