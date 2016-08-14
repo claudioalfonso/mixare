@@ -41,6 +41,16 @@ public class DataHandler {
 
 	protected DataSource.DISPLAY overrideMarkerDisplayType = null;
 
+	public boolean getRespectJSONDisplayType() {
+		return respectJSONDisplayType;
+	}
+
+	public void setRespectJSONDisplayType(boolean respectJSONDisplayType) {
+		this.respectJSONDisplayType = respectJSONDisplayType;
+	}
+
+	protected boolean respectJSONDisplayType = false;
+
 	public DataSource.DISPLAY getOverrideMarkerDisplayType() {
 		return overrideMarkerDisplayType;
 	}

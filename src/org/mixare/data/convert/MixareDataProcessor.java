@@ -25,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mixare.Config;
+import org.mixare.data.DataSource;
 import org.mixare.data.MarkerBuilder;
 import org.mixare.data.DataHandler;
 import org.mixare.lib.HtmlUnescape;
@@ -62,19 +63,30 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 		List<Marker> markers = new ArrayList<Marker>();
 		JSONObject root = convertToJSON(rawData);
 		JSONArray dataArray = root.getJSONArray("results");
+		String jsonMarkerType = null;
+
+		if(root.has("marker_type")){
+			jsonMarkerType = root.getString("marker_type");
+		}
+
+		if(jsonMarkerType !=null && respectJSONDisplayType){
+			if(jsonMarkerType.equals("IMAGE")) {
+				overrideMarkerDisplayType = DataSource.DISPLAY.IMAGE_MARKER;
+			}
+		}
+
 		int top = Math.min(MAX_JSON_OBJECTS, dataArray.length());
 
 		for (int i = 0; i < top; i++) {
 			JSONObject jo = dataArray.getJSONObject(i);
-			
-			Marker ma = null;
-			if (jo.has("title") && jo.has("lat") && jo.has("lng")
-					&& jo.has("elevation")) {
 
+			Marker ma = null;
+			if (jo.has("title") && jo.has("lat") && jo.has("lng")) { // && jo.has("elevation")) {
 				String id = "";
-				if(jo.has("id"))
-						id = jo.getString("id");
-				
+				if(jo.has("id")){
+					id = jo.getString("id");
+				}
+
 				Log.v(Config.TAG, "processing Mixare JSON object");
 				String link=null;
 				String image=null;
@@ -86,18 +98,18 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 				if(jo.has("image")) {
 					image = jo.getString("image");
 				}
+
 				ma = new MarkerBuilder().setId(id)
 						.setTitle(HtmlUnescape.unescapeHTML(jo.getString("title")))
 						.setLatitude(jo.getDouble("lat"))
 						.setLongitude(jo.getDouble("lng"))
-						.setAltitude(jo.getDouble("elevation"))
+	//					.setAltitude(jo.getDouble("elevation"))
+						.setAltitude(0.0)
 						.setDisplayType(overrideMarkerDisplayType)
 						.setPageURL(link)
 						.setImageURL(image)
 						.setColor(color)
 						.build();
-
-
 
 				if(ma!=null) {
 					markers.add(ma);

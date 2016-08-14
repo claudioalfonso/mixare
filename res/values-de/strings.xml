@@ -191,4 +191,5 @@
 <string name="routing_service_label_locoslab">Locoslab</string>
 <string name="routing_service_label_osrm">OSMRoutingMachine</string>
 <string name="pref_item_routing_service_title">Routen-Dienst</string>
+    <string name="ds_respect_displaytype_label">Anzeige-Typ aus JSON berücksichtigen</string>
 </resources>

@@ -190,8 +190,7 @@ public class PanoramioDataProcessor extends DataHandler implements
 			}
 
 			// request
-			String[] content = Elevation.getElevation().calcElevations(lats,
-					lngs);
+			String[] content = Elevation.getElevation().calcElevations(lats, lngs);
 
 			if (content.length != looper) {
 				Log.d("test", "looper(" + looper + ") != length("

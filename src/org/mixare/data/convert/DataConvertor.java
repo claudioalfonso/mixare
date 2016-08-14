@@ -68,6 +68,7 @@ public class DataConvertor {
 		try {
 			if(dataProcessor instanceof DataHandler) {
 				((DataHandler) dataProcessor).setOverrideMarkerDisplayType(ds.getDisplay());
+				((DataHandler) dataProcessor).setRespectJSONDisplayType(ds.getRespectDisplayType());
 			}
 			return dataProcessor.load(rawResult, ds.getDataSourceId(), ds.getColor());
 		} catch (JSONException e) {

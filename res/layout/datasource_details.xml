@@ -91,6 +91,19 @@
         </Spinner>
 
         <TextView
+            android:id="@+id/ds_respect_displaytype_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ds_respect_displaytype_label"
+            android:textAppearance="?android:attr/textAppearanceLarge" >
+        </TextView>
+
+        <CheckBox
+            android:id="@+id/ds_respect_displaytype_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/ds_detail_color_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

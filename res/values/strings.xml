@@ -238,4 +238,5 @@
 	<string name="routing_service_label_locoslab">Locoslab</string>
 	<string name="routing_service_value_osrm" translatable="false">routingOSRM</string>
 	<string name="routing_service_value_locoslab" translatable="false">routingLocoslab</string>
+	<string name="ds_respect_displaytype_label">Respect display type in JSON</string>
 </resources>

@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.CheckBox;
 
 /**
  * Activity to add new DataSources
@@ -48,6 +49,7 @@ public class AddDataSource extends Activity {
 	EditText colorField;
 	Spinner typeSpinner;
 	Spinner displaySpinner;
+	CheckBox respectDisplayCheckbox;
 	Spinner blurSpinner;
 	
 	Bundle extras;
@@ -62,6 +64,7 @@ public class AddDataSource extends Activity {
 		colorField = (EditText) findViewById(R.id.ds_detail_color_input);
 		typeSpinner = (Spinner) findViewById(R.id.ds_detail_dstype_input);
 		displaySpinner = (Spinner) findViewById(R.id.ds_detail_displaytype_input);
+		respectDisplayCheckbox = (CheckBox) findViewById(R.id.ds_respect_displaytype_input);
 		blurSpinner = (Spinner) findViewById(R.id.ds_detail_blurgps_input);
 		
 		extras = getIntent().getExtras();
@@ -106,6 +109,7 @@ public class AddDataSource extends Activity {
 				.getSelectedItemPosition());
 		int displayId = (int) displaySpinner.getItemIdAtPosition(displaySpinner
 				.getSelectedItemPosition());
+		boolean respectDisplayType = respectDisplayCheckbox.isChecked();
 		int blurId = (int) blurSpinner.getItemIdAtPosition(blurSpinner
 				.getSelectedItemPosition());
 		
@@ -130,6 +134,7 @@ public class AddDataSource extends Activity {
 			DataSource ds = new DataSource(name, url,
 					DataSource.TYPE.values()[typeId],
 					DataSource.DISPLAY.values()[displayId], true);
+			ds.setRespectDisplayType(respectDisplayType);
 			ds.setBlur(DataSource.BLUR.values()[blurId]);
 			ds.setColor(Color.parseColor(colorString));
 			DataSourceStorage.getInstance().add(ds);

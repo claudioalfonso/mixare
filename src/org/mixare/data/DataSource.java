@@ -47,6 +47,16 @@ public class DataSource {
 	private boolean enabled;
 	private TYPE type;
 	private DISPLAY display;
+
+	public boolean getRespectDisplayType() {
+		return respectDisplayType;
+	}
+
+	public void setRespectDisplayType(boolean respectDisplayType) {
+		this.respectDisplayType = respectDisplayType;
+	}
+
+	private boolean respectDisplayType;
 	private boolean editable;
 	private BLUR blur;
 	private int color=-1;
