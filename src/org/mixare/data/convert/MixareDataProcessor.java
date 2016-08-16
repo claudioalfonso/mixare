@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mixare.Config;
 import org.mixare.data.DataSource;
+import org.mixare.MixContext;
 import org.mixare.data.MarkerBuilder;
 import org.mixare.data.DataHandler;
 import org.mixare.lib.HtmlUnescape;
@@ -81,7 +82,7 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 			JSONObject jo = dataArray.getJSONObject(i);
 
 			Marker ma = null;
-			if (jo.has("title") && jo.has("lat") && jo.has("lng")) { // && jo.has("elevation")) {
+			if (jo.has("title") && jo.has("lat") && jo.has("lng")) {
 				String id = "";
 				if(jo.has("id")){
 					id = jo.getString("id");
@@ -90,6 +91,7 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 				Log.v(Config.TAG, "processing Mixare JSON object");
 				String link=null;
 				String image=null;
+				Double elevation=0.0;
 
 				if(jo.has("has_detail_page") && jo.getInt("has_detail_page")!=0 && jo.has("webpage")) {
 					link = jo.getString("webpage");
@@ -98,13 +100,18 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 				if(jo.has("image")) {
 					image = jo.getString("image");
 				}
+				if(jo.has("elevation")) {
+					elevation = jo.getDouble("elevation");
+				}
+				else {
+					elevation = MixContext.getInstance().getCurLocation().getAltitude();
+				}
 
 				ma = new MarkerBuilder().setId(id)
 						.setTitle(HtmlUnescape.unescapeHTML(jo.getString("title")))
 						.setLatitude(jo.getDouble("lat"))
 						.setLongitude(jo.getDouble("lng"))
-	//					.setAltitude(jo.getDouble("elevation"))
-						.setAltitude(0.0)
+						.setAltitude(elevation)
 						.setDisplayType(overrideMarkerDisplayType)
 						.setPageURL(link)
 						.setImageURL(image)
