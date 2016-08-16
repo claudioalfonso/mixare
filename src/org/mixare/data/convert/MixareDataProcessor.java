@@ -93,7 +93,7 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 				String image=null;
 				Double elevation=0.0;
 
-				if(jo.has("has_detail_page") && jo.getInt("has_detail_page")!=0 && jo.has("webpage")) {
+				if(jo.has("has_detail_page") && jo.getInt("has_detail_page")!=0 && jo.has("webpage")) { // && jo.has("elevation")) {
 					link = jo.getString("webpage");
 				}
 
@@ -102,8 +102,7 @@ public class MixareDataProcessor extends DataHandler implements DataProcessor{
 				}
 				if(jo.has("elevation")) {
 					elevation = jo.getDouble("elevation");
-				}
-				else {
+				} else {
 					elevation = MixContext.getInstance().getCurLocation().getAltitude();
 				}
 
