@@ -144,7 +144,7 @@ public class DataSourceStorage {
 	 */
 	private Element createDataSourceElement(Document doc, String id,
 			String name, String url, String type, String display,
-			boolean visible, boolean editable, String blur, String color) {
+			boolean visible, boolean editable, String blur, String color, boolean respectDisplayType) {
 		// Set rootElement to "DataSource"
 		Element rootElement = doc.createElement("datasource");
 
@@ -170,6 +170,11 @@ public class DataSourceStorage {
 		Element displayElement = doc.createElement("display");
 		displayElement.appendChild(doc.createTextNode(display));
 		rootElement.appendChild(displayElement);
+
+		// create "Display" Element and add it to rootElement
+		Element respectDisplayTypeElement = doc.createElement("respectDisplayType");
+		respectDisplayTypeElement.appendChild(doc.createTextNode(String.valueOf(respectDisplayType)));
+		rootElement.appendChild(respectDisplayTypeElement);
 
 		// create "enabled" Element and add it to rootElement
 		Element enabled = doc.createElement("visible");
@@ -286,13 +291,14 @@ public class DataSourceStorage {
 								getTagValue("name",eElement), 
 								getTagValue("url", eElement),
 								getTagValue("type", eElement), 
-								getTagValue("display", eElement), 
+								getTagValue("display", eElement),
 								getTagValue("visible", eElement),
 								Boolean.parseBoolean(
 										getTagValue("editable",eElement)));
 						ds.setBlur(DataSource.BLUR.values()[Integer
 								.parseInt(getTagValue("blur", eElement))]);
 						ds.setColor(Color.parseColor(getTagValue("color", eElement)));
+						ds.setRespectDisplayType(Boolean.parseBoolean(getTagValue("respectDisplayType", eElement)));
 						return ds;
 					}
 				}
@@ -414,9 +420,10 @@ public class DataSourceStorage {
                         curDataSource.getEnabled(),
                         curDataSource.isEditable(),
 						String.valueOf(curDataSource.getBlurId()),
-                        curDataSource.getColorString()
+                        curDataSource.getColorString(),
+						curDataSource.getRespectDisplayType()
                         );
-				
+
 				documentRoot.appendChild(dataSourceElement);
 			}
 			

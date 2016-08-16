@@ -3,11 +3,6 @@ package org.mixare.route;
 import android.location.Location;
 import android.os.AsyncTask;
 
-import org.mapsforge.core.model.LatLong;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class RouteDataAsyncTaskOSRM extends AsyncTask<Location,Void,MyRoute> {
     MyRoute myRoute;
 

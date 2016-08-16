@@ -729,9 +729,11 @@ public class MixViewActivity extends MaterialDrawerMenuActivity implements Senso
 	/**
 	 * Refreshes Viewed Data.
 	 */
-	public void refresh(){
+	public void refresh() {
 		markerRenderer.refresh();
-		MixContext.getInstance().getRouteRenderer().updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers(POIMarker.class));
+		if (MixContext.getInstance().getRouteRenderer() != null) {
+			MixContext.getInstance().getRouteRenderer().updatePOIMarker(getMarkerRenderer().getDataHandler().getCopyOfMarkers(POIMarker.class));
+		}
 	}
 
 	public void setErrorDialog(int error) {

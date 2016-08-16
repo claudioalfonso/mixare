@@ -77,6 +77,7 @@ public class AddDataSource extends Activity {
 				urlField.setText(ds.getUrl(), TextView.BufferType.EDITABLE);
 				typeSpinner.setSelection(ds.getTypeId());
 				displaySpinner.setSelection(ds.getDisplayId());
+				respectDisplayCheckbox.setChecked(ds.getRespectDisplayType());
 				blurSpinner.setSelection(ds.getBlurId());
 				colorField.setText(ds.getColorString(), TextView.BufferType.EDITABLE);
 			}
@@ -123,6 +124,7 @@ public class AddDataSource extends Activity {
 					ds.setUrl(url);
 					ds.setType(typeId);
 					ds.setDisplay(displayId);
+					ds.setRespectDisplayType(respectDisplayType);
 					ds.setBlur(blurId);
 					ds.setColor(Color.parseColor(colorString));
 					
