@@ -3,6 +3,8 @@
 mixare (mix Augmented Reality Engine) is a free open source augmented reality browser, 
 which is published under the GPLv3.
 
+ESTE REPOSITÓRIO ESTA MAIS ATUALIZADO DO QUE OS DEMAIS DO PROJETO MIXARE COM UMA DEFASAGEM, DE NO MAXIMO 2 ANOS
+
 This fork has been created in the wake of a Master Project of @MelanieWe and @pokerazor.
 It continues to work on the library and app.
 
